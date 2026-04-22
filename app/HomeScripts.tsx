@@ -226,24 +226,28 @@ export default function HomeScripts() {
 
     // ── tag elements for reveal ─────────────────────────────────
     function tagReveal() {
-      // Section headings
-      document.querySelectorAll('.sec h2, .sec h1').forEach((el, i) => {
+      // The hero is the first big div after the live strip — it has min-height:100vh
+      // We identify it as the first child div of body that is NOT nav and NOT the strip
+      // Simplest: get all .sec elements — hero is NOT a .sec, so only animate .sec children
+
+      // Section headings — ONLY inside .sec (hero is not .sec so excluded)
+      document.querySelectorAll('.sec h2, .sec h1').forEach((el) => {
         if (!el.classList.contains('ax-reveal')) {
           el.classList.add('ax-reveal');
-          (el as HTMLElement).dataset.delay = String(0.05);
+          (el as HTMLElement).dataset.delay = '0.05';
         }
       });
 
-      // Eyebrow labels
-      document.querySelectorAll('.eyebrow').forEach((el) => {
+      // Eyebrow labels — ONLY inside .sec
+      document.querySelectorAll('.sec .eyebrow').forEach((el) => {
         if (!el.classList.contains('ax-reveal-left')) {
           el.classList.add('ax-reveal-left');
           (el as HTMLElement).dataset.delay = '0';
         }
       });
 
-      // Cards — stagger by index within their parent grid
-      const cardSelectors = ['.fg-card', '.fw-card', '.aud-card', '.hw-card', '.sc'];
+      // Cards — only inside .sec
+      const cardSelectors = ['.sec .fg-card', '.sec .fw-card', '.sec .aud-card', '.sec .hw-card', '.sec .sc'];
       cardSelectors.forEach((sel) => {
         document.querySelectorAll(sel).forEach((el, i) => {
           if (!el.classList.contains('ax-reveal-scale')) {
@@ -253,24 +257,24 @@ export default function HomeScripts() {
         });
       });
 
-      // Paragraphs inside .inner
-      document.querySelectorAll('.inner > p, .inner > div > p').forEach((el) => {
+      // Paragraphs — only inside .sec .inner
+      document.querySelectorAll('.sec .inner > p, .sec .inner > div > p').forEach((el) => {
         if (!el.classList.contains('ax-reveal')) {
           el.classList.add('ax-reveal');
           (el as HTMLElement).dataset.delay = '0.1';
         }
       });
 
-      // fw-note
-      document.querySelectorAll('.fw-note').forEach((el) => {
+      // fw-note — only inside .sec
+      document.querySelectorAll('.sec .fw-note').forEach((el) => {
         if (!el.classList.contains('ax-reveal-left')) {
           el.classList.add('ax-reveal-left');
           (el as HTMLElement).dataset.delay = '0.2';
         }
       });
 
-      // cta-panel
-      document.querySelectorAll('.cta-panel').forEach((el) => {
+      // cta-panel — only inside .sec
+      document.querySelectorAll('.sec .cta-panel').forEach((el) => {
         if (!el.classList.contains('ax-reveal-scale')) {
           el.classList.add('ax-reveal-scale');
           (el as HTMLElement).dataset.delay = '0.05';
