@@ -21,6 +21,10 @@ export default function FamilyBusiness() {
       <section className="sec" style={{ background: 'var(--bg)', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3 }}
           style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(200,168,108,.1), transparent 65%)', zIndex: 0 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.3 }}
+          className="gn-hero" style={{ fontSize: 'clamp(120px,18vw,280px)', right: '-20px', top: '-20px', zIndex: 0, letterSpacing: '-.08em' }}>
+          FAMILY
+        </motion.div>
         <div className="inner" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div variants={staggerContainer} initial="hidden" animate="show">
             <motion.div variants={fadeUp} className="eyebrow">Family Business</motion.div>

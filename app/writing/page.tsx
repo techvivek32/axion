@@ -28,6 +28,10 @@ export default function Writing() {
       <section className="sec" style={{ background: 'var(--bg)', minHeight: '72vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.14 }} transition={{ duration: 2 }}
           style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 60%, rgba(200,168,108,.2), transparent 60%)', zIndex: 0 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.3 }}
+          className="gn-hero" style={{ fontSize: 'clamp(120px,18vw,280px)', right: '-20px', top: '-20px', zIndex: 0, letterSpacing: '-.08em' }}>
+          WRITING
+        </motion.div>
         <div className="inner" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div variants={staggerContainer} initial="hidden" animate="show">
             <motion.div variants={fadeUp} className="eyebrow">Writing</motion.div>

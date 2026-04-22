@@ -31,6 +31,16 @@ export default function Philosophy() {
           transition={{ duration: 2 }}
           style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(200,168,108,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,108,.15) 1px,transparent 1px)', backgroundSize: '72px 72px', zIndex: 0 }}
         />
+        {/* Ghost page name watermark */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="gn-hero"
+          style={{ fontSize: 'clamp(120px,18vw,280px)', right: '-20px', top: '-20px', zIndex: 0, letterSpacing: '-.08em' }}
+        >
+          PHILOSOPHY
+        </motion.div>
         <div className="inner" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div variants={staggerContainer} initial="hidden" animate="show">
             <motion.div variants={fadeUp} className="eyebrow">Philosophy</motion.div>

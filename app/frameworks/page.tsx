@@ -28,6 +28,16 @@ export default function Frameworks() {
           transition={{ duration: 2.5 }}
           style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(200,168,108,.18), transparent 65%)', zIndex: 0 }}
         />
+        {/* Ghost page name watermark */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="gn-hero"
+          style={{ fontSize: 'clamp(120px,18vw,280px)', right: '-20px', top: '-20px', zIndex: 0, letterSpacing: '-.08em' }}
+        >
+          FRAMEWORKS
+        </motion.div>
         <div className="inner" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div variants={staggerContainer} initial="hidden" animate="show">
             <motion.div variants={fadeUp} className="eyebrow">Frameworks</motion.div>

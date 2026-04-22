@@ -30,6 +30,10 @@ export default function HROS() {
           style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(200,168,108,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,108,.12) 1px,transparent 1px)', backgroundSize: '48px 48px', zIndex: 0 }} />
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.5 }}
           style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(7,7,7,0) 30%, var(--bg) 75%)', zIndex: 1 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.3 }}
+          className="gn-hero" style={{ fontSize: 'clamp(120px,18vw,280px)', right: '-20px', top: '-20px', zIndex: 0, letterSpacing: '-.08em' }}>
+          HROS
+        </motion.div>
         <div className="inner" style={{ position: 'relative', zIndex: 2 }}>
           <motion.div variants={staggerContainer} initial="hidden" animate="show">
             <motion.div variants={fadeUp} className="eyebrow">HROS</motion.div>
