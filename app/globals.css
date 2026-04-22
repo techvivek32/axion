@@ -88,6 +88,39 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:14px 5
 .if-item p{font-size:13px;color:var(--muted);line-height:1.6}
 .cta-panel{background:linear-gradient(135deg,rgba(200,168,108,.07),rgba(200,168,108,.02));border:1px solid rgba(200,168,108,.14);border-radius:var(--rg);padding:64px;text-align:center}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+
+/* ─── HOMEPAGE SCROLL ANIMATIONS ─────────────────────────── */
+.anim-fade-up{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.anim-fade-in{opacity:0;transition:opacity .8s ease-out}
+.anim-slide-right{opacity:0;transform:translateX(-24px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.anim-visible{opacity:1!important;transform:none!important}
+
+/* Stagger delays for grid children */
+.anim-d1{transition-delay:.08s}
+.anim-d2{transition-delay:.16s}
+.anim-d3{transition-delay:.24s}
+.anim-d4{transition-delay:.32s}
+
+/* ─── ENHANCED HOVER EFFECTS ──────────────────────────────── */
+.bp{transition:background .2s,transform .18s,box-shadow .2s}
+.bp:hover{background:#e5c385;transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,168,108,.28)}
+.bp:active{transform:translateY(0)}
+.bs{transition:border-color .2s,color .2s,transform .18s}
+.bs:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.bs:active{transform:translateY(0)}
+.nl{transition:color .2s,letter-spacing .2s}
+.nl:hover{color:var(--gold);letter-spacing:.04em}
+.fg-card{transition:border-color .22s,transform .22s,box-shadow .22s}
+.fg-card:hover{border-color:rgba(200,168,108,.35);transform:translateY(-6px);box-shadow:0 20px 56px rgba(200,168,108,.07)}
+.aud-card{transition:border-color .22s,transform .22s,box-shadow .22s}
+.aud-card:hover{border-color:rgba(200,168,108,.35);transform:translateY(-6px);box-shadow:0 20px 56px rgba(200,168,108,.07)}
+.hw-card{transition:border-top-color .2s,transform .22s}
+.hw-card:hover{border-top-color:#e5c385;transform:translateY(-4px)}
+.sc{transition:border-color .2s,background .2s,transform .22s}
+.sc:hover{border-color:rgba(200,168,108,.3);background:#181818;transform:translateY(-4px)}
 
 /* ─── RESPONSIVE ─────────────────────────────────────────── */
 
