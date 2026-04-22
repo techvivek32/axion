@@ -1,41 +1,17 @@
+﻿import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 
 const features = [
-  { no:'01', name:'Intelligent Payroll Layer',   desc:'Wage structure validation, 50% Rule compliance, PF/ESI cascade calculations — automated and traceable.' },
+  { no:'01', name:'Intelligent Payroll Layer',   desc:'Wage structure validation, 50% Rule compliance, PF/ESI cascade calculations â€” automated and traceable.' },
   { no:'02', name:'Compliance Intelligence',     desc:'Labour Codes interpreted as live doctrine. Every obligation mapped to your headcount, states, and worker types in real time.' },
-  { no:'03', name:'Decision Engine',             desc:'Six cooperating agents that route every query to the right answer — with a full audit trail and STUCK Protocol for grey areas.' },
+  { no:'03', name:'Decision Engine',             desc:'Six cooperating agents that route every query to the right answer â€” with a full audit trail and STUCK Protocol for grey areas.' },
   { no:'04', name:'Cost Simulation',             desc:'Total Employment Obligation modelled per employee. P&L vs balance sheet split. Three scenarios: conservative, aggressive, recommended.' },
 ];
 
 export default function HROS() {
   return (
     <>
-      {/* NAV */}
-      <nav>
-        <div style={{lineHeight:1}}>
-          <svg width="144" height="46" viewBox="0 0 360 116" xmlns="http://www.w3.org/2000/svg">
-            <text x="0" y="82" fill="#f5f0e6" fontFamily="Inter,-apple-system,sans-serif" fontSize="82" fontWeight="900" letterSpacing="-5">AX</text>
-            <line x1="112" y1="5" x2="112" y2="88" stroke="#c8a86c" strokeWidth="1.8" opacity="0.6"/>
-            <text x="119" y="82" fill="#c8a86c" fontFamily="Inter,-apple-system,sans-serif" fontSize="82" fontWeight="300" letterSpacing="-3">ION</text>
-            <polygon points="278,80 285,66 292,80" fill="#c8a86c" opacity="0.45"/>
-            <polygon points="297,80 307,52 317,80" fill="#c8a86c" opacity="0.72"/>
-            <polygon points="322,80 335,24 348,80" fill="#c8a86c"/>
-            <rect x="0" y="94" width="348" height="20" fill="#c8a86c"/>
-            <text x="174" y="108" textAnchor="middle" fill="#1a0e00" fontFamily="Inter,-apple-system,sans-serif" fontSize="9" fontWeight="900" letterSpacing="17">INDEX</text>
-          </svg>
-        </div>
-        <div style={{display:'flex',gap:'22px',alignItems:'center'}}>
-          <Link className="nl" href="/">Home</Link>
-          <Link className="nl" href="/philosophy">Philosophy</Link>
-          <Link className="nl" href="/frameworks">Frameworks</Link>
-          <Link className="nl" href="/writing">Writing</Link>
-          <Link className="nl" href="/practice">Practice</Link>
-          <Link className="nl" href="/family-business">Family Business</Link>
-          <Link className="nl" href="/hros">HROS</Link>
-          <Link className="nl" href="/about">About</Link>
-          <span className="bp" style={{padding:'8px 20px',fontSize:'11px'}}>Book a call</span>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* HERO */}
       <div className="sec" style={{background:'var(--bg)',minHeight:'70vh',display:'flex',flexDirection:'column',justifyContent:'center',position:'relative',overflow:'hidden'}}>
@@ -120,7 +96,7 @@ export default function HROS() {
               Built for organisations that treat compliance as architecture, not administration. Join the waitlist or start a conversation.
             </p>
             <div style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
-              <span className="bp" style={{fontSize:'14px',padding:'13px 30px',cursor:'pointer'}}>Talk to us →</span>
+              <span className="bp" style={{fontSize:'14px',padding:'13px 30px',cursor:'pointer'}}>Talk to us â†’</span>
               <Link className="bs" href="/practice" style={{fontSize:'14px',padding:'13px 30px'}}>View Practice</Link>
             </div>
           </div>
@@ -129,7 +105,7 @@ export default function HROS() {
 
       {/* FOOTER */}
       <footer style={{padding:'20px 56px',display:'flex',justifyContent:'space-between',alignItems:'center',background:'rgba(5,5,5,.95)',borderTop:'1px solid var(--line)'}}>
-        <span style={{fontSize:'10px',color:'rgba(245,242,235,.16)',letterSpacing:'.04em'}}>© 2026 Axion Index</span>
+        <span style={{fontSize:'10px',color:'rgba(245,242,235,.16)',letterSpacing:'.04em'}}>Â© 2026 Axion Index</span>
         <div style={{display:'flex',gap:'22px'}}>
           <Link href="/" style={{fontSize:'11px',color:'rgba(245,242,235,.22)',textDecoration:'none'}}>Home</Link>
           <Link href="/practice" style={{fontSize:'11px',color:'rgba(245,242,235,.22)',textDecoration:'none'}}>Practice</Link>
