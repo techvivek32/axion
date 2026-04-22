@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk 'NR<=50 {print NR\": \"length\\($0\\)\" chars\"}' \"D:/OFFICE WORK/Axion Index/axionindex_homepage_v4_4.html\")",
+      "Bash(awk 'NR>=770 && NR<=782 {print NR\": \"substr\\($0,1,300\\)}' \"D:/OFFICE WORK/Axion Index/axionindex_homepage_v4_4.html\")",
+      "Bash(node scripts/split-html.mjs)",
+      "Bash(awk 'NR==1 || NR==NR && NR<4 {print NR\": \"substr\\($0,1,200\\)}' \"D:/OFFICE WORK/Axion Index/axion-index-next/app/page.tsx\")",
+      "Bash(awk '{print NR\": \"substr\\($0,1,100\\)}')"
+    ]
+  }
+}
