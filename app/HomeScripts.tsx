@@ -62,6 +62,7 @@ const INLINE_SCRIPTS: string[] = [
 
 export default function HomeScripts() {
   useEffect(() => {
+    // ── inject scripts ──────────────────────────────────────────
     const nodes: HTMLScriptElement[] = [];
     for (const code of INLINE_SCRIPTS) {
       const s = document.createElement('script');
@@ -70,8 +71,226 @@ export default function HomeScripts() {
       document.body.appendChild(s);
       nodes.push(s);
     }
+
+    // ── inject animation CSS ────────────────────────────────────
+    const style = document.createElement('style');
+    style.id = 'home-anim-css';
+    style.textContent = `
+      /* scroll-reveal base */
+      .ax-reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.65s ease, transform 0.65s ease;
+      }
+      .ax-reveal.ax-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .ax-reveal-left {
+        opacity: 0;
+        transform: translateX(-32px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .ax-reveal-left.ax-visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .ax-reveal-scale {
+        opacity: 0;
+        transform: scale(0.94);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+      .ax-reveal-scale.ax-visible {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* fg-card hover */
+      .fg-card {
+        transition: border-color 0.22s ease, transform 0.25s ease, box-shadow 0.25s ease !important;
+      }
+      .fg-card:hover {
+        border-color: rgba(200,168,108,.35) !important;
+        transform: translateY(-6px) !important;
+        box-shadow: 0 20px 56px rgba(200,168,108,.07) !important;
+      }
+
+      /* fw-card hover */
+      .fw-card {
+        transition: border-color 0.22s ease, transform 0.25s ease, box-shadow 0.25s ease !important;
+      }
+      .fw-card:hover {
+        border-color: rgba(200,168,108,.3) !important;
+        transform: translateY(-5px) !important;
+        box-shadow: 0 18px 48px rgba(0,0,0,.25) !important;
+      }
+
+      /* aud-card hover */
+      .aud-card {
+        transition: border-color 0.22s ease, transform 0.25s ease !important;
+      }
+      .aud-card:hover {
+        border-color: rgba(200,168,108,.35) !important;
+        transform: translateY(-6px) !important;
+      }
+
+      /* hw-card hover */
+      .hw-card {
+        transition: border-top-color 0.2s ease, transform 0.22s ease !important;
+      }
+      .hw-card:hover {
+        border-top-color: #e5c385 !important;
+        transform: translateY(-4px) !important;
+      }
+
+      /* sc (thought leadership) hover */
+      .sc {
+        transition: border-color 0.2s ease, background 0.2s ease, transform 0.22s ease !important;
+      }
+      .sc:hover {
+        border-color: rgba(200,168,108,.28) !important;
+        background: #181818 !important;
+        transform: translateY(-4px) !important;
+      }
+
+      /* .bp button hover */
+      .bp {
+        transition: background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease !important;
+      }
+      .bp:hover {
+        background: #e5c385 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 28px rgba(200,168,108,.22) !important;
+      }
+
+      /* .bs button hover */
+      .bs {
+        transition: border-color 0.2s ease, color 0.2s ease, transform 0.18s ease !important;
+      }
+      .bs:hover {
+        border-color: var(--gold) !important;
+        color: var(--gold) !important;
+        transform: translateY(-2px) !important;
+      }
+
+      /* nav link hover */
+      .nl {
+        transition: color 0.18s ease !important;
+        position: relative;
+      }
+
+      /* fc (accordion) hover */
+      .fc {
+        transition: flex 0.4s cubic-bezier(.4,0,.2,1), border-color 0.2s ease, filter 0.2s ease !important;
+      }
+
+      /* cmp-wrap hover on sides */
+      .cmp-dark, .cmp-gold {
+        transition: background 0.3s ease !important;
+      }
+
+      /* tl-item hover */
+      .tl-item {
+        transition: color 0.18s ease !important;
+      }
+      .tl-item:hover {
+        color: var(--goldb) !important;
+      }
+
+      /* hero stat numbers */
+      .ax-stat {
+        transition: color 0.3s ease !important;
+      }
+      .ax-stat:hover {
+        color: var(--goldb) !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // ── scroll-reveal observer ──────────────────────────────────
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = parseFloat(el.dataset.delay || '0');
+            setTimeout(() => {
+              el.classList.add('ax-visible');
+            }, delay * 1000);
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    // ── tag elements for reveal ─────────────────────────────────
+    function tagReveal() {
+      // Section headings
+      document.querySelectorAll('.sec h2, .sec h1').forEach((el, i) => {
+        if (!el.classList.contains('ax-reveal')) {
+          el.classList.add('ax-reveal');
+          (el as HTMLElement).dataset.delay = String(0.05);
+        }
+      });
+
+      // Eyebrow labels
+      document.querySelectorAll('.eyebrow').forEach((el) => {
+        if (!el.classList.contains('ax-reveal-left')) {
+          el.classList.add('ax-reveal-left');
+          (el as HTMLElement).dataset.delay = '0';
+        }
+      });
+
+      // Cards — stagger by index within their parent grid
+      const cardSelectors = ['.fg-card', '.fw-card', '.aud-card', '.hw-card', '.sc'];
+      cardSelectors.forEach((sel) => {
+        document.querySelectorAll(sel).forEach((el, i) => {
+          if (!el.classList.contains('ax-reveal-scale')) {
+            el.classList.add('ax-reveal-scale');
+            (el as HTMLElement).dataset.delay = String((i % 4) * 0.1);
+          }
+        });
+      });
+
+      // Paragraphs inside .inner
+      document.querySelectorAll('.inner > p, .inner > div > p').forEach((el) => {
+        if (!el.classList.contains('ax-reveal')) {
+          el.classList.add('ax-reveal');
+          (el as HTMLElement).dataset.delay = '0.1';
+        }
+      });
+
+      // fw-note
+      document.querySelectorAll('.fw-note').forEach((el) => {
+        if (!el.classList.contains('ax-reveal-left')) {
+          el.classList.add('ax-reveal-left');
+          (el as HTMLElement).dataset.delay = '0.2';
+        }
+      });
+
+      // cta-panel
+      document.querySelectorAll('.cta-panel').forEach((el) => {
+        if (!el.classList.contains('ax-reveal-scale')) {
+          el.classList.add('ax-reveal-scale');
+          (el as HTMLElement).dataset.delay = '0.05';
+        }
+      });
+
+      // Observe all tagged elements
+      document.querySelectorAll('.ax-reveal, .ax-reveal-left, .ax-reveal-scale').forEach((el) => {
+        observer.observe(el);
+      });
+    }
+
+    // Run after a short delay to let the HTML render
+    const timer = setTimeout(tagReveal, 120);
+
     return () => {
+      clearTimeout(timer);
+      observer.disconnect();
       for (const n of nodes) n.remove();
+      document.getElementById('home-anim-css')?.remove();
     };
   }, []);
   return null;
