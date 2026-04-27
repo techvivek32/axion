@@ -236,3 +236,10 @@ footer a:hover{color:#C9A84C!important}
 /* ── Nav links on new pages ── */
 .nav-link{color:rgba(255,255,255,.7)!important;text-decoration:none!important}
 .nav-link:hover{color:#C9A84C!important}
+
+/* ── Founder page hero responsive ── */
+@media (max-width: 1024px) {
+  .founder-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

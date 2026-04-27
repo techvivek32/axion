@@ -4,11 +4,11 @@ import { useState } from 'react';
 
 const navLinks = [
   { label: 'Home',       href: '/' },
-  { label: 'About Us',   href: '/about-us' },
   { label: 'Founder',    href: '/founder' },
   { label: 'Expertise',  href: '/expertise' },
   { label: 'Research',   href: '/research' },
   { label: 'Connect',    href: '/connect' },
+  { label: 'About Us',   href: '/about-us' },
 ];
 
 export default function NavBar() {
