@@ -19,7 +19,7 @@ const INLINE_SCRIPTS: string[] = [
     var overlay = document.createElement('div');
     overlay.id = 'mob-overlay';
     overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(7,7,7,0.98);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px;';
-    var links = [['/', 'Home']];
+    var links = [['/', 'Home'],['/about-us','About Us'],['/founder','Founder'],['/expertise','Expertise'],['/research','Research'],['/connect','Connect']];
     links.forEach(function(l){
       var a = document.createElement('a');
       a.href = l[0]; a.textContent = l[1];
