@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import { motion } from 'framer-motion';
@@ -13,8 +13,8 @@ const books = [
   { title: 'The Operating Architect', subtitle: 'Frameworks for the Modern Organisation', desc: 'Eight signature frameworks that turn organisational complexity into operating clarity.' },
 ];
 const frameworks = [
-  { name: 'BCR Framework',         desc: 'Belief → Conviction → Rhythm. The three-stage sequence every organisation must complete to scale.' },
-  { name: '3i Framework',          desc: 'Interpretation → Implication → Implementation. The operating sequence for every Labour Codes assessment.' },
+  { name: 'BCR Framework',         desc: 'Belief â†’ Conviction â†’ Rhythm. The three-stage sequence every organisation must complete to scale.' },
+  { name: '3i Framework',          desc: 'Interpretation â†’ Implication â†’ Implementation. The operating sequence for every Labour Codes assessment.' },
   { name: 'Operating Architecture', desc: 'The three-layer system: People Intelligence, People Operations, People Records.' },
 ];
 
@@ -56,13 +56,13 @@ export default function Research() {
               <motion.div key={i} variants={scaleIn}
                 whileHover={{ y: -6, borderColor: 'var(--gold)', boxShadow: '0 20px 48px rgba(201,168,76,.1)', transition: { duration: 0.22 } }}
                 className="card" style={{ cursor: 'pointer' }}>
-                <div style={{ fontSize: '11px', color: 'var(--gold)', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '14px' }}>
-                  {String(i + 1).padStart(2, '0')} — Report
+                <div style={{ fontSize: '11px', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '14px' }}>
+                  {String(i + 1).padStart(2, '0')} â€” Report
                 </div>
                 <h3 className="display" style={{ fontSize: '22px', fontWeight: 400, color: 'var(--navy-dark)', marginBottom: '10px' }}>{r.title}</h3>
                 <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7 }}>{r.desc}</p>
-                <motion.div whileHover={{ x: 4 }} style={{ fontSize: '12px', color: 'var(--gold)', marginTop: '16px', fontWeight: 600, display: 'inline-block' }}>
-                  Access report →
+                <motion.div whileHover={{ x: 4 }} style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none', marginTop: '16px', fontWeight: 600, display: 'inline-block' }}>
+                  Access report â†’
                 </motion.div>
               </motion.div>
             ))}
@@ -87,13 +87,13 @@ export default function Research() {
                 style={{ background: 'var(--white)', border: '1px solid var(--card-border)', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer' }}>
                 <div style={{ background: 'var(--navy)', padding: '40px 32px', minHeight: '160px', display: 'flex', alignItems: 'flex-end' }}>
                   <div>
-                    <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '8px' }}>{b.subtitle}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '8px' }}>{b.subtitle}</div>
                     <h3 className="display" style={{ fontSize: '26px', fontWeight: 400, color: '#fff', lineHeight: 1.2 }}>{b.title}</h3>
                   </div>
                 </div>
                 <div style={{ padding: '24px 28px' }}>
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '16px' }}>{b.desc}</p>
-                  <span style={{ fontSize: '12px', color: 'var(--gold)', fontWeight: 600 }}>Learn more →</span>
+                  <span style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>Learn more â†’</span>
                 </div>
               </motion.div>
             ))}
@@ -156,7 +156,7 @@ export default function Research() {
               Explore the research.
             </motion.h2>
             <motion.div variants={fadeUp} style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Get in touch →</Link>
+              <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Get in touch â†’</Link>
               <Link href="/expertise" className="btn-outline" style={{ fontSize: '14px', padding: '14px 32px' }}>View Expertise</Link>
             </motion.div>
           </motion.div>
@@ -164,7 +164,7 @@ export default function Research() {
       </section>
 
       <footer style={{ background: 'var(--navy-dark)', padding: '32px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(201,168,76,.15)', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>© 2026 Axion Index</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>Â© 2026 Axion Index</span>
         <div style={{ display: 'flex', gap: '24px' }}>
           {[['/', 'Home'], ['/about-us', 'About'], ['/expertise', 'Expertise'], ['/connect', 'Connect']].map(([href, label]) => (
             <Link key={href} href={href} style={{ fontSize: '12px', color: 'rgba(255,255,255,.35)', textDecoration: 'none' }}>{label}</Link>

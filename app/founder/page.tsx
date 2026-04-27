@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import { motion } from 'framer-motion';
@@ -45,7 +45,7 @@ export default function Founder() {
                 Building systems where organisations actually break.
               </motion.p>
               <motion.div variants={fadeUp} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Link href="/connect" className="btn-primary">Connect with Nitin →</Link>
+                <Link href="/connect" className="btn-primary">Connect with Nitin â†’</Link>
                 <Link href="/expertise" className="btn-gold-outline">View Expertise</Link>
               </motion.div>
             </div>
@@ -53,7 +53,7 @@ export default function Founder() {
             <motion.div variants={scaleIn}
               style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(201,168,76,.2)', borderRadius: '24px', aspectRatio: '3/4', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               <div style={{ textAlign: 'center', color: 'rgba(255,255,255,.3)' }}>
-                <div style={{ fontSize: '48px', marginBottom: '12px' }}>👤</div>
+                <div style={{ fontSize: '48px', marginBottom: '12px' }}>ðŸ‘¤</div>
                 <div style={{ fontSize: '12px', letterSpacing: '.1em' }}>Portrait</div>
               </div>
             </motion.div>
@@ -73,7 +73,7 @@ export default function Founder() {
                 22+ years inside India&rsquo;s most complex organisations.
               </motion.h2>
               <motion.p variants={fadeLeft} style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.85, marginBottom: '16px' }}>
-                From corporate systems to startup chaos, the journey has been about understanding where organisations fail — and building the architecture to prevent it.
+                From corporate systems to startup chaos, the journey has been about understanding where organisations fail â€” and building the architecture to prevent it.
               </motion.p>
               <motion.p variants={fadeLeft} style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.85 }}>
                 Every engagement, every system, every framework at Axion Index is built from that experience.
@@ -112,7 +112,7 @@ export default function Founder() {
                 style={{ display: 'flex', gap: '28px', marginBottom: '28px', position: 'relative', zIndex: 1 }}>
                 <motion.div whileHover={{ scale: 1.2, backgroundColor: 'var(--gold)', transition: { duration: 0.2 } }}
                   style={{ width: '48px', height: '48px', borderRadius: '50%', border: '2px solid var(--gold)', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: '11px', color: 'var(--gold)', fontWeight: 700 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span style={{ fontSize: '11px', color: 'var(--gold)', textDecoration: 'none', fontWeight: 700 }}>{String(i + 1).padStart(2, '0')}</span>
                 </motion.div>
                 <div style={{ background: 'var(--white)', border: '1px solid var(--card-border)', borderRadius: '16px', padding: '20px 24px', flex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
@@ -169,13 +169,13 @@ export default function Founder() {
             ))}
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={viewportOnce}>
-            <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Connect with Nitin →</Link>
+            <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Connect with Nitin â†’</Link>
           </motion.div>
         </div>
       </section>
 
       <footer style={{ background: 'var(--navy-dark)', padding: '32px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(201,168,76,.15)', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>© 2026 Axion Index</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>Â© 2026 Axion Index</span>
         <div style={{ display: 'flex', gap: '24px' }}>
           {[['/', 'Home'], ['/about-us', 'About'], ['/expertise', 'Expertise'], ['/connect', 'Connect']].map(([href, label]) => (
             <Link key={href} href={href} style={{ fontSize: '12px', color: 'rgba(255,255,255,.35)', textDecoration: 'none' }}>{label}</Link>

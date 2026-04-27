@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import { useState } from 'react';
 import NavBar from '@/components/NavBar';
@@ -6,12 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fadeUp, fadeLeft, scaleIn, staggerContainer, viewportOnce } from '@/lib/motion';
 
 const options = [
-  { icon: '🔬', label: 'Run Diagnostic',   desc: 'AI Edge Diagnostic or Labour Codes readiness assessment.' },
-  { icon: '🎤', label: 'Speaking',          desc: 'Keynotes, panels, and thought leadership engagements.' },
-  { icon: '🏛️', label: 'Advisory',          desc: 'Board advisory, CFO roundtables, and strategic counsel.' },
-  { icon: '🤝', label: 'Partnerships',      desc: 'Research partnerships, institutional advisory, co-creation.' },
-  { icon: '📬', label: 'Newsletter',        desc: 'The Weekly Amendment Digest and Operating Architect Brief.' },
-  { icon: '💼', label: 'LinkedIn',          desc: 'Follow for weekly frameworks, insights, and doctrine lines.' },
+  { icon: 'ðŸ”¬', label: 'Run Diagnostic',   desc: 'AI Edge Diagnostic or Labour Codes readiness assessment.' },
+  { icon: 'ðŸŽ¤', label: 'Speaking',          desc: 'Keynotes, panels, and thought leadership engagements.' },
+  { icon: 'ðŸ›ï¸', label: 'Advisory',          desc: 'Board advisory, CFO roundtables, and strategic counsel.' },
+  { icon: 'ðŸ¤', label: 'Partnerships',      desc: 'Research partnerships, institutional advisory, co-creation.' },
+  { icon: 'ðŸ“¬', label: 'Newsletter',        desc: 'The Weekly Amendment Digest and Operating Architect Brief.' },
+  { icon: 'ðŸ’¼', label: 'LinkedIn',          desc: 'Follow for weekly frameworks, insights, and doctrine lines.' },
 ];
 
 const enquiryTypes = ['Consulting / Advisory', 'Speaking / Keynote', 'Run a Diagnostic', 'Partnership', 'Media / Interview', 'General Enquiry'];
@@ -36,7 +36,7 @@ export default function Connect() {
               Start Where You Are.
             </motion.h1>
             <motion.p variants={fadeUp} style={{ fontSize: '18px', color: 'rgba(255,255,255,.6)', lineHeight: 1.85 }}>
-              Whether you need a diagnostic, a conversation, or a system — this is where it begins.
+              Whether you need a diagnostic, a conversation, or a system â€” this is where it begins.
             </motion.p>
           </motion.div>
         </div>
@@ -57,7 +57,7 @@ export default function Connect() {
               <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.6)', lineHeight: 1.8, marginBottom: '28px' }}>
                 A structured conversation about your organisation&rsquo;s operating challenges. No pitch. No deck. Just clarity.
               </p>
-              <Link href="#form" className="btn-primary" style={{ fontSize: '13px' }}>Book a conversation →</Link>
+              <Link href="#form" className="btn-primary" style={{ fontSize: '13px' }}>Book a conversation â†’</Link>
             </motion.div>
             <motion.div variants={scaleIn}
               whileHover={{ y: -8, boxShadow: '0 28px 72px rgba(201,168,76,.1)', borderColor: 'var(--gold)', transition: { duration: 0.22 } }}
@@ -69,7 +69,7 @@ export default function Connect() {
               <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '28px' }}>
                 AI Edge Diagnostic or Labour Codes readiness assessment. Get a structured view of your exposure in under 30 minutes.
               </p>
-              <Link href="/expertise" className="btn-outline" style={{ fontSize: '13px' }}>Start diagnostic →</Link>
+              <Link href="/expertise" className="btn-outline" style={{ fontSize: '13px' }}>Start diagnostic â†’</Link>
             </motion.div>
           </motion.div>
 
@@ -151,16 +151,16 @@ export default function Connect() {
                     whileTap={{ scale: 0.97 }}
                     className="btn-primary"
                     style={{ width: '100%', textAlign: 'center', fontSize: '14px', padding: '15px' }}>
-                    Submit Request →
+                    Submit Request â†’
                   </motion.button>
                 </motion.div>
               ) : (
                 <motion.div key="thanks" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                   style={{ background: 'var(--white)', border: '1px solid rgba(201,168,76,.3)', borderRadius: '24px', padding: '64px 48px', maxWidth: '680px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '48px', marginBottom: '20px' }}>✓</div>
+                  <div style={{ fontSize: '48px', marginBottom: '20px' }}>âœ“</div>
                   <h3 className="display" style={{ fontSize: '28px', fontWeight: 400, color: 'var(--navy-dark)', marginBottom: '12px' }}>Request received.</h3>
                   <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.8 }}>We&rsquo;ll respond within 48 hours. In the meantime, explore the research.</p>
-                  <Link href="/research" className="btn-outline" style={{ marginTop: '24px', display: 'inline-block', fontSize: '13px' }}>Explore Research →</Link>
+                  <Link href="/research" className="btn-outline" style={{ marginTop: '24px', display: 'inline-block', fontSize: '13px' }}>Explore Research â†’</Link>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -169,7 +169,7 @@ export default function Connect() {
       </section>
 
       <footer style={{ background: 'var(--navy-dark)', padding: '32px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(201,168,76,.15)', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>© 2026 Axion Index</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>Â© 2026 Axion Index</span>
         <div style={{ display: 'flex', gap: '24px' }}>
           {[['/', 'Home'], ['/about-us', 'About'], ['/founder', 'Founder'], ['/expertise', 'Expertise']].map(([href, label]) => (
             <Link key={href} href={href} style={{ fontSize: '12px', color: 'rgba(255,255,255,.35)', textDecoration: 'none' }}>{label}</Link>

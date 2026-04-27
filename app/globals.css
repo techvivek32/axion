@@ -1,4 +1,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Global link reset — kill browser blue ── */
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:none}
 :root{
   --bg:#070707;--bg2:#0d0d0d;--panel:#141414;--panel2:#1c1b1b;
   --gold:#c8a86c;--goldb:#e5c385;--solar:#c8a86c;--silver:#C0C0C0;
@@ -213,3 +217,22 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:14px 5
   }
 }
 
+
+/* ── Button classes — force correct colors, no blue ── */
+.btn-primary{display:inline-block;padding:13px 30px;background:#C9A84C;color:#121C33!important;font-size:13px;font-weight:700;letter-spacing:.06em;cursor:pointer;border-radius:999px;text-decoration:none!important;transition:background .2s,transform .18s,box-shadow .2s;border:none}
+.btn-primary:hover{background:#E2C97E;transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.3);color:#121C33!important}
+.btn-outline{display:inline-block;padding:13px 30px;background:transparent;border:1.5px solid #1B2A4A;color:#1B2A4A!important;font-size:13px;font-weight:600;letter-spacing:.04em;cursor:pointer;border-radius:999px;text-decoration:none!important;transition:all .2s}
+.btn-outline:hover{background:#1B2A4A;color:#fff!important;transform:translateY(-2px)}
+.btn-gold-outline{display:inline-block;padding:13px 30px;background:transparent;border:1.5px solid #C9A84C;color:#C9A84C!important;font-size:13px;font-weight:600;letter-spacing:.04em;cursor:pointer;border-radius:999px;text-decoration:none!important;transition:all .2s}
+.btn-gold-outline:hover{background:#C9A84C;color:#121C33!important;transform:translateY(-2px)}
+
+/* ── Footer links — never blue ── */
+footer a{color:rgba(255,255,255,.35)!important;text-decoration:none!important}
+footer a:hover{color:#C9A84C!important}
+
+/* ── Card links — never blue ── */
+.card a,.card-dark a{color:inherit!important;text-decoration:none!important}
+
+/* ── Nav links on new pages ── */
+.nav-link{color:rgba(255,255,255,.7)!important;text-decoration:none!important}
+.nav-link:hover{color:#C9A84C!important}

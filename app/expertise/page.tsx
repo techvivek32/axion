@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import { motion } from 'framer-motion';
@@ -8,7 +8,7 @@ const products = [
   { no:'01', name:'AI Edge Lab',                  tag:'LIVE',         tagColor:'#86d9a2', tagBg:'rgba(134,217,162,.12)', desc:'A diagnostic engine that measures human vs AI leverage. Structural readiness assessment using the E-D-G-E framework.' },
   { no:'02', name:'Labour Codes Command Centre',  tag:'ACTIVE',       tagColor:'#8aaccc', tagBg:'rgba(138,172,204,.12)', desc:'Compliance intelligence system. Turns India\'s Labour Codes from a burden into an operating advantage.' },
   { no:'03', name:'Family Business HR',           tag:'ADVISORY',     tagColor:'#c4956a', tagBg:'rgba(196,149,106,.12)', desc:'Legacy architecture for family-run companies navigating generational transition and institutional scale.' },
-  { no:'04', name:'HROS',                         tag:'PLATFORM',     tagColor:'#9b8fc0', tagBg:'rgba(155,143,192,.12)', desc:'The HR Operating System. People Intelligence, People Operations, and People Records — unified.' },
+  { no:'04', name:'HROS',                         tag:'PLATFORM',     tagColor:'#9b8fc0', tagBg:'rgba(155,143,192,.12)', desc:'The HR Operating System. People Intelligence, People Operations, and People Records â€” unified.' },
   { no:'05', name:'Problem Statement Engagements', tag:'CUSTOM',      tagColor:'#7ab895', tagBg:'rgba(122,184,149,.12)', desc:'Bespoke operating architecture engagements for organisations facing specific structural challenges.' },
   { no:'06', name:'Intelligent Payroll',          tag:'COMING SOON',  tagColor:'rgba(255,255,255,.4)', tagBg:'rgba(255,255,255,.05)', desc:'Compliance-native, AI-first payroll infrastructure for India. Built on the Labour Codes Command Centre.' },
 ];
@@ -54,13 +54,13 @@ export default function Expertise() {
                 whileHover={{ y: -8, borderColor: 'var(--gold)', boxShadow: '0 24px 64px rgba(201,168,76,.12)', transition: { duration: 0.22 } }}
                 className="card" style={{ cursor: 'pointer' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--gold)', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700 }}>{p.no}</span>
+                  <span style={{ fontSize: '11px', color: 'var(--gold)', textDecoration: 'none', letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700 }}>{p.no}</span>
                   <span style={{ fontSize: '10px', padding: '4px 10px', borderRadius: '999px', background: p.tagBg, color: p.tagColor, fontWeight: 700, letterSpacing: '.08em' }}>{p.tag}</span>
                 </div>
                 <h3 className="display" style={{ fontSize: '20px', fontWeight: 400, color: 'var(--navy-dark)', marginBottom: '10px', lineHeight: 1.2 }}>{p.name}</h3>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.7 }}>{p.desc}</p>
-                <motion.div whileHover={{ x: 4 }} style={{ fontSize: '12px', color: 'var(--gold)', marginTop: '16px', fontWeight: 600, display: 'inline-block' }}>
-                  {p.tag === 'COMING SOON' ? 'Join waitlist →' : 'Learn more →'}
+                <motion.div whileHover={{ x: 4 }} style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none', marginTop: '16px', fontWeight: 600, display: 'inline-block' }}>
+                  {p.tag === 'COMING SOON' ? 'Join waitlist â†’' : 'Learn more â†’'}
                 </motion.div>
               </motion.div>
             ))}
@@ -68,7 +68,7 @@ export default function Expertise() {
         </div>
       </section>
 
-      {/* FEATURE HIGHLIGHT — AI EDGE LAB */}
+      {/* FEATURE HIGHLIGHT â€” AI EDGE LAB */}
       <section className="section-navy">
         <div className="container">
           <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={viewportOnce}
@@ -77,17 +77,17 @@ export default function Expertise() {
               <motion.div variants={fadeLeft} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
                 <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 2 }}
                   style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#86d9a2', flexShrink: 0 }} />
-                <span style={{ fontSize: '11px', letterSpacing: '.18em', textTransform: 'uppercase', color: '#86d9a2', fontWeight: 700 }}>Live — AI Edge Lab</span>
+                <span style={{ fontSize: '11px', letterSpacing: '.18em', textTransform: 'uppercase', color: '#86d9a2', fontWeight: 700 }}>Live â€” AI Edge Lab</span>
               </motion.div>
               <motion.h2 variants={fadeLeft} className="display"
                 style={{ fontSize: 'clamp(26px,3.5vw,44px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-.03em', color: '#fff', marginBottom: '20px' }}>
                 A diagnostic engine that measures human vs AI leverage.
               </motion.h2>
               <motion.p variants={fadeLeft} style={{ fontSize: '16px', color: 'rgba(255,255,255,.6)', lineHeight: 1.85, marginBottom: '28px' }}>
-                The AI Edge Diagnostic assesses structural leverage across four dimensions — giving organisations a clear picture of where human judgment is irreplaceable and where AI compression is already happening.
+                The AI Edge Diagnostic assesses structural leverage across four dimensions â€” giving organisations a clear picture of where human judgment is irreplaceable and where AI compression is already happening.
               </motion.p>
               <motion.div variants={fadeLeft}>
-                <Link href="/connect" className="btn-primary">Run the diagnostic →</Link>
+                <Link href="/connect" className="btn-primary">Run the diagnostic â†’</Link>
               </motion.div>
             </div>
             {/* Mock dashboard */}
@@ -125,10 +125,10 @@ export default function Expertise() {
               Explore each solution.
             </motion.h2>
             <motion.p variants={fadeUp} style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '32px' }}>
-              Every product is built on the same operating doctrine — and designed to work together.
+              Every product is built on the same operating doctrine â€” and designed to work together.
             </motion.p>
             <motion.div variants={fadeUp} style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Start a conversation →</Link>
+              <Link href="/connect" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>Start a conversation â†’</Link>
               <Link href="/research" className="btn-outline" style={{ fontSize: '14px', padding: '14px 32px' }}>View Research</Link>
             </motion.div>
           </motion.div>
@@ -136,7 +136,7 @@ export default function Expertise() {
       </section>
 
       <footer style={{ background: 'var(--navy-dark)', padding: '32px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(201,168,76,.15)', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>© 2026 Axion Index</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)' }}>Â© 2026 Axion Index</span>
         <div style={{ display: 'flex', gap: '24px' }}>
           {[['/', 'Home'], ['/about-us', 'About'], ['/founder', 'Founder'], ['/connect', 'Connect']].map(([href, label]) => (
             <Link key={href} href={href} style={{ fontSize: '12px', color: 'rgba(255,255,255,.35)', textDecoration: 'none' }}>{label}</Link>

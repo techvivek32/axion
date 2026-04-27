@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import NavBar from '@/components/NavBar';
 import { motion } from 'framer-motion';
@@ -38,7 +38,7 @@ export default function AboutUs() {
               Axion Index is not a consulting firm. It is a system for building organisations that operate with clarity, speed, and structure.
             </motion.p>
             <motion.div variants={fadeUp} style={{ display: 'flex', gap: '14px', marginTop: '36px', flexWrap: 'wrap' }}>
-              <Link href="/expertise" className="btn-primary">Explore our expertise →</Link>
+              <Link href="/expertise" className="btn-primary">Explore our expertise â†’</Link>
               <Link href="/connect" className="btn-gold-outline">Start a conversation</Link>
             </motion.div>
           </motion.div>
@@ -102,7 +102,7 @@ export default function AboutUs() {
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={viewportOnce} style={{ marginBottom: '48px', textAlign: 'center' }}>
             <div className="eyebrow" style={{ justifyContent: 'center' }}>BCR Framework</div>
             <h2 className="display" style={{ fontSize: 'clamp(28px,3.5vw,46px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-.03em', color: '#fff' }}>
-              Belief → Conviction → Rhythm
+              Belief â†’ Conviction â†’ Rhythm
             </h2>
           </motion.div>
           <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={viewportOnce}
@@ -158,11 +158,11 @@ export default function AboutUs() {
               The Unfinished Organisation
             </motion.h2>
             <motion.p variants={fadeUp} style={{ fontSize: '18px', color: 'rgba(255,255,255,.65)', lineHeight: 1.9, marginBottom: '40px' }}>
-              Organisations are not static. They are continuously evolving systems of belief, decision, and rhythm. The ones that survive are not the ones that finish — they are the ones that keep redesigning.
+              Organisations are not static. They are continuously evolving systems of belief, decision, and rhythm. The ones that survive are not the ones that finish â€” they are the ones that keep redesigning.
             </motion.p>
             <motion.div variants={fadeUp}>
               <Link href="/expertise" className="btn-primary" style={{ fontSize: '14px', padding: '14px 32px' }}>
-                Explore our expertise →
+                Explore our expertise â†’
               </Link>
             </motion.div>
           </motion.div>
@@ -171,7 +171,7 @@ export default function AboutUs() {
 
       {/* FOOTER */}
       <footer style={{ background: 'var(--navy-dark)', padding: '32px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(201,168,76,.15)', flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)', letterSpacing: '.04em' }}>© 2026 Axion Index</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,.3)', letterSpacing: '.04em' }}>Â© 2026 Axion Index</span>
         <div style={{ display: 'flex', gap: '24px' }}>
           {[['/', 'Home'], ['/founder', 'Founder'], ['/expertise', 'Expertise'], ['/connect', 'Connect']].map(([href, label]) => (
             <Link key={href} href={href} style={{ fontSize: '12px', color: 'rgba(255,255,255,.35)', textDecoration: 'none' }}>{label}</Link>
