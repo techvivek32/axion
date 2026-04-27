@@ -8,51 +8,148 @@ const INLINE_SCRIPTS: string[] = [
   `(function(){
     var navLinks = document.querySelector('nav > div:last-child');
     if(!navLinks) return;
-    // Create hamburger button
+
+    // ── Hamburger button ──────────────────────────────────────
     var btn = document.createElement('button');
     btn.id = 'mob-btn';
+    btn.setAttribute('aria-label','Menu');
     btn.innerHTML = '<span></span><span></span><span></span>';
-    btn.style.cssText = 'display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;z-index:201;';
+    btn.style.cssText = [
+      'display:none',
+      'background:none',
+      'border:none',
+      'cursor:pointer',
+      'padding:8px',
+      'flex-direction:column',
+      'gap:5px',
+      'z-index:202',
+      'flex-shrink:0',
+    ].join(';');
     var spans = btn.querySelectorAll('span');
-    spans.forEach(function(s){ s.style.cssText='display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;'; });
-    // Create overlay
+    spans.forEach(function(s){
+      s.style.cssText = 'display:block;width:24px;height:2px;background:#c8a86c;transition:transform 0.3s,opacity 0.3s;border-radius:2px;';
+    });
+
+    // ── Overlay ───────────────────────────────────────────────
     var overlay = document.createElement('div');
     overlay.id = 'mob-overlay';
-    overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(7,7,7,0.98);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px;';
-    var links = [['/', 'Home'],['/founder','Founder'],['/expertise','Expertise'],['/research','Research'],['/connect','Connect'],['/about-us','About Us']];
-    links.forEach(function(l){
+    overlay.style.cssText = [
+      'display:none',
+      'position:fixed',
+      'inset:0',
+      'background:rgba(7,7,7,0.98)',
+      'z-index:199',
+      'flex-direction:column',
+      'align-items:center',
+      'justify-content:center',
+      'overflow-y:auto',
+      '-webkit-overflow-scrolling:touch',
+    ].join(';');
+
+    // Inner wrapper — controls spacing responsively
+    var inner = document.createElement('div');
+    inner.style.cssText = [
+      'display:flex',
+      'flex-direction:column',
+      'align-items:center',
+      'width:100%',
+      'max-width:400px',
+      'padding:40px 24px',
+      'gap:0',
+    ].join(';');
+
+    var links = [
+      ['/','Home'],
+      ['/founder','Founder'],
+      ['/expertise','Expertise'],
+      ['/research','Research'],
+      ['/connect','Connect'],
+      ['/about-us','About Us'],
+    ];
+
+    links.forEach(function(l, i){
       var a = document.createElement('a');
-      a.href = l[0]; a.textContent = l[1];
-      a.style.cssText = 'font-size:18px;color:rgba(245,242,235,.52);text-decoration:none;letter-spacing:.08em;transition:color .2s;';
+      a.href = l[0];
+      a.textContent = l[1];
+      a.style.cssText = [
+        'display:block',
+        'width:100%',
+        'text-align:center',
+        'font-size:clamp(16px,4vw,22px)',
+        'color:rgba(245,242,235,.55)',
+        'text-decoration:none',
+        'letter-spacing:.06em',
+        'font-weight:500',
+        'padding:14px 0',
+        'border-bottom:1px solid rgba(255,255,255,.06)',
+        'transition:color .2s,background .2s',
+        'font-family:Inter,-apple-system,sans-serif',
+      ].join(';');
+      a.addEventListener('touchstart', function(){ a.style.color='#c8a86c'; }, {passive:true});
+      a.addEventListener('touchend',   function(){ setTimeout(function(){ a.style.color='rgba(245,242,235,.55)'; }, 300); }, {passive:true});
       a.onmouseover = function(){ a.style.color='#c8a86c'; };
-      a.onmouseout = function(){ a.style.color='rgba(245,242,235,.52)'; };
-      overlay.appendChild(a);
+      a.onmouseout  = function(){ a.style.color='rgba(245,242,235,.55)'; };
+      a.onclick = function(){ toggle(); };
+      inner.appendChild(a);
     });
-    var cta = document.createElement('span');
+
+    // CTA button
+    var cta = document.createElement('a');
+    cta.href = '#';
     cta.textContent = 'Book a call';
-    cta.style.cssText = 'margin-top:16px;display:inline-block;padding:12px 28px;background:#c8a86c;color:#2a1800;font-size:13px;font-weight:600;letter-spacing:.04em;cursor:pointer;border-radius:999px;';
-    overlay.appendChild(cta);
+    cta.style.cssText = [
+      'display:inline-block',
+      'margin-top:28px',
+      'padding:13px 32px',
+      'background:#c8a86c',
+      'color:#2a1800',
+      'font-size:clamp(12px,3vw,14px)',
+      'font-weight:700',
+      'letter-spacing:.06em',
+      'cursor:pointer',
+      'border-radius:999px',
+      'text-decoration:none',
+      'font-family:Inter,-apple-system,sans-serif',
+      'transition:background .2s',
+    ].join(';');
+    cta.onmouseover = function(){ cta.style.background='#e5c385'; };
+    cta.onmouseout  = function(){ cta.style.background='#c8a86c'; };
+    inner.appendChild(cta);
+
+    overlay.appendChild(inner);
     document.body.appendChild(overlay);
+
     var nav = document.querySelector('nav');
     nav.appendChild(btn);
+
+    // ── Toggle ────────────────────────────────────────────────
     var open = false;
     function toggle(){
       open = !open;
       overlay.style.display = open ? 'flex' : 'none';
+      document.body.style.overflow = open ? 'hidden' : '';
       spans[0].style.transform = open ? 'rotate(45deg) translateY(7px)' : 'none';
-      spans[1].style.opacity = open ? '0' : '1';
+      spans[1].style.opacity   = open ? '0' : '1';
       spans[2].style.transform = open ? 'rotate(-45deg) translateY(-7px)' : 'none';
     }
     btn.onclick = toggle;
-    overlay.onclick = function(e){ if(e.target===overlay) toggle(); };
+    overlay.onclick = function(e){ if(e.target === overlay) toggle(); };
+
+    // ── Responsive check ──────────────────────────────────────
     function checkSize(){
-      if(window.innerWidth <= 1024){
+      var w = window.innerWidth;
+      if(w <= 1024){
         btn.style.display = 'flex';
         navLinks.style.display = 'none';
+        // Adjust font size for small phones
+        var fs = w <= 375 ? '15px' : w <= 480 ? '16px' : w <= 768 ? '18px' : '20px';
+        inner.querySelectorAll('a:not(:last-child)').forEach(function(a){
+          a.style.fontSize = fs;
+        });
       } else {
         btn.style.display = 'none';
         navLinks.style.display = 'flex';
-        if(open){ open=false; overlay.style.display='none'; }
+        if(open){ open=false; overlay.style.display='none'; document.body.style.overflow=''; }
       }
     }
     checkSize();
