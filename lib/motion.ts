@@ -7,7 +7,7 @@ export const fadeUp = {
 
 export const fadeIn = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+  show: { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 
 export const fadeLeft = {
@@ -41,7 +41,7 @@ export const cardHover = {
     scale: 1.02,
     y: -6,
     borderColor: 'rgba(200,168,108,0.4)',
-    transition: { duration: 0.25, ease: 'easeOut' },
+    transition: { duration: 0.25, ease: 'easeOut' as const },
   },
 };
 

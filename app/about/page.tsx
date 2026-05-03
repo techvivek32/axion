@@ -3,18 +3,18 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-/* ── Motion variants ──────────────────────────────────── */
+/* -- Motion variants -- */
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const fadeIn = {
   hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const scaleUp = {
   hidden: { opacity: 0, scale: 0.95 },
-  show:   { opacity: 1, scale: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const stagger = (d = 0.15) => ({
   hidden: {},
@@ -22,11 +22,11 @@ const stagger = (d = 0.15) => ({
 });
 const lineGrowY = {
   hidden: { scaleY: 0, originY: 0 },
-  show:   { scaleY: 1, transition: { duration: 0.8, ease: 'easeOut' } },
+  show:   { scaleY: 1, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const lineGrowX = {
   hidden: { scaleX: 0, originX: 0 },
-  show:   { scaleX: 1, transition: { duration: 0.9, ease: 'easeOut' } },
+  show:   { scaleX: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const VP = { once: false, margin: '-60px' };

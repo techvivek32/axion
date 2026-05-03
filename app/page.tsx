@@ -565,7 +565,7 @@ function openFan(el){
   checkSize();
   window.addEventListener('resize',checkSize);
 })();
-const io=new IntersectionObserver(entries=>{
+var io=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
       e.target.classList.add('in');

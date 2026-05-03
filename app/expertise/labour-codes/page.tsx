@@ -6,10 +6,10 @@ import NavBar from '@/components/NavBar';
 
 const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',RUST='#8C3B28';
 const VP={once:false,margin:'-60px'};
-const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:'easeOut'}}};
-const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:'easeOut'}}};
-const scaleUp={hidden:{opacity:0,scale:0.95},show:{opacity:1,scale:1,transition:{duration:0.6,ease:'easeOut'}}};
-const slideLeft={hidden:{opacity:0,x:-30},show:{opacity:1,x:0,transition:{duration:0.6,ease:'easeOut'}}};
+const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
+const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
+const scaleUp={hidden:{opacity:0,scale:0.95},show:{opacity:1,scale:1,transition:{duration:0.6,ease:[0.22,1,0.36,1]as const}}};
+const slideLeft={hidden:{opacity:0,x:-30},show:{opacity:1,x:0,transition:{duration:0.6,ease:[0.22,1,0.36,1]as const}}};
 const stagger=(d=0.1)=>({hidden:{},show:{transition:{staggerChildren:d}}});
 
 function Eyebrow({label}:{label:string}){

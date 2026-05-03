@@ -6,19 +6,19 @@ import NavBar from '@/components/NavBar';
 /* ── Motion variants ──────────────────────────────────── */
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 const fadeIn = {
   hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 const scaleUp = {
   hidden: { opacity: 0, scale: 0.95 },
-  show:   { opacity: 1, scale: 1, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, scale: 1, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 const slideLeft = {
   hidden: { opacity: 0, x: -40 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  show:   { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 const stagger = (d = 0.15) => ({
   hidden: {},
@@ -26,11 +26,11 @@ const stagger = (d = 0.15) => ({
 });
 const lineGrowY = {
   hidden: { scaleY: 0, originY: 0 },
-  show:   { scaleY: 1, transition: { duration: 1, ease: 'easeOut' } },
+  show:   { scaleY: 1, transition: { duration: 1, ease: 'easeOut' as const } },
 };
 const numScale = {
   hidden: { opacity: 0, scale: 0.8 },
-  show:   { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+  show:   { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' as const } },
 };
 
 const VP = { once: false, margin: '-60px' };

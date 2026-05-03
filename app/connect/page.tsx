@@ -6,8 +6,8 @@ import NavBar from '@/components/NavBar';
 
 const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',ERR='#c0392b';
 const VP={once:false,margin:'-60px'};
-const fadeUp={hidden:{opacity:0,y:40},show:{opacity:1,y:0,transition:{duration:0.7,ease:'easeOut'}}};
-const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.5,ease:'easeOut'}}};
+const fadeUp={hidden:{opacity:0,y:40},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
+const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.5,ease:[0.22,1,0.36,1]as const}}};
 const stagger=(d=0.05)=>({hidden:{},show:{transition:{staggerChildren:d}}});
 
 const CONTEXT_TAGS:Record<string,string>={'Labour Codes':'labour-codes','AI Edge Lab':'ai-edge','People Architecture':'people-architecture','Family Business':'family-business','Not sure':'exploratory'};
