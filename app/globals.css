@@ -407,3 +407,204 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:14px 5
   .stat-grid,.arch-grid,.fg,.hw-grid{ grid-template-columns:1fr }
   .hero-metrics{ grid-template-columns:1fr 1fr }
 }
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL RESPONSIVE — All pages, all devices
+═══════════════════════════════════════════════════════ */
+
+/* ── Nav responsive ─────────────────────────────────── */
+nav {
+  padding: 14px 56px !important;
+}
+@media (max-width: 1024px) {
+  nav { padding: 14px 28px !important; }
+  .nb-desktop { display: none !important; }
+  .nb-hamburger { display: flex !important; }
+}
+@media (max-width: 767px) {
+  nav { padding: 12px 20px !important; }
+}
+
+/* ── Section padding ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  .sec { padding: 64px 28px !important; }
+  section[style*="padding:96px 56px"],
+  section[style*="padding: 96px 56px"] {
+    padding: 64px 28px !important;
+  }
+  section[style*="padding:120px 56px"],
+  section[style*="padding: 120px 56px"] {
+    padding: 80px 28px !important;
+  }
+  section[style*="padding:80px 56px"],
+  section[style*="padding: 80px 56px"] {
+    padding: 64px 28px !important;
+  }
+  footer[style*="padding:20px 56px"],
+  footer[style*="padding: 20px 56px"] {
+    padding: 20px 28px !important;
+  }
+}
+@media (max-width: 767px) {
+  .sec { padding: 48px 20px !important; }
+  section[style*="padding:96px 56px"],
+  section[style*="padding: 96px 56px"],
+  section[style*="padding:120px 56px"],
+  section[style*="padding: 120px 56px"],
+  section[style*="padding:80px 56px"],
+  section[style*="padding: 80px 56px"] {
+    padding: 56px 20px !important;
+  }
+  footer { padding: 20px !important; flex-direction: column !important; text-align: center !important; gap: 16px !important; }
+}
+
+/* ── Grid collapses ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  /* 2-col grids → 1 col */
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 2fr"],
+  [style*="grid-template-columns: 1fr 2fr"],
+  [style*="grid-template-columns:1.2fr 0.8fr"],
+  [style*="grid-template-columns: 1.2fr 0.8fr"],
+  [style*="grid-template-columns:1fr 1.1fr"],
+  [style*="grid-template-columns: 1fr 1.1fr"],
+  [style*="grid-template-columns:1fr 400px"],
+  [style*="grid-template-columns: 1fr 400px"],
+  [style*="grid-template-columns:1fr 320px"],
+  [style*="grid-template-columns: 1fr 320px"],
+  [style*="grid-template-columns:200px 1fr"],
+  [style*="grid-template-columns: 200px 1fr"],
+  [style*="grid-template-columns:100px 1fr"],
+  [style*="grid-template-columns: 100px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  /* 3-col → 1 col */
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* 4-col → 2 col */
+  [style*="grid-template-columns:repeat(4,1fr)"],
+  [style*="grid-template-columns: repeat(4,1fr)"],
+  [style*="grid-template-columns:repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2,1fr) !important;
+  }
+  /* 5-col → 2 col */
+  [style*="grid-template-columns:repeat(5,1fr)"],
+  [style*="grid-template-columns: repeat(5,1fr)"] {
+    grid-template-columns: repeat(2,1fr) !important;
+  }
+  /* 2x2 stays 2x2 on tablet */
+  [style*="grid-template-columns:repeat(2,1fr)"],
+  [style*="grid-template-columns: repeat(2,1fr)"] {
+    grid-template-columns: repeat(2,1fr) !important;
+  }
+}
+@media (max-width: 767px) {
+  /* All grids → 1 col on mobile */
+  [style*="grid-template-columns:repeat(2,1fr)"],
+  [style*="grid-template-columns: repeat(2,1fr)"],
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(4,1fr)"],
+  [style*="grid-template-columns: repeat(4,1fr)"],
+  [style*="grid-template-columns:repeat(5,1fr)"],
+  [style*="grid-template-columns: repeat(5,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Hide ghost watermarks on mobile */
+  .gn-hero, .gn { display: none !important; }
+  /* Reduce hero min-height */
+  [style*="min-height:100vh"],
+  [style*="min-height: 100vh"] {
+    min-height: 70vh !important;
+  }
+  [style*="min-height:80vh"],
+  [style*="min-height: 80vh"],
+  [style*="min-height:88vh"],
+  [style*="min-height: 88vh"] {
+    min-height: 60vh !important;
+  }
+}
+
+/* ── Typography scaling ──────────────────────────────── */
+@media (max-width: 767px) {
+  h1, h2 { word-break: break-word; }
+  .hero-title { font-size: clamp(32px,8vw,52px) !important; }
+}
+
+/* ── Flex wrapping ───────────────────────────────────── */
+@media (max-width: 767px) {
+  [style*="display:flex"][style*="gap:44px"],
+  [style*="display: flex"][style*="gap: 44px"] {
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+  }
+  [style*="display:flex"][style*="gap:64px"],
+  [style*="display: flex"][style*="gap: 64px"] {
+    flex-wrap: wrap !important;
+    gap: 24px !important;
+  }
+}
+
+/* ── Fan/accordion on mobile ─────────────────────────── */
+@media (max-width: 767px) {
+  .fan-wrap { flex-direction: column !important; height: auto !important; gap: 6px !important; }
+  .fc { flex: none !important; min-height: 60px !important; }
+  .fc.on { min-height: 260px !important; }
+  .fvt { writing-mode: horizontal-tb !important; padding: 14px 16px !important; }
+}
+
+/* ── Table overflow ──────────────────────────────────── */
+@media (max-width: 767px) {
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* ── Button sizing on mobile ─────────────────────────── */
+@media (max-width: 767px) {
+  .bp, .bs, .btn-primary, .btn-secondary, .btn-gold-outline {
+    padding: 12px 20px !important;
+    font-size: 12px !important;
+    width: auto !important;
+  }
+  [style*="display:flex"][style*="gap:14px"] .bp,
+  [style*="display:flex"][style*="gap:14px"] .bs {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* ── Connect form ────────────────────────────────────── */
+@media (max-width: 767px) {
+  [style*="grid-template-columns:1fr 1fr"][style*="gap:16px"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Inline style overrides for sub-pages ────────────── */
+@media (max-width: 1024px) {
+  /* Hero grids on sub-pages */
+  .hero-grid { grid-template-columns: 1fr !important; }
+  /* Timeline padding */
+  [style*="padding-left:48px"] { padding-left: 28px !important; }
+  [style*="padding-left:32px"] { padding-left: 20px !important; }
+}
+@media (max-width: 767px) {
+  /* Remove right-side portrait on mobile */
+  [style*="grid-template-columns:1fr 400px"] > div:last-child,
+  [style*="grid-template-columns: 1fr 400px"] > div:last-child {
+    display: none !important;
+  }
+  /* Compact padding */
+  [style*="padding:28px 56px"],
+  [style*="padding: 28px 56px"] { padding: 20px !important; }
+  /* BCR flow wrap */
+  [style*="display:flex"][style*="align-items:center"][style*="margin-bottom:48px"] {
+    flex-wrap: wrap !important;
+    gap: 0 !important;
+  }
+}

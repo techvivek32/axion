@@ -1,34 +1,46 @@
-'use client';
+﻿'use client';
 import { useEffect } from 'react';
 
 const BODY_HTML = `<div class="wrap">
 
 <!-- NAV -->
-<nav>
-  <div class="inner" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;max-width:none">
-    <a href="#" aria-label="AX/ON Index" style="text-decoration:none;display:flex;align-items:center;gap:0">
-      <!-- Stacked AX over ON -->
+<nav id="site-nav">
+  <div style="line-height:1">
+    <a href="/" aria-label="Axion Index" style="text-decoration:none;display:flex;align-items:center;gap:0">
       <div style="display:flex;flex-direction:column;gap:0;line-height:1;padding-right:12px;border-right:1.5px solid rgba(200,168,108,.55)">
         <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:900;color:#f5f0e6;letter-spacing:-.06em;line-height:.92">AX</span>
         <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:200;color:rgba(200,168,108,.8);letter-spacing:-.05em;line-height:.92">ON</span>
       </div>
-      <!-- Index wordmark — same height as AX+ON stack -->
       <div style="padding-left:12px;display:flex;align-items:center">
         <span style="font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:500;font-style:italic;color:#f5f0e6;letter-spacing:-.01em;line-height:.92">Index</span>
       </div>
     </a>
-    <div style="display:flex;gap:26px;align-items:center">
-      <a href="#arch" class="nl">Architecture</a>
-      <a href="#what" class="nl">What we do</a>
-      <a href="#diff" class="nl">Difference</a>
-      <a href="#practices" class="nl">Practices</a>
-      <a href="#how" class="nl">How we work</a>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <a href="#contact" class="btn-secondary" style="padding:8px 18px;font-size:11px">Book diagnostic</a>
-      <a href="#contact" class="btn-primary" style="padding:8px 18px;font-size:11px">Run architecture scan</a>
-    </div>
   </div>
+  <div class="nb-desktop" style="display:flex;gap:26px;align-items:center">
+    <a href="/" class="nl">Home</a>
+    <a href="/about" class="nl">About Us</a>
+    <a href="/founder" class="nl">Founder</a>
+    <div class="nav-expertise" style="position:relative">
+      <button class="nl nav-exp-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--muted);letter-spacing:.02em;display:flex;align-items:center;gap:5px;padding:0;font-family:Inter,-apple-system,sans-serif">
+        Expertise <span style="font-size:9px;opacity:.6">▾</span>
+      </button>
+      <div class="nav-exp-drop" style="display:none;position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:rgba(8,7,6,.97);border:1px solid rgba(200,168,108,.18);border-radius:14px;padding:8px;min-width:200px;z-index:300;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.6)">
+        <a href="/expertise/labour-codes" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">Labour Codes</a>
+        <a href="/expertise/ai-edge-lab" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">AI Edge Lab</a>
+        <a href="/expertise/family-business" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">Family Business</a>
+        <a href="/expertise/people-architecture" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">People Architecture</a>
+      </div>
+    </div>
+    <a href="/connect" class="nl">Connect</a>
+  </div>
+  <div class="nb-desktop" style="display:flex;gap:10px;align-items:center">
+    <a href="/connect" class="btn-primary" style="padding:8px 18px;font-size:11px;text-decoration:none">Book Diagnostic</a>
+  </div>
+  <button id="mob-btn-hp" style="display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;z-index:201">
+    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
+    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
+    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
+  </button>
 </nav>
 
 <!-- LIVE TICKER -->
@@ -60,7 +72,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="eyebrow">Operating intelligence &middot; Future of work</div>
         <h1 class="hero-title sr">Most organisations don&rsquo;t break in strategy.</h1>
         <p class="hero-insight">They break in how decisions actually move.</p>
-        <p class="hero-body">Axion Index works with founders, boards, and operators to read the hidden operating layer beneath performance — work design, decision ownership, labour exposure, succession strain, and scale logic — and redesign what must hold.</p>
+        <p class="hero-body">Axion Index works with founders, boards, and operators to read the hidden operating layer beneath performance â€” work design, decision ownership, labour exposure, succession strain, and scale logic â€” and redesign what must hold.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn-primary">Request architecture briefing &rarr;</a>
           <a href="#arch" class="btn-secondary">Read the architecture</a>
@@ -107,7 +119,7 @@ const BODY_HTML = `<div class="wrap">
       <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
         <span class="fg-no">01 &mdash; Diagnose</span>
         <h3 class="sr">Diagnose where your system is already failing</h3>
-        <p>Work, ownership, and compliance exposure read as one architecture — structural stress identified before it shows up in margin.</p>
+        <p>Work, ownership, and compliance exposure read as one architecture â€” structural stress identified before it shows up in margin.</p>
         <div class="you-receive">
           <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,78,.5);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Workforce layer map &middot; Labour Code exposure scan &middot; Decision ownership audit</p>
@@ -160,7 +172,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="af-top"><span class="af-num">01 &middot; Execution layer</span><span class="af-tag">Work</span></div>
         <h3>WORK</h3>
         <p class="af-sub">Tasks &middot; Roles &middot; Execution flow</p>
-        <p>Work changes faster than structure — where AI compression hits first and where role design falls furthest behind.</p>
+        <p>Work changes faster than structure â€” where AI compression hits first and where role design falls furthest behind.</p>
       </div>
       <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg><div class="ac-orb"></div>
         <div class="af-ghost" aria-hidden="true">02</div>
@@ -220,7 +232,7 @@ const BODY_HTML = `<div class="wrap">
       <div class="cmp-g"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,108,.55),transparent);z-index:2"></div>
         <h3 class="sr">Axion Index</h3>
         <ul>
-          <li><strong>System first</strong>Reads labour, people, AI, and succession pressures as one operating architecture — not four disconnected categories.</li>
+          <li><strong>System first</strong>Reads labour, people, AI, and succession pressures as one operating architecture â€” not four disconnected categories.</li>
           <li><strong>Hidden layer focus</strong>Works on the movement of work, ownership, escalation, and decision rights beneath the presenting problem.</li>
           <li><strong>Decision-grade outcome</strong>Produces a structural recommendation leadership can act on immediately, with redesign priorities that hold under pressure.</li>
         </ul>
@@ -249,7 +261,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="fbd">
           <span class="ftag" style="color:var(--gold-primary);border-color:rgba(200,168,108,.3);background:rgba(200,168,108,.06)">Beyond compliance readiness</span>
           <div class="fh">Labour Codes Command Centre</div>
-          <p class="fp">The market reads regulation as compliance. Axion Index reads it as workforce architecture: cost, classification, contractor logic, and control exposure — redesigned, not filed.</p>
+          <p class="fp">The market reads regulation as compliance. Axion Index reads it as workforce architecture: cost, classification, contractor logic, and control exposure â€” redesigned, not filed.</p>
           <div class="fc-cta">Map cost and control exposure &rarr;</div>
         </div>
       </div>
@@ -347,7 +359,7 @@ const BODY_HTML = `<div class="wrap">
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" class="rv">
 
-      <!-- Card 1 — Featured -->
+      <!-- Card 1 â€” Featured -->
       <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#0d0b0a,#090706,#060404);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
         <div style="position:absolute;top:-20%;right:0;width:100px;height:100px;background:radial-gradient(circle,rgba(160,90,40,.09),transparent 65%);filter:blur(28px)"></div>
         <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
@@ -386,7 +398,7 @@ const BODY_HTML = `<div class="wrap">
         <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(200,168,108,.8);position:relative;z-index:1">Read &rarr;</a>
       </div>
 
-      <!-- Card 4 — Newsletter -->
+      <!-- Card 4 â€” Newsletter -->
       <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#0d0b09,#0a0807,#070605);border:1px solid rgba(200,168,108,.18);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
         <div style="position:absolute;bottom:-10%;right:5%;width:110px;height:110px;background:radial-gradient(circle,rgba(200,168,108,.1),transparent 65%);filter:blur(28px)"></div>
         <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
@@ -417,30 +429,30 @@ const BODY_HTML = `<div class="wrap">
           <p style="font-size:14px;color:var(--muted);line-height:1.88;max-width:420px">Start with a short architecture briefing. You leave with a clearer view of where control, ownership, labour exposure, and scale logic are drifting.</p>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px">
 
-            <!-- Card 1: Structural Map — amber -->
+            <!-- Card 1: Structural Map â€” amber -->
             <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#0d0b0a,#090706,#060404);border:1px solid rgba(160,90,40,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(180,100,40,.4),transparent)"></div>
               <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(160,90,40,.16),transparent 65%);filter:blur(24px)"></div>
               <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(120,60,20,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,140,70,.8);margin-bottom:10px;position:relative;z-index:1">01 — Structural map</div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,140,70,.8);margin-bottom:10px;position:relative;z-index:1">01 â€” Structural map</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">Operating layer strain identified with cause, not just symptom.</p>
             </div>
 
-            <!-- Card 2: Decision Rights — blue -->
+            <!-- Card 2: Decision Rights â€” blue -->
             <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#090c14,#07090d,#05060a);border:1px solid rgba(80,100,150,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(100,130,180,.35),transparent)"></div>
               <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(80,100,150,.16),transparent 65%);filter:blur(24px)"></div>
               <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(60,80,130,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(140,160,200,.8);margin-bottom:10px;position:relative;z-index:1">02 — Decision-rights audit</div>
-              <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">Who owns decisions — and where ownership has drifted.</p>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(140,160,200,.8);margin-bottom:10px;position:relative;z-index:1">02 â€” Decision-rights audit</div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">Who owns decisions â€” and where ownership has drifted.</p>
             </div>
 
-            <!-- Card 3: Structural Recommendation — gold -->
+            <!-- Card 3: Structural Recommendation â€” gold -->
             <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#0e0c09,#0b0907,#080705);border:1px solid rgba(200,168,108,.25);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,108,.5),transparent)"></div>
               <div style="position:absolute;top:-15%;right:-5%;width:110px;height:110px;background:radial-gradient(circle,rgba(200,168,108,.18),transparent 65%);filter:blur(26px)"></div>
               <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(180,140,60,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,168,108,.85);margin-bottom:10px;position:relative;z-index:1">03 — Structural recommendation</div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,168,108,.85);margin-bottom:10px;position:relative;z-index:1">03 â€” Structural recommendation</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">A concrete redesign priority to act on immediately.</p>
             </div>
 
@@ -459,7 +471,7 @@ const BODY_HTML = `<div class="wrap">
             <span>Structural recommendation</span>
           </div>
           <p class="cta-note">No generic proposal. A direct conversation about the operating layer beneath your visible problems.</p>
-          <p class="cta-close">Quiet signal, serious work — built for leaders who need sharper control, not more language.</p>
+          <p class="cta-close">Quiet signal, serious work â€” built for leaders who need sharper control, not more language.</p>
         </div>
       </div>
     </div>
@@ -486,6 +498,73 @@ function openFan(el){
   document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
 }
+// Expertise dropdown
+(function(){
+  var btn=document.querySelector('.nav-exp-btn');
+  var drop=document.querySelector('.nav-exp-drop');
+  var wrap=document.querySelector('.nav-expertise');
+  if(!btn||!drop||!wrap)return;
+  
+  
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    drop.style.display=drop.style.display==='block'?'none':'block';
+  });
+  document.addEventListener('click',function(e){
+    if(!wrap.contains(e.target))drop.style.display='none';
+  });
+})();
+// Mobile hamburger for homepage
+(function(){
+  var btn=document.getElementById('mob-btn-hp');
+  if(!btn)return;
+  var overlay=document.createElement('div');
+  overlay.style.cssText='display:none;position:fixed;inset:0;background:rgba(7,7,6,.98);z-index:199;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto';
+  var inner=document.createElement('div');
+  inner.style.cssText='display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:40px 24px';
+  var links=[['/', 'Home'],['/about','About Us'],['/founder','Founder'],['/expertise/labour-codes','Labour Codes'],['/expertise/ai-edge-lab','AI Edge Lab'],['/expertise/family-business','Family Business'],['/expertise/people-architecture','People Architecture'],['/connect','Connect']];
+  links.forEach(function(l){
+    var a=document.createElement('a');
+    a.href=l[0];a.textContent=l[1];
+    a.style.cssText='display:block;width:100%;text-align:center;font-size:18px;color:rgba(210,205,195,.55);text-decoration:none;letter-spacing:.06em;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s;font-family:Inter,-apple-system,sans-serif';
+    a.onmouseover=function(){a.style.color='#c8a86c'};
+    a.onmouseout=function(){a.style.color='rgba(210,205,195,.55)'};
+    a.onclick=function(){toggle()};
+    inner.appendChild(a);
+  });
+  var cta=document.createElement('a');
+  cta.href='/connect';cta.textContent='Book Diagnostic';
+  cta.style.cssText='display:inline-block;margin-top:28px;padding:12px 32px;background:#c8a86c;color:#2a1800;font-size:13px;font-weight:700;letter-spacing:.06em;border-radius:999px;text-decoration:none';
+  cta.onclick=function(){toggle()};
+  inner.appendChild(cta);
+  overlay.appendChild(inner);
+  document.body.appendChild(overlay);
+  var spans=btn.querySelectorAll('span');
+  var open=false;
+  function toggle(){
+    open=!open;
+    overlay.style.display=open?'flex':'none';
+    document.body.style.overflow=open?'hidden':'';
+    if(spans[0])spans[0].style.transform=open?'rotate(45deg) translateY(7px)':'none';
+    if(spans[1])spans[1].style.opacity=open?'0':'1';
+    if(spans[2])spans[2].style.transform=open?'rotate(-45deg) translateY(-7px)':'none';
+  }
+  btn.onclick=toggle;
+  overlay.onclick=function(e){if(e.target===overlay)toggle()};
+  function checkSize(){
+    var w=window.innerWidth;
+    if(w<=1024){
+      btn.style.display='flex';
+      document.querySelectorAll('.nb-desktop').forEach(function(el){el.style.display='none'});
+    } else {
+      btn.style.display='none';
+      document.querySelectorAll('.nb-desktop').forEach(function(el){el.style.display='flex'});
+      if(open){open=false;overlay.style.display='none';document.body.style.overflow=''}
+    }
+  }
+  checkSize();
+  window.addEventListener('resize',checkSize);
+})();
 const io=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
