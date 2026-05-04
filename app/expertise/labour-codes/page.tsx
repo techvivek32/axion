@@ -254,6 +254,27 @@ export default function LabourCodes(){
     return()=>cancelAnimationFrame(id);
   },[]);
 
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const tracker = document.getElementById('state-tracker');
+      if (tracker) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          // Scrolling down - hide tracker
+          tracker.style.transform = 'translateY(-100%)';
+        } else {
+          // Scrolling up - show tracker
+          tracker.style.transform = 'translateY(0)';
+        }
+      }
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const filtered=activeCat==='All'?QUESTIONS:QUESTIONS.filter(q=>q.cat===activeCat);
 
   return(
@@ -261,7 +282,7 @@ export default function LabourCodes(){
       <NavBar/>
 
       {/* TICKER */}
-      <div style={{background:'#020617',borderBottom:`1px solid ${LINE}`,overflow:'hidden',position:'sticky',top:'57px',zIndex:190}}>
+      <div id="state-tracker" style={{background:'#020617',borderBottom:`1px solid ${LINE}`,overflow:'hidden',position:'sticky',top:'57px',zIndex:190,transform:'translateY(0)',transition:'transform 0.3s ease'}}>
         <div style={{display:'flex',alignItems:'stretch'}}>
           <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 20px',borderRight:`1px solid ${LINE}`,flexShrink:0}}>
             <span style={{width:'6px',height:'6px',borderRadius:'50%',background:GOLD,animation:'pulse 2s infinite',flexShrink:0}}/>
