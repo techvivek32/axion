@@ -1,6 +1,101 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import NavBar from '@/components/NavBar';
+
+function ParticleSphere() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const W = 520, H = 520, CX = 260, CY = 260, R = 175, N = 10000;
+    canvas.width = W; canvas.height = H;
+    type P = { theta: number; phi: number; size: number; opacity: number };
+    type E = { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; size: number };
+    const pts: P[] = Array.from({ length: N }, () => ({
+      theta: Math.random() * Math.PI * 2,
+      phi: Math.acos(2 * Math.random() - 1),
+      size: Math.random() * 1.6 + 0.2,
+      opacity: Math.random() * 0.9 + 0.1,
+    }));
+    const ejected: E[] = [];
+    let rotY = 0, raf = 0, frame = 0;
+    const spawnEjected = () => {
+      const phi = Math.acos(2 * Math.random() - 1);
+      const theta = Math.random() * Math.PI * 2;
+      const sx = R * Math.sin(phi) * Math.cos(theta);
+      const sy = R * Math.cos(phi);
+      const sz = R * Math.sin(phi) * Math.sin(theta);
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      const rx = sx * cosY + sz * sinY;
+      const rz = -sx * sinY + sz * cosY;
+      if (rz < 0) return;
+      const nx = rx / R, ny = sy / R;
+      const speed = 0.5 + Math.random() * 1.2;
+      ejected.push({
+        x: rx + CX, y: sy + CY,
+        vx: nx * speed + (Math.random() - 0.5) * 0.4,
+        vy: ny * speed + (Math.random() - 0.5) * 0.4,
+        life: 0, maxLife: 60 + Math.random() * 70,
+        size: Math.random() * 1.1 + 0.2,
+      });
+    };
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      rotY += 0.006;
+      frame++;
+      if (frame % 1 === 0) { for (let k = 0; k < 8; k++) spawnEjected(); }
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      const glow = ctx.createRadialGradient(CX, CY, R * 0.6, CX, CY, R * 1.6);
+      glow.addColorStop(0, 'rgba(255,255,255,0.0)');
+      glow.addColorStop(0.5, 'rgba(255,255,255,0.08)');
+      glow.addColorStop(0.8, 'rgba(255,255,255,0.04)');
+      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(CX, CY, R * 1.6, 0, Math.PI * 2); ctx.fill();
+      for (let i = ejected.length - 1; i >= 0; i--) {
+        const e = ejected[i];
+        e.x += e.vx; e.y += e.vy;
+        e.vx *= 0.97; e.vy *= 0.97;
+        e.life++;
+        if (e.life > e.maxLife) { ejected.splice(i, 1); continue; }
+        const t = e.life / e.maxLife;
+        const alpha = (1 - t) * (1 - t) * 0.7;
+        const v = Math.round(255 - t * 150);
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.size * (1 - t * 0.6), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${v},${v},${v},${alpha})`;
+        ctx.fill();
+      }
+      const projected = pts.map(p => {
+        const sx = R * Math.sin(p.phi) * Math.cos(p.theta);
+        const sy = R * Math.cos(p.phi);
+        const sz = R * Math.sin(p.phi) * Math.sin(p.theta);
+        const rx = sx * cosY + sz * sinY;
+        const rz = -sx * sinY + sz * cosY;
+        return { p, px: rx + CX, py: sy + CY, pz: rz };
+      }).sort((a, b) => a.pz - b.pz);
+      for (const { p, px, py, pz } of projected) {
+        const depth = (pz + R) / (2 * R);
+        const limb = Math.pow(1 - Math.abs(depth * 2 - 1), 0.3);
+        const frontBoost = 0.25 + depth * 0.75;
+        const brightness = limb * frontBoost;
+        if (brightness < 0.05) continue;
+        const alpha = p.opacity * brightness * 0.9;
+        const v = Math.round(50 + depth * 205);
+        ctx.beginPath();
+        ctx.arc(px, py, p.size * (0.3 + depth * 0.85), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${v},${v},${v},${alpha})`;
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <canvas ref={canvasRef} style={{ width: '520px', height: '520px', display: 'block' }} />;
+}
 
 const BODY_HTML = `<div class="wrap">
 
@@ -66,35 +161,39 @@ const BODY_HTML = `<div class="wrap">
           <a href="#contact" class="btn-primary">Request architecture briefing &rarr;</a>
           <a href="#arch" class="btn-secondary">Read the architecture</a>
         </div>
-        <div class="hero-metrics">
-          <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:1.3s"><div class="hm-orb"></div>
-            <div class="hm-n sr">22<sup>+</sup></div>
-            <div class="hm-l">Years inside complex systems</div>
-            <div class="hm-s">Tata &middot; StanChart &middot; Udaan &middot; Gameskraft</div>
-          </div>
-          <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:1.45s"><div class="hm-orb"></div>
-            <div class="hm-n sr">4</div>
-            <div class="hm-l">Practice lenses</div>
-            <div class="hm-s">Labour, people, AI, succession &mdash; one doctrine</div>
-          </div>
-          <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:1.6s"><div class="hm-orb"></div>
-            <div class="hm-n sr">&infin;</div>
-            <div class="hm-l">Core scarcity</div>
-            <div class="hm-s">When intelligence gets cheaper, judgment matters more</div>
-          </div>
-          <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:1.75s"><div class="hm-orb"></div>
-            <div class="hm-n sr">01</div>
-            <div class="hm-l">Driving question</div>
-            <div class="hm-s">Where is the system broken before the cost appears?</div>
-          </div>
-        </div>
       </div>
       
     </div>
   </div>
 </section>
 
-
+<!-- METRICS STRIP -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--line);padding:48px 56px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="hero-metrics">
+      <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:.1s"><div class="hm-orb"></div>
+        <div class="hm-n sr">22<sup>+</sup></div>
+        <div class="hm-l">Years inside complex systems</div>
+        <div class="hm-s">Tata &middot; StanChart &middot; Udaan &middot; Gameskraft</div>
+      </div>
+      <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:.25s"><div class="hm-orb"></div>
+        <div class="hm-n sr">4</div>
+        <div class="hm-l">Practice lenses</div>
+        <div class="hm-s">Labour, people, AI, succession &mdash; one doctrine</div>
+      </div>
+      <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:.4s"><div class="hm-orb"></div>
+        <div class="hm-n sr">&infin;</div>
+        <div class="hm-l">Core scarcity</div>
+        <div class="hm-s">When intelligence gets cheaper, judgment matters more</div>
+      </div>
+      <div class="hm" style="animation:hero-metric-in .7s cubic-bezier(.22,1,.36,1) both;animation-delay:.55s"><div class="hm-orb"></div>
+        <div class="hm-n sr">01</div>
+        <div class="hm-l">Driving question</div>
+        <div class="hm-s">Where is the system broken before the cost appears?</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- WHAT WE DO -->
 <div class="sec" id="what" style="background:var(--bg2)">
@@ -582,7 +681,26 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <div dangerouslySetInnerHTML={{ __html: BODY_HTML }} />
+      <div style={{ position: 'relative' }}>
+        <div dangerouslySetInnerHTML={{ __html: BODY_HTML }} />
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingRight: '5%',
+        }}>
+          <div style={{ opacity: 0.85 }}>
+            <ParticleSphere />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
