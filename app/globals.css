@@ -36,7 +36,7 @@
   --r:24px;--rg:24px;
 }
 body{background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.05),transparent 25%),radial-gradient(circle at 20% 80%,rgba(255,255,255,.03),transparent 30%),#080808;color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.7;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.013) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.013) 1px,transparent 1px);background-size:68px 68px;mask-image:radial-gradient(circle at 50% 30%,black 28%,transparent 76%);opacity:.14;z-index:0}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:transparent;z-index:0}
 
 .sr{font-family:'Playfair Display',Georgia,serif}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;color:rgba(255,255,255,.38);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;font-weight:600}
@@ -359,7 +359,7 @@ nav.nav-scrolled{
 .hero-system-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-bottom:18px;text-align:left}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:24px;text-align:left;align-self:flex-start}
 .hero-eyebrow::before{content:"";width:28px;height:1px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.18);box-shadow:0 0 10px rgba(255,255,255,.22);flex-shrink:0}
-.hero-title{margin:0;font-family:'Playfair Display',serif;font-size:clamp(52px,7.5vw,96px);line-height:.97;letter-spacing:-.05em;font-weight:500;text-align:left}
+.hero-title{margin:0;font-family:'Playfair Display',serif;font-size:clamp(52px,7.5vw,96px);line-height:1.1;letter-spacing:-.05em;font-weight:500;text-align:left}
 .hero-truth{color:#ffffff}
 .hero-insight-block{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;font-family:'Playfair Display',serif;font-size:clamp(22px,2.2vw,30px);line-height:1.25;text-align:left;justify-content:flex-start}
 .hero-explain{color:rgba(255,255,255,.55)}
@@ -526,10 +526,7 @@ nav.nav-scrolled{
   content:"";
   position:absolute;inset:0;z-index:1;
   pointer-events:none;
-  background:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
-  background-size:72px 72px;
-  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 80%);
-  animation:hero-grid-pulse 4s ease-in-out infinite;
+  background:transparent;
 }
 
 /* Scan line */
@@ -599,7 +596,7 @@ nav.nav-scrolled{
 .hero-title{
   font-family:'Playfair Display',serif;
   font-size:clamp(42px,6vw,72px);
-  line-height:1.01;
+  line-height:1.2;
   letter-spacing:-.05em;
   font-weight:400;
   margin-bottom:14px;
@@ -1165,12 +1162,27 @@ nav.nav-scrolled{
 
 /* ── CTA mini-cards hover ────────────────────────────── */
 .ax-cta-card{
-  transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .35s;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .35s,max-height .4s cubic-bezier(.22,1,.36,1);
+  position:relative;
+  overflow:hidden;
 }
 .ax-cta-card:hover{
   transform:translateY(-5px);
   border-color:rgba(255,255,255,.35) !important;
   box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+/* Expand content on hover */
+.ax-cta-card > div:not(:first-child),
+.ax-cta-card > p:not(:first-of-type){
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1);
+}
+.ax-cta-card:hover > div:not(:first-child),
+.ax-cta-card:hover > p:not(:first-of-type){
+  opacity:1;
+  transform:translateY(0);
+  transition-delay:.08s;
 }
 
 /* ── Fan accordion — enhanced hover ─────────────────── */
@@ -1335,7 +1347,7 @@ nav {
 /* ── Typography scaling ──────────────────────────────── */
 @media (max-width: 767px) {
   h1, h2 { word-break: break-word; }
-  .hero-title { font-size: clamp(32px,8vw,52px) !important; }
+  .hero-title { font-size: clamp(32px,8vw,52px) !important; line-height: 1.15 !important; }
 }
 
 /* ── Flex wrapping ───────────────────────────────────── */
