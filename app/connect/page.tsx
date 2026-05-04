@@ -11,7 +11,7 @@ const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.5,ease:[
 const stagger=(d=0.05)=>({hidden:{},show:{transition:{staggerChildren:d}}});
 
 /* ── 3D Tilt Component ───────────────────────────────── */
-function TiltWrapper({ children, intensity = 5 }: { children: React.ReactNode, intensity?: number }) {
+function TiltWrapper({ children, intensity = 5, style }: { children: React.ReactNode, intensity?: number, style?: React.CSSProperties }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x);
@@ -29,9 +29,9 @@ function TiltWrapper({ children, intensity = 5 }: { children: React.ReactNode, i
     <motion.div
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: "1200px" }}
+      style={{ ...style, rotateX, rotateY, transformStyle: "preserve-3d", perspective: "1200px" }}
     >
-      <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
+      <div style={{ height: '100%', transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
         {children}
       </div>
     </motion.div>
@@ -477,19 +477,43 @@ export default function Connect(){
             Who this is for.
           </motion.h2>
           <motion.div variants={stagger(0.12)} initial="hidden" whileInView="show" viewport={VP}
-            style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'24px'}}>
+            style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'32px',alignItems:'stretch'}}>
             {[
               {role:'Founder / CEO',body:'You are seeing symptoms — attrition, drift, misalignment — and want to understand what is structurally wrong.'},
               {role:'CFO',body:'You want to read workforce as cost architecture, not just headcount.'},
               {role:'CHRO',body:'You want to move from program ownership to system design.'},
             ].map((item,i)=>(
-              <TiltWrapper key={item.role}>
-                <motion.div variants={fadeUp}
-                  style={{background:PANEL,border:`1px solid ${LINE}`,padding:'32px 24px',position:'relative',overflow:'hidden',height:'100%',transformStyle:'preserve-3d'}}>
-                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)`}}/>
-                  <div style={{transform:'translateZ(20px)'}}>
-                    <div style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase' as const,color:GOLD,marginBottom:'12px'}}>{item.role}</div>
-                    <p style={{fontSize:'14px',color:MUTED,lineHeight:1.8}}>{item.body}</p>
+              <TiltWrapper key={item.role} style={{ height: '100%' }}>
+                <motion.div 
+                  variants={fadeUp}
+                  whileHover={{ y: -5, borderColor: GOLD, backgroundColor: 'rgba(255,255,255,0.04)' }}
+                  style={{
+                    background:PANEL,
+                    border:`1px solid ${LINE}`,
+                    padding:'40px 32px',
+                    position:'relative',
+                    overflow:'hidden',
+                    height:'100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    transformStyle:'preserve-3d',
+                    transition: 'border-color 0.3s ease, background-color 0.3s ease'
+                  }}
+                >
+                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)`}}/>
+                  
+                  <div style={{transform:'translateZ(30px)', position: 'relative', zIndex: 2}}>
+                    <div style={{fontFamily:'monospace',fontSize:'10px',fontWeight:800,letterSpacing:'0.2em',textTransform:'uppercase' as const,color:GOLD,marginBottom:'16px',display:'flex',alignItems:'center',gap:'8px'}}>
+                      <div style={{width:'4px',height:'4px',background:GOLD,borderRadius:'50%'}}/>
+                      {item.role}
+                    </div>
+                    <p style={{fontSize:'15px',color:MUTED,lineHeight:1.8,margin:0}}>{item.body}</p>
+                  </div>
+
+                  {/* Decorative 3D background element */}
+                  <div style={{ position: 'absolute', bottom: '-10px', right: '-10px', opacity: 0.1, transform: 'translateZ(-10px)' }}>
+                    <WireframeCube size={60} color={GOLD} />
                   </div>
                 </motion.div>
               </TiltWrapper>
