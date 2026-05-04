@@ -1,7 +1,53 @@
 'use client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import NavBar from '@/components/NavBar';
+
+/* Animated floating dots background */
+function FloatingDots() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const dots = Array.from({ length: 40 }, () => {
+      const dot = document.createElement('div');
+      const size = Math.random() * 8 + 3;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const duration = Math.random() * 8 + 6;
+      const delay = Math.random() * 2;
+      dot.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+        border-radius: 50%;
+        left: ${x}%;
+        top: ${y}%;
+        box-shadow: 0 0 ${size * 2}px rgba(255,255,255,0.4);
+        animation: float ${duration}s ease-in-out ${delay}s infinite;
+      `;
+      container.appendChild(dot);
+      return dot;
+    });
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
+        25% { transform: translateY(-30px) translateX(20px); opacity: 0.6; }
+        50% { transform: translateY(-60px) translateX(-20px); opacity: 0.8; }
+        75% { transform: translateY(-30px) translateX(30px); opacity: 0.5; }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      dots.forEach(dot => dot.remove());
+      style.remove();
+    };
+  }, []);
+  return <div ref={containerRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} />;
+}
 
 /* -- Motion variants -- */
 const fadeUp = {
@@ -96,7 +142,9 @@ export default function About() {
       <NavBar />
 
       {/* ── 2.1 GENESIS ─────────────────────────────── */}
-      <section id="genesis" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', position: 'relative', overflow: 'hidden' }}>
+      <section id="genesis" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', position: 'relative', overflow: 'hidden', minHeight: '600px' }}>
+        {/* Floating dots background */}
+        <FloatingDots />
         {/* Subtle radial glow */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
@@ -110,7 +158,7 @@ export default function About() {
           viewport={VP}
           style={{ position: 'absolute', left: '56px', top: '80px', bottom: '80px', width: '2px', background: GOLD, zIndex: 1 }}
         />
-        <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <Eyebrow label="Genesis" />
           <h2 style={{
             fontFamily: "'Playfair Display',Georgia,serif",
