@@ -1,58 +1,120 @@
 'use client';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import NavBar from '@/components/NavBar';
+
+/* ── 3D Background Grid ───────────────────────────────── */
+function Scene3D() {
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, perspective: '1000px', overflow: 'hidden', pointerEvents: 'none' }}>
+      <div 
+        style={{ 
+          position: 'absolute', 
+          inset: '-100%', 
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
+          backgroundSize: '40px 40px',
+          transform: 'rotateX(60deg) translateY(-20%)',
+          opacity: 0.3
+        }} 
+      />
+      <div 
+        style={{ 
+          position: 'absolute', 
+          inset: 0, 
+          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%)' 
+        }} 
+      />
+    </div>
+  );
+}
+
+/* ── 3D Card Wrapper ──────────────────────────────────── */
+function TiltCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        ...style,
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+    >
+      <div style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 /* ── Motion variants ──────────────────────────────────── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
+  hidden: { opacity: 0, y: 60 },
+  show:   { opacity: 1, y: 0, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const fadeIn = {
   hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { duration: 0.7, ease: 'easeOut' as const } },
+  show:   { opacity: 1, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const scaleUp = {
-  hidden: { opacity: 0, scale: 0.95 },
-  show:   { opacity: 1, scale: 1, transition: { duration: 0.7, ease: 'easeOut' as const } },
-};
-const slideLeft = {
-  hidden: { opacity: 0, x: -40 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
+  hidden: { opacity: 0, scale: 0.9 },
+  show:   { opacity: 1, scale: 1, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const } },
 };
 const stagger = (d = 0.15) => ({
   hidden: {},
   show:   { transition: { staggerChildren: d } },
 });
-const lineGrowY = {
-  hidden: { scaleY: 0, originY: 0 },
-  show:   { scaleY: 1, transition: { duration: 1, ease: 'easeOut' as const } },
-};
-const numScale = {
-  hidden: { opacity: 0, scale: 0.8 },
-  show:   { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' as const } },
+const lineGrowX = {
+  hidden: { scaleX: 0, originX: 0 },
+  show:   { scaleX: 1, transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
-const VP = { once: false, margin: '-60px' };
+const VP = { once: false, margin: '-100px' };
 
 /* ── Homepage color tokens ────────────────────────────── */
-const BG    = '#080808';
-const BG2   = '#121212';
-const PANEL = '#1a1a1a';
+const BG    = '#050505';
+const BG2   = '#0a0a0a';
+const PANEL = 'rgba(255,255,255,0.03)';
 const TEXT  = '#ffffff';
-const MUTED = 'rgba(255,255,255,.6)';
-const SOFT  = 'rgba(255,255,255,.35)';
-const LINE  = 'rgba(255,255,255,.08)';
+const MUTED = 'rgba(255,255,255,0.5)';
+const SOFT  = 'rgba(255,255,255,0.25)';
+const LINE  = 'rgba(255,255,255,0.08)';
 const GOLD  = '#ffffff';
-const GOLDB = '#cccccc';
-const RUST  = '#444444';
 
 /* ── Eyebrow ──────────────────────────────────────────── */
 function Eyebrow({ label }: { label: string }) {
   return (
     <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={VP}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontSize: '10px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: GOLD, marginBottom: '20px' }}>
-      <span style={{ width: '24px', height: '1px', background: GOLD, flexShrink: 0 }} />
+      style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: GOLD, marginBottom: '24px' }}>
+      <span style={{ width: '32px', height: '1px', background: GOLD, flexShrink: 0 }} />
       {label}
     </motion.div>
   );
@@ -61,10 +123,10 @@ function Eyebrow({ label }: { label: string }) {
 /* ── Word-by-word reveal ──────────────────────────────── */
 function WordReveal({ text, style }: { text: string; style?: React.CSSProperties }) {
   return (
-    <motion.span variants={stagger(0.04)} initial="hidden" whileInView="show" viewport={VP}
+    <motion.span variants={stagger(0.05)} initial="hidden" whileInView="show" viewport={VP}
       style={{ display: 'inline', ...style }}>
       {text.split(' ').map((w, i) => (
-        <motion.span key={i} variants={fadeUp} style={{ display: 'inline-block', marginRight: '0.28em' }}>{w}</motion.span>
+        <motion.span key={i} variants={fadeUp} style={{ display: 'inline-block', marginRight: '0.3em' }}>{w}</motion.span>
       ))}
     </motion.span>
   );
@@ -121,201 +183,245 @@ const codified = [
    PAGE
 ══════════════════════════════════════════════════════ */
 export default function Founder() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+  const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+
+  useEffect(() => {
+    // Scroll progress bar
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:#ffffff;z-index:9999;transform-origin:left;width:100%;transform:scaleX(0);transition:transform 0.1s linear;mix-blend-mode:difference;';
+    document.body.appendChild(bar);
+
+    const handleScroll = () => {
+      const s = document.documentElement.scrollTop;
+      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      bar.style.transform = `scaleX(${s / h})`;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      if (document.body.contains(bar)) document.body.removeChild(bar);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif' }}>
+    <div ref={containerRef} style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif', overflowX: 'hidden' }}>
       <NavBar />
 
-      {/* ── 3.1 POSITIONING LINE ────────────────────── */}
-      <section id="position" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', position: 'relative', overflow: 'hidden' }}>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
-          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(255,255,255,.03), transparent 60%)', zIndex: 0 }} />
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '64px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-
-          {/* Portrait */}
-          <motion.div variants={scaleUp} initial="hidden" animate="show"
-            style={{ aspectRatio: '3/4', background: PANEL, border: `1px solid ${LINE}`, overflow: 'hidden', position: 'relative' }}>
-            <img src="/portrait.jpg" alt="Nitin Nahata"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
-            {/* Gold shimmer top */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)` }} />
-          </motion.div>
-
-          {/* Text */}
+      {/* ── 3.1 HERO SECTION ───────────────────────── */}
+      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '0 56px' }}>
+        <Scene3D />
+        
+        <motion.div style={{ maxWidth: '1200px', width: '100%', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center', zIndex: 1, scale, opacity }}>
           <div>
             <Eyebrow label="Founder" />
-            <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(28px,4vw,52px)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '-0.04em', color: TEXT, marginBottom: '28px' }}>
-              <WordReveal text="Nitin Nahata is the Operating Architect — the practitioner whose work codified the patterns Axion Index now deploys." />
+            <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(40px, 6vw, 84px)', fontWeight: 400, lineHeight: 1, letterSpacing: '-0.05em', marginBottom: '40px' }}>
+              <WordReveal text="Nitin Nahata converts intellect into architecture." />
             </h1>
-            {/* Gold underline */}
-            <motion.div variants={lineGrowY} initial="hidden" whileInView="show" viewport={VP}
-              style={{ width: '60px', height: '2px', background: GOLD, transformOrigin: 'top' }} />
+            <motion.div variants={lineGrowX} initial="hidden" animate="show" style={{ width: '120px', height: '2px', background: GOLD, marginBottom: '40px' }} />
+            <motion.p variants={fadeUp} initial="hidden" animate="show" style={{ fontSize: '20px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
+              The practitioner whose work codified the patterns Axion Index now deploys.
+            </motion.p>
           </div>
-        </div>
+
+          <TiltCard>
+            <div style={{ position: 'relative', aspectRatio: '3/4', background: '#111', border: `1px solid ${LINE}`, overflow: 'hidden' }}>
+              <img src="/portrait.jpg" alt="Nitin Nahata" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #050505 0%, transparent 40%)' }} />
+            </div>
+          </TiltCard>
+        </motion.div>
+
+        <motion.div 
+          animate={{ y: [0, 10, 0] }} 
+          transition={{ repeat: Infinity, duration: 2 }}
+          style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', opacity: 0.5, fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' }}
+        >
+          Scroll to explore
+        </motion.div>
       </section>
 
-      {/* ── 3.2 DEFINING INSIGHT ────────────────────── */}
-      <section id="insight" style={{ background: BG2, borderBottom: `1px solid ${LINE}`, padding: '96px 56px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <motion.div variants={stagger(0.2)} initial="hidden" whileInView="show" viewport={VP}
-            style={{ position: 'relative', paddingLeft: '32px' }}>
-            {/* Rust left border */}
-            <motion.div variants={lineGrowY}
-              style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: RUST }} />
-            <motion.blockquote variants={fadeUp}
-              style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(20px,2.8vw,34px)', fontWeight: 400, lineHeight: 1.45, letterSpacing: '-0.02em', color: TEXT, fontStyle: 'italic', margin: 0 }}>
-              &ldquo;Most failures are not strategy failures. They are people-system failures that happen silently, long before anyone notices. By the time they show up as attrition or culture issues, the damage is already structural.&rdquo;
-            </motion.blockquote>
-          </motion.div>
+      {/* ── 3.2 THE INSIGHT ────────────────────────── */}
+      <section style={{ padding: '200px 56px', background: BG2, position: 'relative' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <Eyebrow label="Core Thesis" />
+          <motion.blockquote
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.03em', fontStyle: 'italic', margin: 0 }}
+          >
+            &ldquo;Most failures are not strategy failures. They are <span style={{ color: GOLD }}>people-system failures</span> that happen silently, long before anyone notices.&rdquo;
+          </motion.blockquote>
         </div>
       </section>
 
       {/* ── 3.3 CAREER ARC ──────────────────────────── */}
-      <section id="arc" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '96px 56px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <Eyebrow label="Career Arc" />
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(26px,3.5vw,44px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.04em', color: TEXT, marginBottom: '12px' }}>
-            Twenty-two years inside the systems beneath organisations.
-          </motion.h2>
-          <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, marginBottom: '56px', maxWidth: '640px' }}>
-            Four institutions. Each carrying weight not because it is complete, but because it teaches what the doctrine had to absorb.
-          </motion.p>
+      <section style={{ padding: '160px 56px', position: 'relative' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
+            <div>
+              <Eyebrow label="Career Arc" />
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em' }}>Twenty-two years inside.</h2>
+            </div>
+            <p style={{ fontSize: '16px', color: MUTED, maxWidth: '400px', marginBottom: '10px' }}>
+              Four institutions. Each taught what the doctrine had to absorb.
+            </p>
+          </div>
 
-          {/* Timeline */}
-          <div style={{ position: 'relative', paddingLeft: '32px' }}>
-            {/* Animated vertical line */}
-            <motion.div variants={lineGrowY} initial="hidden" whileInView="show" viewport={VP}
-              style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: RUST }} />
-
-            <motion.div variants={stagger(0.2)} initial="hidden" whileInView="show" viewport={VP}
-              style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {arc.map((item, i) => (
-                <motion.div key={item.org} variants={slideLeft}
-                  whileHover={{ y: -5, borderColor: `rgba(255,255,255,.2)`, transition: { duration: 0.2 } }}
-                  style={{ padding: '24px', background: BG, border: `1px solid rgba(255,255,255,.08)`, borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)` }} />
-                  {/* Timeline dot */}
-                  <div style={{ position: 'absolute', left: '-37px', top: '36px', width: '10px', height: '10px', borderRadius: '50%', background: RUST, border: `2px solid ${BG}` }} />
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-                    <h3 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 400, color: TEXT, letterSpacing: '-0.03em', margin: 0 }}>
-                      {item.org}
-                    </h3>
-                    <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: SOFT, paddingTop: '6px' }}>
-                      {item.year}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '14px', color: MUTED, lineHeight: 1.8, marginBottom: '14px' }}>{item.scope}</p>
-                  <p style={{ fontSize: '13px', color: GOLD, fontStyle: 'italic', lineHeight: 1.6 }}>
-                    {item.codified}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px' }}>
+            {arc.map((item, i) => (
+              <motion.div
+                key={item.org}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={VP}
+                whileHover={{ y: -10 }}
+                style={{ 
+                  background: PANEL, 
+                  padding: '48px', 
+                  border: `1px solid ${LINE}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '24px',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: SOFT, letterSpacing: '0.2em' }}>{item.year}</span>
+                  <div style={{ width: '40px', height: '1px', background: LINE }} />
+                </div>
+                <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400 }}>{item.org}</h3>
+                <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, flex: 1 }}>{item.scope}</p>
+                <div style={{ paddingTop: '24px', borderTop: `1px solid ${LINE}` }}>
+                  <p style={{ fontSize: '14px', color: GOLD, fontStyle: 'italic', fontWeight: 500 }}>
+                    &ldquo;{item.codified}&rdquo;
                   </p>
-                </motion.div>
-              ))}
-            </motion.div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 3.4 WHAT GOT CODIFIED ───────────────────── */}
-      <section id="codified" style={{ background: BG2, borderBottom: `1px solid ${LINE}`, padding: '96px 56px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <Eyebrow label="What Got Codified" />
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(24px,3vw,40px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.04em', color: TEXT, marginBottom: '48px', maxWidth: '720px' }}>
-            The patterns that survived 22 years of collisions are now the doctrine Axion Index deploys.
-          </motion.h2>
-
-          <motion.div variants={stagger(0.18)} initial="hidden" whileInView="show" viewport={VP}
-            style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {codified.map((row, i) => (
-              <motion.div key={row.no} variants={fadeUp}
-                style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: '28px', alignItems: 'start', background: PANEL, padding: '28px 24px', borderTop: `1px solid ${LINE}`, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)` }} />
-                <motion.div variants={numScale}
-                  style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '40px', fontWeight: 400, color: `rgba(255,255,255,.2)`, lineHeight: 1, letterSpacing: '-0.04em' }}>
-                  {row.no}
+      {/* ── 3.4 CODIFICATION ────────────────────────── */}
+      <section style={{ padding: '160px 56px', background: '#000' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Eyebrow label="Codification" />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px' }}>
+            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: '48px', fontWeight: 400, lineHeight: 1.1 }}>
+              The patterns that survived 22 years of collisions.
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+              {codified.map((row) => (
+                <motion.div 
+                  key={row.no}
+                  variants={fadeIn}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={VP}
+                  style={{ display: 'flex', gap: '32px' }}
+                >
+                  <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '24px', color: SOFT }}>{row.no}</span>
+                  <div>
+                    <h4 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>{row.title}</h4>
+                    <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.6 }}>{row.desc}</p>
+                  </div>
                 </motion.div>
-                <div>
-                  <div style={{ fontSize: '16px', fontWeight: 600, color: TEXT, marginBottom: '6px', letterSpacing: '-0.01em' }}>{row.title}</div>
-                  <div style={{ fontSize: '14px', color: MUTED, lineHeight: 1.75 }}>{row.desc}</div>
-                </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3.5 FINAL THESIS ────────────────────────── */}
+      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative' }}>
+        <Scene3D />
+        <div style={{ maxWidth: '900px', zIndex: 1 }}>
+          <motion.p
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, fontStyle: 'italic', color: GOLD }}
+          >
+            &ldquo;I architect order before scale demands it. The work is to make the patterns survive the person.&rdquo;
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ delay: 0.5 }}
+            style={{ marginTop: '60px', display: 'flex', gap: '20px', justifyContent: 'center' }}
+          >
+            <Link href="/about" className="btn-premium">About Axion Index</Link>
+            <Link href="/connect" className="btn-outline">Start Conversation</Link>
           </motion.div>
         </div>
       </section>
 
-      {/* ── 3.5 THESIS ──────────────────────────────── */}
-      <section id="thesis" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
-          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.03), transparent 60%)', zIndex: 0 }} />
-        <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <motion.p
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={VP}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(24px,3.5vw,44px)', fontWeight: 400, lineHeight: 1.35, letterSpacing: '-0.03em', color: TEXT, fontStyle: 'italic', textShadow: `0 0 80px rgba(255,255,255,.06)` }}>
-            &ldquo;I architect order before scale demands it. The work is to make the patterns survive the person.&rdquo;
-          </motion.p>
-        </div>
-      </section>
-
-      {/* ── 3.6 CLOSING ─────────────────────────────── */}
-      <section id="sign" style={{ background: BG2, padding: '80px 56px', textAlign: 'center', borderBottom: `1px solid ${LINE}` }}>
-        <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={VP}>
-          <p style={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: 700, letterSpacing: '0.14em', color: SOFT }}>
-            — Nitin Nahata, Founder · Axion Index
-          </p>
-        </motion.div>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VP}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '36px' }}
-        >
-          <Link href="/about"
-            style={{ display: 'inline-block', padding: '11px 26px', background: GOLD, color: '#080808', fontSize: '13px', fontWeight: 600, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'background .2s,transform .18s', boxShadow: '0 12px 40px rgba(255,255,255,.1)', whiteSpace: 'nowrap' }}
-            onMouseOver={(e) => { e.currentTarget.style.background = GOLDB; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.transform = 'translateY(0)'; }}>
-            Read About Axion Index
-          </Link>
-          <Link href="/connect"
-            style={{ display: 'inline-block', padding: '11px 26px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.12)', color: MUTED, fontSize: '13px', fontWeight: 500, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'border-color .2s,color .2s,transform .18s', whiteSpace: 'nowrap' }}
-            onMouseOver={(e) => { e.currentTarget.style.borderColor = GOLD; e.currentTarget.style.color = GOLD; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,.12)'; e.currentTarget.style.color = MUTED; e.currentTarget.style.transform = 'translateY(0)'; }}>
-            Start a Conversation
-          </Link>
-        </motion.div>
-      </section>
-
       {/* FOOTER */}
-      <footer style={{ background: 'rgba(5,5,4,.98)', padding: '20px 56px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid ${LINE}`, flexWrap: 'wrap', gap: '16px' }}>
-        <span style={{ fontSize: '10px', color: SOFT, letterSpacing: '0.04em' }}>© 2026 Axion Index</span>
-        <div style={{ display: 'flex', gap: '22px' }}>
-          {[['/', 'Home'], ['/about', 'About'], ['/connect', 'Connect']].map(([href, label]) => (
-            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT }}>{label}</Link>
+      <footer style={{ padding: '60px 56px', borderTop: `1px solid ${LINE}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000' }}>
+        <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.1em' }}>© 2026 AXION INDEX</span>
+        <div style={{ display: 'flex', gap: '32px' }}>
+          {[['/', 'HOME'], ['/about', 'ABOUT'], ['/connect', 'CONNECT']].map(([href, label]) => (
+            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.15em' }}>{label}</Link>
           ))}
         </div>
       </footer>
 
-      {/* Responsive */}
       <style>{`
-        @media (max-width: 1024px) {
-          #position > div > div:first-child { grid-template-columns: 1fr !important; }
+        .btn-premium {
+          display: inline-block;
+          padding: 16px 40px;
+          background: #fff;
+          color: #000;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
         }
-        @media (max-width: 767px) {
-          #position, #insight, #arc, #codified, #thesis { padding: 64px 20px !important; }
-          #sign { padding: 56px 20px !important; }
-          #position > div > div { grid-template-columns: 1fr !important; gap: 32px !important; }
-          #arc > div > div:last-child { padding-left: 20px !important; }
-          footer { padding: 20px !important; flex-direction: column !important; text-align: center !important; }
+        .btn-premium:hover {
+          background: #eee;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+        }
+        .btn-outline {
+          display: inline-block;
+          padding: 16px 40px;
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #fff;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+          border-color: #fff;
+          background: rgba(255,255,255,0.05);
+          transform: translateY(-2px);
+        }
+        @media (max-width: 1024px) {
+          section { padding: 100px 24px !important; }
+          .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+          .arc-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
   );
 }
+
