@@ -1,47 +1,8 @@
 'use client';
 import { useEffect } from 'react';
+import NavBar from '@/components/NavBar';
 
 const BODY_HTML = `<div class="wrap">
-
-<!-- NAV -->
-<nav id="site-nav">
-  <div style="line-height:1">
-    <a href="/" aria-label="Axion Index" style="text-decoration:none;display:flex;align-items:center;gap:0">
-      <div style="display:flex;flex-direction:column;gap:0;line-height:1;padding-right:12px;border-right:1.5px solid rgba(255,255,255,.2)">
-        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:-.06em;line-height:.92">AX</span>
-        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:200;color:rgba(255,255,255,.7);letter-spacing:-.05em;line-height:.92">ON</span>
-      </div>
-      <div style="padding-left:12px;display:flex;align-items:center">
-        <span style="font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:500;font-style:italic;color:#f8fafc;letter-spacing:-.01em;line-height:.92">Index</span>
-      </div>
-    </a>
-  </div>
-  <div class="nb-desktop" style="display:flex;gap:26px;align-items:center">
-    <a href="/" class="nl">Home</a>
-    <a href="/about" class="nl">About Us</a>
-    <a href="/founder" class="nl">Founder</a>
-    <div class="nav-expertise" style="position:relative">
-      <button class="nl nav-exp-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--muted);letter-spacing:.02em;display:flex;align-items:center;gap:5px;padding:0;font-family:Inter,-apple-system,sans-serif">
-        Expertise <span style="font-size:9px;opacity:.6">▾</span>
-      </button>
-      <div class="nav-exp-drop" style="display:none;position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:rgba(8,8,8,.97);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:8px;min-width:200px;z-index:300;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.6)">
-        <a href="/expertise/labour-codes" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">Labour Codes</a>
-        <a href="/expertise/ai-edge-lab" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">AI Edge Lab</a>
-        <a href="/expertise/family-business" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">Family Business</a>
-        <a href="/expertise/people-architecture" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">People Architecture</a>
-      </div>
-    </div>
-    <a href="/connect" class="nl">Connect</a>
-  </div>
-  <div class="nb-desktop" style="display:flex;gap:10px;align-items:center">
-    <a href="/connect" class="btn-primary" style="padding:8px 18px;font-size:11px;text-decoration:none">Book Diagnostic</a>
-  </div>
-  <button id="mob-btn-hp" style="display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;z-index:201">
-    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
-    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
-    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
-  </button>
-</nav>
 
 <!-- LIVE TICKER -->
 <div style="border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);overflow:hidden">
@@ -618,5 +579,10 @@ export default function Home() {
     };
   }, []);
 
-  return <div dangerouslySetInnerHTML={{ __html: BODY_HTML }} />;
+  return (
+    <>
+      <NavBar />
+      <div dangerouslySetInnerHTML={{ __html: BODY_HTML }} />
+    </>
+  );
 }
