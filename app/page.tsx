@@ -9,7 +9,7 @@ function ParticleSphere() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const W = 520, H = 520, CX = 260, CY = 260, R = 175, N = 10000;
+    const W = 520, H = 520, CX = 260, CY = 260, R = 175, N = 6000;
     canvas.width = W; canvas.height = H;
     type P = { theta: number; phi: number; size: number; opacity: number };
     type E = { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; size: number };
