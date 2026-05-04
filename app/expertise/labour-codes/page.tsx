@@ -98,6 +98,145 @@ const FAQS = [
   {q:'What is the 3i engagement model?',a:'Interpret → Integrate → Institutionalise. Axion Index reads the codes as operating architecture, not compliance checklists, and redesigns the workforce structure accordingly.'},
 ];
 
+function TypewriterText({text}:{text:string}){
+  const [displayed,setDisplayed]=useState('');
+  const [done,setDone]=useState(false);
+  useEffect(()=>{
+    let i=0;
+    setDisplayed('');
+    setDone(false);
+    const id=setInterval(()=>{
+      i++;
+      setDisplayed(text.slice(0,i));
+      if(i>=text.length){clearInterval(id);setDone(true);}
+    },38);
+    return()=>clearInterval(id);
+  },[text]);
+  return(
+    <span style={{
+      background:'linear-gradient(90deg, #f5f2eb 0%, #e5c385 30%, #c8a86c 55%, #f5f2eb 80%, #e5c385 100%)',
+      backgroundSize:'200% auto',
+      WebkitBackgroundClip:'text',
+      WebkitTextFillColor:'transparent',
+      backgroundClip:'text',
+      animation: done ? 'shimmerText 3s linear infinite' : 'none',
+    }}>
+      {displayed}
+      {!done&&(
+        <motion.span
+          animate={{opacity:[1,0]}}
+          transition={{duration:0.5,repeat:Infinity,repeatType:'reverse'}}
+          style={{display:'inline-block',width:'3px',height:'0.85em',background:GOLD,marginLeft:'4px',verticalAlign:'middle',borderRadius:'1px',WebkitTextFillColor:'initial'}}
+        />
+      )}
+    </span>
+  );
+}
+
+function ParticleSphere(){
+  const canvasRef=useRef<HTMLCanvasElement>(null);
+  useEffect(()=>{
+    const canvas=canvasRef.current;
+    if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    if(!ctx)return;
+    const W=520,H=520,CX=260,CY=260,R=175,N=10000;
+    canvas.width=W;canvas.height=H;
+    type P={theta:number;phi:number;size:number;opacity:number};
+    type E={x:number;y:number;vx:number;vy:number;life:number;maxLife:number;size:number};
+    const pts:P[]=Array.from({length:N},()=>({
+      theta:Math.random()*Math.PI*2,
+      phi:Math.acos(2*Math.random()-1),
+      size:Math.random()*1.6+0.2,
+      opacity:Math.random()*0.9+0.1,
+    }));
+    const ejected:E[]=[];
+    let rotY=0,raf=0,frame=0;
+    const spawnEjected=()=>{
+      const phi=Math.acos(2*Math.random()-1);
+      const theta=Math.random()*Math.PI*2;
+      const sx=R*Math.sin(phi)*Math.cos(theta);
+      const sy=R*Math.cos(phi);
+      const sz=R*Math.sin(phi)*Math.sin(theta);
+      const cosY=Math.cos(rotY),sinY=Math.sin(rotY);
+      const rx=sx*cosY+sz*sinY;
+      const rz=-sx*sinY+sz*cosY;
+      if(rz<0)return;
+      const nx=rx/R,ny=sy/R;
+      const speed=0.5+Math.random()*1.2;
+      ejected.push({
+        x:rx+CX,y:sy+CY,
+        vx:nx*speed+(Math.random()-0.5)*0.4,
+        vy:ny*speed+(Math.random()-0.5)*0.4,
+        life:0,maxLife:60+Math.random()*70,
+        size:Math.random()*1.1+0.2,
+      });
+    };
+    const draw=()=>{
+      ctx.clearRect(0,0,W,H);
+      rotY+=0.006;
+      frame++;
+      if(frame%1===0){for(let k=0;k<8;k++)spawnEjected();}
+      const cosY=Math.cos(rotY),sinY=Math.sin(rotY);
+      // deep amber outer glow
+      const glow=ctx.createRadialGradient(CX,CY,R*0.6,CX,CY,R*1.6);
+      glow.addColorStop(0,'rgba(180,90,20,0.0)');
+      glow.addColorStop(0.5,'rgba(160,75,15,0.12)');
+      glow.addColorStop(0.8,'rgba(120,50,10,0.06)');
+      glow.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=glow;
+      ctx.beginPath();ctx.arc(CX,CY,R*1.6,0,Math.PI*2);ctx.fill();
+      // ejected sparks
+      for(let i=ejected.length-1;i>=0;i--){
+        const e=ejected[i];
+        e.x+=e.vx;e.y+=e.vy;
+        e.vx*=0.97;e.vy*=0.97;
+        e.life++;
+        if(e.life>e.maxLife){ejected.splice(i,1);continue;}
+        const t=e.life/e.maxLife;
+        const alpha=(1-t)*(1-t)*0.7;
+        // ember: bright orange-gold fading to dark red
+        const rr=Math.round(220-t*80);
+        const gg=Math.round(120-t*90);
+        const bb=Math.round(20-t*15);
+        ctx.beginPath();
+        ctx.arc(e.x,e.y,e.size*(1-t*0.6),0,Math.PI*2);
+        ctx.fillStyle=`rgba(${rr},${gg},${bb},${alpha})`;
+        ctx.fill();
+      }
+      // sphere particles
+      const projected=pts.map(p=>{
+        const sx=R*Math.sin(p.phi)*Math.cos(p.theta);
+        const sy=R*Math.cos(p.phi);
+        const sz=R*Math.sin(p.phi)*Math.sin(p.theta);
+        const rx=sx*cosY+sz*sinY;
+        const rz=-sx*sinY+sz*cosY;
+        return {p,px:rx+CX,py:sy+CY,pz:rz};
+      }).sort((a,b)=>a.pz-b.pz);
+      for(const {p,px,py,pz} of projected){
+        const depth=(pz+R)/(2*R);
+        const limb=Math.pow(1-Math.abs(depth*2-1),0.3);
+        const frontBoost=0.25+depth*0.75;
+        const brightness=limb*frontBoost;
+        if(brightness<0.05)continue;
+        const alpha=p.opacity*brightness*0.9;
+        // deep ember palette: dark red-brown back → bright amber-gold front
+        const rr=Math.round(80+depth*170);
+        const gg=Math.round(25+depth*110);
+        const bb=Math.round(5+depth*30);
+        ctx.beginPath();
+        ctx.arc(px,py,p.size*(0.3+depth*0.85),0,Math.PI*2);
+        ctx.fillStyle=`rgba(${rr},${gg},${bb},${alpha})`;
+        ctx.fill();
+      }
+      raf=requestAnimationFrame(draw);
+    };
+    draw();
+    return()=>cancelAnimationFrame(raf);
+  },[]);
+  return <canvas ref={canvasRef} style={{width:'520px',height:'520px',display:'block'}}/>;
+}
+
 export default function LabourCodes(){
   const [activeQ,setActiveQ]=useState<number|null>(null);
   const [activeCat,setActiveCat]=useState('All');
@@ -146,14 +285,25 @@ export default function LabourCodes(){
       <section style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
           style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 40% 50%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
-        <div style={{maxWidth:'1100px',margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'64px',alignItems:'center',position:'relative',zIndex:1}}>
+        {/* dot grid overlay */}
+        <div style={{position:'absolute',inset:0,zIndex:0,pointerEvents:'none',
+          backgroundImage:'radial-gradient(circle, rgba(200,168,108,0.18) 1px, transparent 1px)',
+          backgroundSize:'32px 32px',
+          maskImage:'radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)',
+          WebkitMaskImage:'radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)',
+          opacity:0.5
+        }}/>
+        {/* Particle sphere — between columns */}
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2,delay:0.5}}
+          style={{position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)',zIndex:0,pointerEvents:'none'}}>
+          <ParticleSphere/>
+        </motion.div>
+        <div style={{maxWidth:'1100px',margin:'0 auto',display:'grid',gridTemplateColumns:'1fr',gap:'48px',alignItems:'center',position:'relative',zIndex:1}}>
           <div>
             <Eyebrow label="Labour Codes"/>
-            <motion.h1 variants={stagger(0.04)} initial="hidden" animate="show"
+            <motion.h1
               style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(36px,5.5vw,64px)',fontWeight:400,lineHeight:1.04,letterSpacing:'-0.04em',color:TEXT,marginBottom:'24px'}}>
-              {['Four','codes.','One','operating','architecture.'].map((w,i)=>(
-                <motion.span key={i} variants={fadeUp} style={{display:'inline-block',marginRight:'0.28em'}}>{w}</motion.span>
-              ))}
+              <TypewriterText text="Four codes. One operating architecture." />
             </motion.h1>
             <motion.p variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.3}}
               style={{fontSize:'16px',color:MUTED,lineHeight:1.88,maxWidth:'480px',marginBottom:'36px'}}>
@@ -175,17 +325,75 @@ export default function LabourCodes(){
               </Link>
             </motion.div>
           </div>
-          <motion.div variants={stagger(0.12)} initial="hidden" animate="show"
-            style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'2px'}}>
-            {[{n:'29',label:'Central laws consolidated'},{n:'4',label:'Labour Codes'},{n:'36',label:'States + UTs to notify'},{n:'2019–20',label:'Years of enactment'}].map((s,i)=>(
-              <motion.div key={i} variants={scaleUp}
-                style={{background:PANEL,border:`1px solid ${LINE}`,padding:'28px 24px',position:'relative',overflow:'hidden'}}>
-                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(200,168,108,.3),transparent)`}}/>
-                <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'40px',fontWeight:400,color:GOLD,lineHeight:1,letterSpacing:'-0.04em',marginBottom:'8px'}}>{s.n}</div>
-                <div style={{fontSize:'12px',color:MUTED,lineHeight:1.5}}>{s.label}</div>
+          <div
+            style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:'2px'}}
+            onMouseLeave={e=>{
+              (e.currentTarget as HTMLDivElement).querySelectorAll<HTMLDivElement>('[data-stat]').forEach(el=>{
+                el.style.filter='none';
+                el.style.opacity='1';
+                el.style.transform='translateY(0) scale(1)';
+              });
+            }}
+          >
+            {[
+              {n:'29',label:'Central laws consolidated',x:200,y:0,delay:0.2},
+              {n:'4', label:'Labour Codes',             x:200,y:0,delay:0.4},
+              {n:'36',label:'States + UTs to notify',   x:200,y:0,delay:0.6},
+              {n:'2019–20',label:'Years of enactment',  x:200,y:0,delay:0.8},
+            ].map((s,i)=>(
+              <motion.div key={i} data-stat
+                initial={{opacity:0,x:s.x,y:s.y}}
+                animate={{opacity:1,x:0,y:0}}
+                transition={{duration:0.9,delay:s.delay,ease:[0.22,1,0.36,1]}}
+                style={{background:'rgba(23,23,23,0.06)',backdropFilter:'blur(6px)',WebkitBackdropFilter:'blur(6px)',padding:'44px 36px',position:'relative',overflow:'hidden',borderRadius:'16px',transition:'transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease'}}
+                onMouseEnter={e=>{
+                  const parent=(e.currentTarget as HTMLDivElement).parentElement;
+                  parent?.querySelectorAll<HTMLDivElement>('[data-stat]').forEach(el=>{
+                    if(el===e.currentTarget){
+                      el.style.transform='translateY(-8px) scale(1.03)';
+                      el.style.filter='none';
+                      el.style.opacity='1';
+                    } else {
+                      el.style.transform='translateY(0) scale(1)';
+                      el.style.filter='blur(2px)';
+                      el.style.opacity='0.45';
+                    }
+                  });
+                }}
+              >
+                <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'none',overflow:'visible'}} preserveAspectRatio="none">
+                  <defs>
+                    <filter id={`glow${i}`} x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                  </defs>
+                  {/* base dim border */}
+                  <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
+                    rx="16" fill="none" stroke="rgba(200,168,108,0.08)" strokeWidth="1"
+                  />
+                  {/* glowing trail */}
+                  <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
+                    rx="16" fill="none" stroke="rgba(200,168,108,0.9)" strokeWidth="2"
+                    strokeDasharray="40 1020"
+                    strokeLinecap="round"
+                    filter={`url(#glow${i})`}
+                    style={{animation:`borderTrail${i} 3s linear 0s infinite`}}
+                  />
+                  {/* soft fade tail */}
+                  <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
+                    rx="16" fill="none" stroke="rgba(200,168,108,0.25)" strokeWidth="4"
+                    strokeDasharray="80 980"
+                    strokeLinecap="round"
+                    filter={`url(#glow${i})`}
+                    style={{animation:`borderTrail${i} 3s linear 0s infinite`}}
+                  />
+                </svg>
+                <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'40px',fontWeight:400,color:GOLD,lineHeight:1,letterSpacing:'-0.04em',marginBottom:'8px',position:'relative'}}>{s.n}</div>
+                <div style={{fontSize:'12px',color:MUTED,lineHeight:1.5,position:'relative'}}>{s.label}</div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -438,6 +646,26 @@ export default function LabourCodes(){
       </footer>
 
       <style>{`
+        @keyframes shimmerText {
+          0%   { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
+        @keyframes borderTrail0 {
+          0%   { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: -1060; }
+        }
+        @keyframes borderTrail1 {
+          0%   { stroke-dashoffset: -265; }
+          100% { stroke-dashoffset: -1325; }
+        }
+        @keyframes borderTrail2 {
+          0%   { stroke-dashoffset: -795; }
+          100% { stroke-dashoffset: -1855; }
+        }
+        @keyframes borderTrail3 {
+          0%   { stroke-dashoffset: -530; }
+          100% { stroke-dashoffset: -1590; }
+        }
         @media(max-width:1024px){
           section>div{grid-template-columns:1fr!important}
         }
