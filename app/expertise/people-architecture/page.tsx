@@ -1,27 +1,133 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.62)',SOFT='rgba(255,255,255,.38)',LINE='rgba(255,255,255,.06)',GOLD='#ffffff',GOLDB='#eeeeee',RUST='#ffffff';
-const VP={once:false,margin:'-60px'};
-const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
-const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
-const scaleUp={hidden:{opacity:0,scale:0.95},show:{opacity:1,scale:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
-const stagger=(d=0.15)=>({hidden:{},show:{transition:{staggerChildren:d}}});
-const lineGrowX={hidden:{scaleX:0,originX:0},show:{scaleX:1,transition:{duration:0.9,ease:[0.22,1,0.36,1]as const}}};
+/* ── Structural Tokens ───────────────────────────────── */
+const BG    = '#050505';
+const BG2   = '#080808';
+const PANEL = 'rgba(255,255,255,0.02)';
+const TEXT  = '#ffffff';
+const MUTED = 'rgba(255,255,255,0.5)';
+const SOFT  = 'rgba(255,255,255,0.2)';
+const LINE  = 'rgba(255,255,255,0.06)';
+const GOLD  = '#ffffff';
+const ACCENT = '#ffffff';
 
-function Eyebrow({label}:{label:string}){
-  return(
-    <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={VP}
-      style={{display:'inline-flex',alignItems:'center',gap:'10px',fontSize:'10px',fontWeight:700,letterSpacing:'0.22em',textTransform:'uppercase',color:GOLD,marginBottom:'20px'}}>
-      <span style={{width:'24px',height:'1px',background:GOLD,flexShrink:0}}/>
+const VP = { once: false, margin: '-100px' };
+
+/* ── 3D Tilt Component ───────────────────────────────── */
+function TiltWrapper({ children, intensity = 10 }: { children: React.ReactNode, intensity?: number }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [`${intensity}deg`, `-${intensity}deg`]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [`-${intensity}deg`, `${intensity}deg`]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: "1200px" }}
+    >
+      <div style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ── Background: Architectural Surface ────────────────── */
+function StructuralBackground() {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -150]);
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none', perspective: '1200px' }}>
+      {/* 3D Structural Grid */}
+      <motion.div 
+        style={{ 
+          position: 'absolute', 
+          inset: '-100%', 
+          backgroundImage: `linear-gradient(${LINE} 1.5px, transparent 1.5px), linear-gradient(90deg, ${LINE} 1.5px, transparent 1.5px)`,
+          backgroundSize: '100px 100px',
+          transform: 'rotateX(70deg) translateY(-10%)',
+          opacity: 0.25,
+          y
+        }} 
+      />
+      
+      {/* Subtle layered depth */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 60%)',
+        opacity: 0.5
+      }} />
+
+      {/* Vertical architectural accents */}
+      <div style={{ position: 'absolute', left: '5%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent)', opacity: 0.5 }} />
+      <div style={{ position: 'absolute', right: '5%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent)', opacity: 0.5 }} />
+    </div>
+  );
+}
+
+/* ── Floating Structural Dots ────────────────────────── */
+function StructuralParticles() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: Math.random() * 100 + "%", y: Math.random() * 100 + "%", opacity: 0 }}
+          animate={{ y: [null, "-15%"], opacity: [0, 0.2, 0], scale: [0.5, 1, 0.5] }}
+          transition={{ duration: Math.random() * 8 + 12, repeat: Infinity, delay: Math.random() * 5 }}
+          style={{ position: 'absolute', width: '3px', height: '3px', background: 'rgba(255,255,255,0.4)', borderRadius: '1px' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Component: Eyebrow ──────────────────────────────── */
+function Eyebrow({ label }: { label: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VP}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '12px',
+        fontSize: '10px',
+        fontWeight: 800,
+        letterSpacing: '0.4em',
+        textTransform: 'uppercase',
+        color: ACCENT,
+        marginBottom: '32px'
+      }}
+    >
+      <div style={{ width: '4px', height: '4px', background: ACCENT, borderRadius: '50%' }} />
       {label}
     </motion.div>
   );
 }
 
+/* ── Data ────────────────────────────────────────────── */
 const bcrNodes=[
   {label:'Belief',    sub:'Founder intent',         fail:'Without conviction → fragility',       detail:'Belief is the founding conviction — the reason the organisation exists beyond revenue. It is not a mission statement. It is the operating logic that determines which decisions are made and which are refused. Without belief, the organisation has no north star.'},
   {label:'Conviction',sub:'Behaviour alignment',    fail:'Without rhythm → bureaucracy',          detail:'Conviction is belief tested and shared. It is the moment when the founder\'s intent becomes the organisation\'s behaviour. Conviction is what allows the organisation to make consistent decisions without the founder in the room.'},
@@ -35,256 +141,401 @@ const surfaces=[
   {name:'Assess',  fail:'No clear differentiation.',              def:'Great. Good. Not here. Why.',            detail:'Assessment architecture defines how the organisation differentiates performance — not just who is performing, but why, and what the organisation will do about it. Without clear assessment, the organisation cannot develop talent or make defensible decisions about who stays and who does not.'},
 ];
 
-export default function PeopleArchitecture(){
-  const [activeBCR,setActiveBCR]=useState<number|null>(null);
-  const [activeSurface,setActiveSurface]=useState<number|null>(null);
+/* ── 3D Hero Decoration ─────────────────────────────── */
+function HeroDecoration() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  return(
-    <div style={{background:BG,minHeight:'100vh',color:TEXT,fontFamily:'Inter,-apple-system,sans-serif'}}>
-      <NavBar/>
+  if (!mounted) return (
+    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+      <div style={{ fontSize: '180px', fontFamily: "'Playfair Display',serif", color: 'rgba(255,255,255,0.05)', userSelect: 'none' }}>A</div>
+    </div>
+  );
 
-      {/* 7.1 HERO */}
-      <section id="hero" style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative',overflow:'hidden'}}>
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 60%,rgba(255,255,255,.05),transparent 60%)',zIndex:0}}/>
-        <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
-          <Eyebrow label="People Architecture"/>
-          <motion.h1 variants={stagger(0.04)} initial="hidden" animate="show"
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(32px,5vw,64px)',fontWeight:400,lineHeight:1.04,letterSpacing:'-0.04em',color:TEXT,marginBottom:'24px'}}>
-            {['The','Playbook','that','defines','the','soul','of','the','organisation.'].map((w,i)=>(
-              <motion.span key={i} variants={fadeUp} style={{display:'inline-block',marginRight:'0.28em'}}>{w}</motion.span>
-            ))}
-          </motion.h1>
-          {/* Gold underline */}
-          <motion.div initial={{scaleX:0,originX:0.5}} animate={{scaleX:1}} transition={{delay:0.8,duration:0.8,ease:'easeOut'}}
-            style={{width:'80px',height:'2px',background:GOLD,margin:'0 auto 28px'}}/>
-          <motion.p variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.4}}
-            style={{fontSize:'16px',color:MUTED,lineHeight:1.88,marginBottom:'36px'}}>
-            People Architecture is the direct expression of the platform methodology — Belief &rarr; Conviction &rarr; Rhythm — in how organisations hire, engage, reward, and assess.
-          </motion.p>
-          <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.5}}
-            style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
-            <a href="#bcr"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
-              onMouseOver={e=>e.currentTarget.style.background=GOLDB}
-              onMouseOut={e=>e.currentTarget.style.background=GOLD}>
-              Read the BCR Framework ↓
-            </a>
-            <a href="#surfaces"
-              style={{display:'inline-block',padding:'11px 26px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.12)',color:MUTED,fontSize:'13px',letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'border-color .2s,color .2s'}}
-              onMouseOver={e=>{e.currentTarget.style.borderColor=GOLD;e.currentTarget.style.color=GOLD}}
-              onMouseOut={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.12)';e.currentTarget.style.color=MUTED}}>
-              See the Four Surfaces ↓
-            </a>
-          </motion.div>
-        </div>
-      </section>
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 2, ease: "easeOut" }}
+      style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+    >
+      <div style={{ position: 'absolute', width: '400px', height: '400px', border: '1px solid ' + SOFT, borderRadius: '50%', opacity: 0.2 }} />
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        style={{ position: 'absolute', width: '320px', height: '320px', border: '1px dashed ' + SOFT, borderRadius: '50%', opacity: 0.3 }} 
+      />
+      <div style={{ fontSize: '180px', fontFamily: "'Playfair Display',serif", color: 'rgba(255,255,255,0.05)', userSelect: 'none' }}>A</div>
+      
+      {/* Decorative architectural markers */}
+      {[0, 90, 180, 270].map((deg) => (
+        <div 
+          key={deg}
+          style={{ 
+            position: 'absolute', 
+            width: '20px', 
+            height: '1px', 
+            background: ACCENT, 
+            opacity: 0.4,
+            transform: `rotate(${deg}deg) translateX(180px)`
+          }} 
+        />
+      ))}
+    </motion.div>
+  );
+}
 
-      {/* 7.2 BCR FRAMEWORK */}
-      <section id="bcr" style={{background:BG2,borderBottom:`1px solid ${LINE}`,padding:'96px 56px'}}>
-        <div style={{maxWidth:'1100px',margin:'0 auto'}}>
-          <Eyebrow label="BCR Framework"/>
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(26px,3.5vw,44px)',fontWeight:400,lineHeight:1.1,letterSpacing:'-0.04em',color:TEXT,marginBottom:'12px'}}>
-            Belief &rarr; Conviction &rarr; Rhythm.
-          </motion.h2>
-          <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{fontSize:'15px',color:MUTED,lineHeight:1.8,marginBottom:'48px',maxWidth:'600px'}}>
-            Every organisation is somewhere in this sequence. The diagnostic question is not which stage you are in — it is whether you know where you are stuck.
-          </motion.p>
+/* ══════════════════════════════════════════════════════
+   PAGE: PEOPLE ARCHITECTURE
+══════════════════════════════════════════════════════ */
+export default function PeopleArchitecture() {
+  const [activeBCR, setActiveBCR] = useState<number | null>(null);
+  const [activeSurface, setActiveSurface] = useState<number | null>(null);
 
-          {/* BCR diagram */}
-          <motion.div variants={stagger(0.15)} initial="hidden" whileInView="show" viewport={VP}
-            style={{display:'flex',alignItems:'stretch',gap:'0',marginBottom:'32px',flexWrap:'wrap'}}>
-            {bcrNodes.map((n,i)=>(
-              <div key={n.label} style={{display:'flex',alignItems:'center',flex:1,minWidth:'200px'}}>
-                <motion.div variants={scaleUp}
-                  onClick={()=>setActiveBCR(activeBCR===i?null:i)}
-                  style={{
-                    flex:1,padding:'28px 24px',
-                    border:`1px solid ${activeBCR===i?GOLD:'rgba(255,255,255,.07)'}`,
-                    background:activeBCR===i?'rgba(255,255,255,.06)':PANEL,
-                    cursor:'pointer',
-                    transition:'all .3s',
-                    position:'relative',
-                  }}>
-                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent)`}}/>
-                  <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',color:GOLD,marginBottom:'10px'}}>{String(i+1).padStart(2,'0')}</div>
-                  <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'24px',fontWeight:400,color:TEXT,marginBottom:'6px'}}>{n.label}</div>
-                  <div style={{fontSize:'12px',color:MUTED,marginBottom:'8px'}}>{n.sub}</div>
-                  <div style={{fontSize:'11px',color:RUST,fontStyle:'italic'}}>{n.fail}</div>
-                </motion.div>
-                {i<2&&(
-                  <motion.div variants={lineGrowX}
-                    style={{width:'32px',height:'1px',background:GOLD,flexShrink:0}}/>
-                )}
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
+
+  return (
+    <div ref={containerRef} style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif', overflowX: 'hidden' }}>
+      <NavBar />
+
+      {/* Progress Line */}
+      <motion.div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '3px', background: '#fff', scaleX: progress, transformOrigin: '0%', zIndex: 1000, mixBlendMode: 'difference' }} />
+
+      {/* SECTION 7.1 - HERO (Enhanced) */}
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', padding: '0 56px', overflow: 'hidden' }}>
+        <StructuralBackground />
+        <StructuralParticles />
+
+        <motion.div 
+          style={{ 
+            maxWidth: '1200px', 
+            margin: '0 auto', 
+            width: '100%', 
+            display: 'grid', 
+            gridTemplateColumns: '1.2fr 0.8fr', 
+            gap: '80px', 
+            alignItems: 'center', 
+            position: 'relative', 
+            zIndex: 1,
+            opacity: heroOpacity,
+            y: heroY
+          }}
+        >
+          <div style={{ textAlign: 'left' }}>
+            <Eyebrow label="People Architecture" />
+            
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
+              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.04em', color: TEXT, marginBottom: '32px' }}
+            >
+              The Playbook that defines the soul of the organisation.
+            </motion.h1>
+
+            <motion.div
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              style={{ width: '80px', height: '2px', background: ACCENT, marginBottom: '40px' }}
+            />
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.7 }}
+            >
+              <p style={{ fontSize: '18px', color: TEXT, lineHeight: 1.6, marginBottom: '32px', maxWidth: '600px', fontWeight: 300 }}>
+                People Architecture is the direct expression of the platform methodology — <span style={{ color: MUTED }}>Belief &rarr; Conviction &rarr; Rhythm</span> — in how organisations hire, engage, reward, and assess.
+              </p>
+
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                <a href="#bcr" className="people-btn-fill">Read the BCR Framework</a>
+                <a href="#surfaces" className="people-btn-outline">See the Four Surfaces</a>
               </div>
-            ))}
-          </motion.div>
-
-          {/* Expanded node detail */}
-          <AnimatePresence>
-            {activeBCR!==null&&(
-              <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} transition={{duration:0.3}}>
-                <div style={{background:PANEL,borderLeft:`3px solid ${GOLD}`,padding:'24px 28px',borderTop:`1px solid ${LINE}`}}>
-                  <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:GOLD,marginBottom:'10px'}}>{bcrNodes[activeBCR].label}</div>
-                  <p style={{fontSize:'14px',color:MUTED,lineHeight:1.8}}>{bcrNodes[activeBCR].detail}</p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* 7.3 FOUR SURFACES */}
-      <section id="surfaces" style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'96px 56px'}}>
-        <div style={{maxWidth:'1100px',margin:'0 auto'}}>
-          <Eyebrow label="Four Surfaces"/>
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(26px,3.5vw,44px)',fontWeight:400,lineHeight:1.1,letterSpacing:'-0.04em',color:TEXT,marginBottom:'12px'}}>
-            Four surfaces where architecture becomes visible.
-          </motion.h2>
-          <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{fontSize:'15px',color:MUTED,lineHeight:1.8,marginBottom:'48px',maxWidth:'600px'}}>
-            Architecture is not visible in documents. It is visible in what the organisation does when it hires, engages, rewards, and assesses.
-          </motion.p>
-
-          <motion.div variants={stagger(0.12)} initial="hidden" whileInView="show" viewport={VP}
-            style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'2px'}}>
-            {surfaces.map((s,i)=>(
-              <motion.div key={s.name} variants={scaleUp}
-                onClick={()=>setActiveSurface(activeSurface===i?null:i)}
-                whileHover={{y:-5,borderColor:GOLD,transition:{duration:0.2}}}
-                style={{
-                  background:PANEL,
-                  border:`1px solid ${activeSurface===i?GOLD:LINE}`,
-                  padding:'32px 28px',
-                  cursor:'pointer',
-                  position:'relative',
-                  overflow:'hidden',
-                  transition:'border-color .2s',
-                }}>
-                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent)`}}/>
-                <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',color:GOLD,marginBottom:'12px',display:'flex',alignItems:'center',gap:'8px'}}>
-                  <span style={{width:'16px',height:'1px',background:GOLD,flexShrink:0}}/>{String(i+1).padStart(2,'0')}
-                </div>
-                <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'26px',fontWeight:400,color:TEXT,marginBottom:'8px'}}>{s.name}</div>
-                <div style={{fontSize:'14px',color:MUTED,marginBottom:'10px',lineHeight:1.6}}>{s.def}</div>
-                <div style={{fontSize:'12px',color:RUST,fontStyle:'italic'}}>{s.fail}</div>
-
-                <AnimatePresence>
-                  {activeSurface===i&&(
-                    <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} transition={{duration:0.3}}>
-                      <div style={{paddingTop:'16px',marginTop:'16px',borderTop:`1px solid ${LINE}`}}>
-                        <p style={{fontSize:'13px',color:MUTED,lineHeight:1.8}}>{s.detail}</p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 7.4 PLAYBOOK */}
-      <section id="playbook" style={{background:BG2,borderBottom:`1px solid ${LINE}`,padding:'96px 56px'}}>
-        <div style={{maxWidth:'1100px',margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'64px',alignItems:'start'}}>
-          <div>
-            <Eyebrow label="The Playbook"/>
-            <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-              style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(24px,3vw,40px)',fontWeight:400,lineHeight:1.1,letterSpacing:'-0.04em',color:TEXT,marginBottom:'20px'}}>
-              From belief to system.
-            </motion.h2>
-            <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-              style={{fontSize:'15px',color:MUTED,lineHeight:1.88,marginBottom:'28px'}}>
-              The Playbook is the codified document that defines how the organisation operates across all four surfaces. It is not an HR policy manual. It is the operating system — the document that makes the architecture transferable, defensible, and institutional.
-            </motion.p>
-            <motion.div variants={stagger(0.1)} initial="hidden" whileInView="show" viewport={VP}
-              style={{display:'flex',flexDirection:'column',gap:'0'}}>
-              {['Hiring loops','Engagement rhythm','Reward logic','Assessment clarity'].map((item,i)=>(
-                <motion.div key={item} variants={fadeUp}
-                  style={{display:'flex',alignItems:'center',gap:'14px',padding:'14px 0',borderBottom:`1px solid ${LINE}`}}>
-                  <span style={{width:'6px',height:'6px',borderRadius:'50%',background:GOLD,flexShrink:0}}/>
-                  <span style={{fontSize:'14px',color:MUTED}}>{item}</span>
-                </motion.div>
-              ))}
             </motion.div>
           </div>
 
-          {/* Document preview */}
-          <motion.div variants={scaleUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{background:PANEL,border:`1px solid ${LINE}`,overflow:'hidden'}}>
-            <div style={{padding:'12px 16px',borderBottom:`1px solid ${LINE}`,background:'rgba(255,255,255,.02)',display:'flex',gap:'6px'}}>
-              {['#ff5f57','#febc2e','#28c840'].map((c,i)=><div key={i} style={{width:'10px',height:'10px',borderRadius:'50%',background:c}}/>)}
-              <span style={{fontSize:'10px',color:SOFT,marginLeft:'8px',letterSpacing:'0.1em'}}>PEOPLE_ARCHITECTURE_PLAYBOOK.pdf</span>
-            </div>
-            <div style={{padding:'24px'}}>
-              {[
-                {section:'01',title:'Belief Statement',status:'Defined'},
-                {section:'02',title:'Hiring Architecture',status:'Active'},
-                {section:'03',title:'Engagement Rhythm',status:'Active'},
-                {section:'04',title:'Reward Logic',status:'Review'},
-                {section:'05',title:'Assessment Framework',status:'Draft'},
-              ].map((row,i)=>(
-                <div key={row.section} style={{display:'grid',gridTemplateColumns:'32px 1fr 60px',gap:'12px',alignItems:'center',padding:'10px 0',borderBottom:`1px solid ${LINE}`}}>
-                  <span style={{fontSize:'10px',color:SOFT,fontFamily:'monospace'}}>{row.section}</span>
-                  <span style={{fontSize:'13px',color:TEXT}}>{row.title}</span>
-                  <span style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.1em',color:row.status==='Active'?GOLD:row.status==='Review'?RUST:SOFT}}>{row.status}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          <HeroDecoration />
+        </motion.div>
+      </section>
+
+      {/* SECTION 7.2 - BCR FRAMEWORK (Enhanced with 3D) */}
+      <section id="bcr" style={{ background: BG2, padding: '160px 56px', position: 'relative' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Eyebrow label="Operational Framework" />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '80px', marginBottom: '80px', alignItems: 'flex-end' }}>
+            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+              Belief &rarr; Conviction &rarr; Rhythm.
+            </h2>
+            <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
+              Every organisation is somewhere in this sequence. The diagnostic question is not which stage you are in — it is whether you know where you are stuck.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2px', background: LINE }}>
+            {bcrNodes.map((n, i) => (
+              <TiltWrapper key={n.label}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={VP}
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                  onClick={() => setActiveBCR(activeBCR === i ? null : i)}
+                  style={{
+                    background: BG2,
+                    padding: '56px 40px',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    borderTop: activeBCR === i ? '2px solid #fff' : '0px solid #fff',
+                    height: '100%',
+                    transformStyle: "preserve-3d"
+                  }}
+                >
+                  <div style={{ transform: "translateZ(20px)" }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: SOFT, letterSpacing: '0.2em', marginBottom: '32px' }}>[ STAGE_0{i+1} ]</div>
+                    <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400, marginBottom: '12px' }}>{n.label}</h3>
+                    <p style={{ fontSize: '16px', color: MUTED, marginBottom: '24px' }}>{n.sub}</p>
+                    <p style={{ fontSize: '13px', color: ACCENT, fontStyle: 'italic', marginBottom: '32px' }}>{n.fail}</p>
+                    
+                    <AnimatePresence>
+                      {activeBCR === i && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          style={{ overflow: 'hidden' }}
+                        >
+                          <div style={{ paddingTop: '32px', borderTop: '1px solid ' + LINE }}>
+                            <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8 }}>{n.detail}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              </TiltWrapper>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 7.5 CTA */}
-      <section id="cta" style={{background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <motion.div initial={{opacity:0}} whileInView={{opacity:1}} viewport={VP} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(56,189,248,.06),transparent 60%)',zIndex:0}}/>
-        <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4vw,52px)',fontWeight:400,lineHeight:1.15,letterSpacing:'-0.03em',color:TEXT,fontStyle:'italic',marginBottom:'42px'}}>
+      {/* SECTION 7.3 - FOUR SURFACES (Enhanced with 3D) */}
+      <section id="surfaces" style={{ background: BG, padding: '160px 56px', position: 'relative' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Eyebrow label="Structural Visibility" />
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
+            Four surfaces where architecture becomes visible.
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+            {surfaces.map((s, i) => (
+              <TiltWrapper key={s.name} intensity={15}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={VP}
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                  onClick={() => setActiveSurface(activeSurface === i ? null : i)}
+                  style={{
+                    background: PANEL,
+                    border: '1px solid ' + LINE,
+                    padding: '48px',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    height: '100%',
+                    transformStyle: "preserve-3d"
+                  }}
+                >
+                  <div style={{ transform: "translateZ(30px)" }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
+                      <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400 }}>{s.name}</h3>
+                      <span style={{ fontFamily: 'monospace', fontSize: '12px', color: SOFT }}>[ SURFACE_0{i+1} ]</span>
+                    </div>
+                    <p style={{ fontSize: '18px', color: TEXT, marginBottom: '16px', fontWeight: 500 }}>{s.def}</p>
+                    <p style={{ fontSize: '14px', color: ACCENT, fontStyle: 'italic', marginBottom: '24px' }}>{s.fail}</p>
+
+                    <AnimatePresence>
+                      {activeSurface === i && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          style={{ overflow: 'hidden' }}
+                        >
+                          <div style={{ paddingTop: '24px', borderTop: '1px solid ' + LINE }}>
+                            <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8 }}>{s.detail}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  {/* Subtle Corner Accent */}
+                  <div style={{ position: 'absolute', bottom: 0, right: 0, width: '40px', height: '40px', background: `linear-gradient(135deg, transparent 50%, ${LINE} 50%)` }} />
+                  
+                  {/* 3D Depth Decoration */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '1px solid ' + LINE, transform: 'translateZ(-20px)', pointerEvents: 'none' }} />
+                </motion.div>
+              </TiltWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 7.4 - PLAYBOOK (Redesigned) */}
+      <section id="playbook" style={{ background: BG2, padding: '160px 56px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px', alignItems: 'center' }}>
+            <div>
+              <Eyebrow label="Institutional Assets" />
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: '48px', fontWeight: 400, lineHeight: 1.1, marginBottom: '32px' }}>
+                From belief to system.
+              </h2>
+              <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.8, marginBottom: '40px' }}>
+                The Playbook is the codified document that defines how the organisation operates across all four surfaces. It is not an HR policy manual. It is the operating system — the document that makes the architecture transferable, defensible, and institutional.
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {['Hiring loops', 'Engagement rhythm', 'Reward logic', 'Assessment clarity'].map((item, i) => (
+                  <motion.div
+                    key={item}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={VP}
+                    transition={{ delay: i * 0.1 }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 0', borderBottom: '1px solid ' + LINE }}
+                  >
+                    <div style={{ width: '6px', height: '6px', background: ACCENT, borderRadius: '50%' }} />
+                    <span style={{ fontSize: '15px', fontWeight: 500 }}>{item}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <TiltWrapper>
+              <motion.div
+                initial={{ opacity: 0, rotate: 2 }}
+                whileInView={{ opacity: 1, rotate: 0 }}
+                viewport={VP}
+                style={{ background: '#111', border: '1px solid ' + LINE, padding: '40px', boxShadow: '0 40px 100px rgba(0,0,0,0.5)', position: 'relative', transformStyle: "preserve-3d" }}
+              >
+                <div style={{ transform: "translateZ(40px)" }}>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '32px' }}>
+                    <div style={{ width: '12px', height: '12px', background: '#333', borderRadius: '50%' }} />
+                    <div style={{ width: '12px', height: '12px', background: '#333', borderRadius: '50%' }} />
+                    <div style={{ width: '12px', height: '12px', background: '#333', borderRadius: '50%' }} />
+                  </div>
+                  <div style={{ fontSize: '10px', color: SOFT, fontFamily: 'monospace', marginBottom: '32px' }}>[ DOCUMENT_SYSTEM_v1.2 ]</div>
+                  
+                  {[
+                    { section: '01', title: 'Belief Statement', status: 'Defined' },
+                    { section: '02', title: 'Hiring Architecture', status: 'Active' },
+                    { section: '03', title: 'Engagement Rhythm', status: 'Active' },
+                    { section: '04', title: 'Reward Logic', status: 'Review' },
+                    { section: '05', title: 'Assessment Framework', status: 'Draft' },
+                  ].map((row, i) => (
+                    <div key={row.section} style={{ display: 'grid', gridTemplateColumns: '40px 1fr auto', gap: '20px', padding: '16px 0', borderBottom: '1px solid ' + LINE }}>
+                      <span style={{ fontSize: '11px', color: SOFT }}>{row.section}</span>
+                      <span style={{ fontSize: '14px', fontWeight: 600 }}>{row.title}</span>
+                      <span style={{ fontSize: '10px', fontWeight: 800, color: row.status === 'Active' ? ACCENT : SOFT, letterSpacing: '0.1em' }}>{row.status.toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </TiltWrapper>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 7.5 - CTA (Redesigned) */}
+      <section id="cta" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative', background: '#000' }}>
+        <StructuralBackground />
+        <div style={{ maxWidth: '1000px', zIndex: 1 }}>
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.03em', color: TEXT, fontStyle: 'italic', marginBottom: '60px' }}
+          >
             &ldquo;Accountability is not an org chart attribute. It is the structural integrity of the system.&rdquo;
           </motion.h2>
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
-            style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
-            <Link href="/connect"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(56,189,248,.3)'}}
-              onMouseOver={e=>{e.currentTarget.style.background=GOLDB;e.currentTarget.style.transform='translateY(-2px)'}}
-              onMouseOut={e=>{e.currentTarget.style.background=GOLD;e.currentTarget.style.transform='translateY(0)'}}>
-              Request a People Architecture Scan →
-            </Link>
-            <Link href="/founder"
-              style={{display:'inline-block',padding:'11px 26px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.12)',color:MUTED,fontSize:'13px',letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'border-color .2s,color .2s,transform .18s'}}
-              onMouseOver={e=>{e.currentTarget.style.borderColor=GOLD;e.currentTarget.style.color=GOLD;e.currentTarget.style.transform='translateY(-2px)'}}
-              onMouseOut={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.12)';e.currentTarget.style.color=MUTED;e.currentTarget.style.transform='translateY(0)'}}>
-              Speak with the Founder →
-            </Link>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ delay: 0.3 }}
+            style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}
+          >
+            <Link href="/connect" className="people-btn-fill">Request a People Architecture Scan</Link>
+            <Link href="/founder" className="people-btn-outline">Speak with the Founder</Link>
           </motion.div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer style={{background:'rgba(5,5,4,.98)',padding:'20px 56px',display:'flex',justifyContent:'space-between',alignItems:'center',borderTop:`1px solid ${LINE}`,flexWrap:'wrap',gap:'16px'}}>
-        <span style={{fontSize:'10px',color:SOFT,letterSpacing:'0.04em'}}>© 2026 Axion Index</span>
-        <div style={{display:'flex',gap:'22px'}}>
-          {[['/', 'Home'],['/about','About'],['/founder','Founder'],['/connect','Connect']].map(([href,label])=>(
-            <Link key={href} href={href} style={{fontSize:'11px',color:SOFT}}>{label}</Link>
+      <footer style={{ padding: '60px 56px', borderTop: '1px solid ' + LINE, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000' }}>
+        <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.1em' }}>© 2026 AXION INDEX</span>
+        <div style={{ display: 'flex', gap: '32px' }}>
+          {[['/', 'HOME'], ['/about', 'ABOUT'], ['/founder', 'FOUNDER'], ['/connect', 'CONNECT']].map(([href, label]) => (
+            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.15em' }}>{label}</Link>
           ))}
         </div>
       </footer>
 
       <style>{`
-        @media(max-width:1024px){
-          #hero>div{text-align:left!important}
-          #playbook>div{grid-template-columns:1fr!important;gap:40px!important}
-          #surfaces>div>div:last-child{grid-template-columns:1fr!important}
-          #bcr>div>div:nth-child(3){flex-direction:column!important;align-items:flex-start!important}
+        .people-btn-fill {
+          display: inline-block;
+          padding: 16px 40px;
+          background: #fff;
+          color: #000;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
         }
-        @media(max-width:767px){
-          section{padding:64px 20px!important}
-          footer{padding:20px!important;flex-direction:column!important;text-align:center!important}
+        .people-btn-fill:hover {
+          background: #eee;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+        }
+        .people-btn-outline {
+          display: inline-block;
+          padding: 16px 40px;
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #fff;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+        }
+        .people-btn-outline:hover {
+          border-color: #fff;
+          background: rgba(255,255,255,0.05);
+          transform: translateY(-2px);
+        }
+        @media (max-width: 1024px) {
+          section { padding: 100px 24px !important; }
+          #hero > div { text-align: left !important; }
+          #bcr > div > div:last-child { grid-template-columns: 1fr !important; }
+          #surfaces > div > div:last-child { grid-template-columns: 1fr !important; }
+          #playbook > div > div { grid-template-columns: 1fr !important; gap: 60px !important; }
         }
       `}</style>
     </div>

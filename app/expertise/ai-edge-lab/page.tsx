@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
 /* ── Cybernetic Tokens ────────────────────────────────── */
@@ -17,27 +17,89 @@ const ACCENT = '#ffffff';
 
 const VP = { once: false, margin: '-100px' };
 
+/* ── 3D Tilt Component ───────────────────────────────── */
+function TiltWrapper({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        perspective: "1000px"
+      }}
+    >
+      <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
 /* ── Background: Neural Grid ─────────────────────────── */
 function NeuralGrid() {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+
   return (
-    <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none', perspective: '1000px' }}>
+      {/* 3D Floor Grid */}
+      <motion.div 
+        style={{ 
+          position: 'absolute', 
+          inset: '-100%', 
+          backgroundImage: `linear-gradient(${LINE} 1px, transparent 1px), linear-gradient(90deg, ${LINE} 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+          transform: 'rotateX(65deg) translateY(-20%)',
+          opacity: 0.2,
+          y
+        }} 
+      />
+      
       {/* Horizontal Scanlines */}
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: 'repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.02) 1px, rgba(255,255,255,0.02) 2px)',
+        background: 'repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.01) 1px, rgba(255,255,255,0.01) 2px)',
         backgroundSize: '100% 4px',
-        opacity: 0.5
+        opacity: 0.3
       }} />
       
       {/* Pulse effect */}
       <motion.div
-        animate={{ opacity: [0.1, 0.3, 0.1] }}
+        animate={{ opacity: [0.1, 0.2, 0.1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%)'
+          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)'
         }}
       />
       
@@ -50,37 +112,85 @@ function NeuralGrid() {
   );
 }
 
+/* ── 3D Floating Particles ───────────────────────────── */
+function FloatingParticles() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+      {Array.from({ length: 15 }).map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ 
+            x: Math.random() * 100 + "%", 
+            y: Math.random() * 100 + "%", 
+            opacity: 0,
+            scale: 0 
+          }}
+          animate={{ 
+            y: [null, "-20%"],
+            opacity: [0, 0.3, 0],
+            scale: [0, 1, 0]
+          }}
+          transition={{ 
+            duration: Math.random() * 10 + 10, 
+            repeat: Infinity, 
+            delay: Math.random() * 10 
+          }}
+          style={{
+            position: 'absolute',
+            width: '2px',
+            height: '2px',
+            background: '#fff',
+            borderRadius: '50%',
+            boxShadow: '0 0 10px #fff'
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ── Component: LabCard ───────────────────────────────── */
 function LabCard({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={VP}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const }}
-      whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.04)' }}
-      style={{
-        background: PANEL,
-        border: '1px solid ' + LINE,
-        padding: '40px',
-        position: 'relative',
-        overflow: 'hidden',
-        transition: 'all 0.3s ease'
-      }}
-    >
-      {/* Hover Glow Edge */}
+    <TiltWrapper>
       <motion.div
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={VP}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const }}
         style={{
-          position: 'absolute',
-          top: 0, left: 0, right: 0,
-          height: '1px',
-          background: 'linear-gradient(90deg, transparent, #fff, transparent)'
+          background: PANEL,
+          border: '1px solid ' + LINE,
+          padding: '40px',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease',
+          height: '100%',
+          transformStyle: "preserve-3d"
         }}
-      />
-      {children}
-    </motion.div>
+      >
+        {/* Hover Glow Edge */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0,
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent, #fff, transparent)',
+            zIndex: 10
+          }}
+        />
+        <div style={{ transform: "translateZ(20px)" }}>
+          {children}
+        </div>
+      </motion.div>
+    </TiltWrapper>
   );
 }
 
@@ -123,9 +233,7 @@ const stagger = (d = 0.1) => ({
    PAGE: AI EDGE LAB
 ══════════════════════════════════════════════════════ */
 export default function AIEdgeLab() {
-  const [activeActor, setActiveActor] = useState<number | null>(null);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [activeAssessment, setActiveAssessment] = useState<number | null>(null);
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -134,6 +242,8 @@ export default function AIEdgeLab() {
   });
 
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
 
   return (
     <div ref={containerRef} style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif', overflowX: 'hidden' }}>
@@ -145,50 +255,107 @@ export default function AIEdgeLab() {
       {/* SECTION 5.1 - HERO (Redesigned) */}
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', padding: '0 56px', overflow: 'hidden' }}>
         <NeuralGrid />
+        <FloatingParticles />
         
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: '800px' }}>
-            <Eyebrow label="AI EDGE LAB / OPERATING DOCTRINE" />
-            
-            <motion.h1 
-              variants={stagger(0.08)} 
-              initial="hidden" 
-              animate="show"
-              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(48px, 8vw, 110px)', fontWeight: 400, lineHeight: 0.9, letterSpacing: '-0.06em', marginBottom: '40px' }}
-            >
-              {['The', 'Work', 'Shift.'].map((w, i) => (
-                <motion.span key={i} variants={fadeUp} style={{ display: 'inline-block', marginRight: '0.2em' }}>{w}</motion.span>
-              ))}
-            </motion.h1>
-
-            <motion.div 
-              initial={{ opacity: 0, width: 0 }} 
-              animate={{ opacity: 1, width: '100px' }} 
-              transition={{ duration: 1, delay: 0.5 }}
-              style={{ height: '1px', background: ACCENT, marginBottom: '40px' }} 
-            />
-
-            <motion.div variants={stagger(0.1)} initial="hidden" animate="show">
-              <motion.p variants={fadeUp} style={{ fontSize: '22px', color: TEXT, lineHeight: 1.5, marginBottom: '24px', maxWidth: '700px', fontStyle: 'italic', fontWeight: 300 }}>
-                AI has entered as a fourth actor - not as a tool, but as a force that absorbs work and reprices human contribution.
-              </motion.p>
+        <motion.div 
+          style={{ 
+            maxWidth: '1200px', 
+            margin: '0 auto', 
+            width: '100%', 
+            position: 'relative', 
+            zIndex: 1,
+            opacity: heroOpacity,
+            scale: heroScale
+          }}
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center' }}>
+            <div style={{ maxWidth: '800px' }}>
+              <Eyebrow label="AI EDGE LAB / OPERATING DOCTRINE" />
               
-              <motion.p variants={fadeUp} style={{ fontSize: '16px', color: MUTED, lineHeight: 1.8, maxWidth: '560px', marginBottom: '48px' }}>
-                The workplace now has four actors: the Employee, the CXO, the Organisation - and AI. Each faces a different structural challenge.
-              </motion.p>
+              <motion.h1 
+                variants={stagger(0.08)} 
+                initial="hidden" 
+                animate="show"
+                style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(48px, 8vw, 110px)', fontWeight: 400, lineHeight: 0.9, letterSpacing: '-0.06em', marginBottom: '40px' }}
+              >
+                {['The', 'Work', 'Shift.'].map((w, i) => (
+                  <motion.span key={i} variants={fadeUp} style={{ display: 'inline-block', marginRight: '0.2em' }}>{w}</motion.span>
+                ))}
+              </motion.h1>
 
-              <motion.div variants={fadeUp} style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                <Link href="#assessments" className="lab-btn-fill">Take the Quick Mirror</Link>
-                <a href="#laws" className="lab-btn-outline">Read the Three Laws</a>
+              <motion.div 
+                initial={{ opacity: 0, width: 0 }} 
+                animate={{ opacity: 1, width: '100px' }} 
+                transition={{ duration: 1, delay: 0.5 }}
+                style={{ height: '1px', background: ACCENT, marginBottom: '40px' }} 
+              />
+
+              <motion.div variants={stagger(0.1)} initial="hidden" animate="show">
+                <motion.p variants={fadeUp} style={{ fontSize: '22px', color: TEXT, lineHeight: 1.5, marginBottom: '24px', maxWidth: '700px', fontStyle: 'italic', fontWeight: 300 }}>
+                  AI has entered as a fourth actor - not as a tool, but as a force that absorbs work and reprices human contribution.
+                </motion.p>
+                
+                <motion.p variants={fadeUp} style={{ fontSize: '16px', color: MUTED, lineHeight: 1.8, maxWidth: '560px', marginBottom: '48px' }}>
+                  The workplace now has four actors: the Employee, the CXO, the Organisation - and AI. Each faces a different structural challenge.
+                </motion.p>
+
+                <motion.div variants={fadeUp} style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                  <Link href="#assessments" className="lab-btn-fill">Take the Quick Mirror</Link>
+                  <a href="#laws" className="lab-btn-outline">Read the Three Laws</a>
+                </motion.div>
               </motion.div>
+            </div>
+
+            {/* 3D Hero Element */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                style={{
+                  width: '300px',
+                  height: '300px',
+                  border: '1px solid ' + SOFT,
+                  borderRadius: '50%',
+                  position: 'absolute'
+                }}
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                style={{
+                  width: '240px',
+                  height: '240px',
+                  border: '1px dashed ' + SOFT,
+                  borderRadius: '50%',
+                  position: 'absolute'
+                }}
+              />
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  background: 'radial-gradient(circle, #fff, transparent)',
+                  borderRadius: '50%',
+                  boxShadow: '0 0 50px rgba(255,255,255,0.2)',
+                  zIndex: 1
+                }}
+              />
             </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Decorative Data Flow */}
         <motion.div 
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.1 }}
+          whileInView={{ opacity: 0.1 }}
+          viewport={VP}
           style={{ position: 'absolute', right: '56px', bottom: '56px', fontSize: '120px', fontWeight: 900, fontFamily: 'monospace', writingMode: 'vertical-rl', letterSpacing: '0.2em' }}
         >
           AI_EDGE_LAB
@@ -410,26 +577,15 @@ export default function AIEdgeLab() {
               { abbr: 'BDI', name: 'Brainpower Density Index', desc: 'CXO model shift. Measure decision density across your leadership layer.', price: 'Building', detail: 'Waitlist - for leaders' },
               { abbr: 'ORG AI DARS', name: 'Org AI Decision Architecture Realignment System', desc: 'Organisation readiness. Enterprise-wide AI positioning assessment.', price: 'Building', detail: 'Enterprise engagement' },
             ].map((a, i) => (
-              <motion.div 
-                key={a.abbr}
-                whileHover={{ y: -10 }}
-                style={{ 
-                  background: PANEL, 
-                  border: '1px solid ' + LINE, 
-                  padding: '48px 40px', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  minHeight: '400px' 
-                }}
-              >
-                <span style={{ fontFamily: 'monospace', fontSize: '14px', color: SOFT, marginBottom: '32px' }}>[ {a.abbr} ]</span>
+              <LabCard key={a.abbr} delay={i * 0.1}>
+                <span style={{ fontFamily: 'monospace', fontSize: '14px', color: SOFT, marginBottom: '32px', display: 'block' }}>[ {a.abbr} ]</span>
                 <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '28px', fontWeight: 400, marginBottom: '20px' }}>{a.name}</h3>
                 <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7, marginBottom: '32px', flex: 1 }}>{a.desc}</p>
                 <div style={{ paddingTop: '24px', borderTop: '1px solid ' + LINE }}>
                   <div style={{ fontSize: '12px', fontWeight: 800, color: TEXT, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>{a.price}</div>
                   <div style={{ fontSize: '12px', color: SOFT }}>{a.detail}</div>
                 </div>
-              </motion.div>
+              </LabCard>
             ))}
           </div>
         </div>
@@ -439,7 +595,7 @@ export default function AIEdgeLab() {
       <section id="evidence" style={{ background: BG, padding: '160px 56px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Signal Registry" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
             12 reports. 6 months.
           </h2>
 

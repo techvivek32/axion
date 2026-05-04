@@ -6,6 +6,9 @@ import NavBar from '@/components/NavBar';
 
 /* ── 3D Background Grid ───────────────────────────────── */
 function Scene3D() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <div style={{ position: 'absolute', inset: 0, zIndex: 0, perspective: '1000px', overflow: 'hidden', pointerEvents: 'none' }}>
       <div 
@@ -18,6 +21,19 @@ function Scene3D() {
           opacity: 0.3
         }} 
       />
+      {mounted && (
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          {Array.from({ length: 15 }).map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ x: Math.random() * 100 + "%", y: Math.random() * 100 + "%", opacity: 0 }}
+              animate={{ y: [null, "-10%"], opacity: [0, 0.2, 0] }}
+              transition={{ duration: Math.random() * 5 + 10, repeat: Infinity, delay: Math.random() * 5 }}
+              style={{ position: 'absolute', width: '2px', height: '2px', background: '#fff', borderRadius: '50%' }}
+            />
+          ))}
+        </div>
+      )}
       <div 
         style={{ 
           position: 'absolute', 
