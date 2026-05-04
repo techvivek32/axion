@@ -905,9 +905,295 @@ nav.nav-scrolled{
 .cta-chips span{ font-size:11px;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:var(--muted) }
 .cta-note{ font-size:11px;color:var(--soft);line-height:1.6 }
 .cta-close{ font-size:11px;color:rgba(226,232,240,.28);margin-top:6px;line-height:1.5 }
-/* reveal */
-.rv{ opacity:0;transform:translateY(20px);transition:opacity .65s,transform .65s }
+/* ═══════════════════════════════════════════════════════
+   NEXT-LEVEL ANIMATION SYSTEM
+═══════════════════════════════════════════════════════ */
+
+/* ── Keyframes ──────────────────────────────────────── */
+@keyframes card-rise      { 0%{opacity:0;transform:translateY(48px) scale(.96)} 100%{opacity:1;transform:none} }
+@keyframes card-slide-l   { 0%{opacity:0;transform:translateX(-56px)} 100%{opacity:1;transform:none} }
+@keyframes card-slide-r   { 0%{opacity:0;transform:translateX(56px)} 100%{opacity:1;transform:none} }
+@keyframes card-pop       { 0%{opacity:0;transform:scale(.88) rotate(-1deg)} 100%{opacity:1;transform:scale(1) rotate(0deg)} }
+@keyframes card-flip-up   { 0%{opacity:0;transform:perspective(600px) rotateX(18deg) translateY(32px)} 100%{opacity:1;transform:perspective(600px) rotateX(0deg) translateY(0)} }
+@keyframes card-blur-in   { 0%{opacity:0;filter:blur(12px);transform:translateY(24px)} 100%{opacity:1;filter:blur(0);transform:none} }
+@keyframes shimmer-sweep  { 0%{background-position:200% center} 100%{background-position:-200% center} }
+@keyframes border-trace   { 0%{stroke-dashoffset:1000} 100%{stroke-dashoffset:0} }
+@keyframes float-y        { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes glow-breathe   { 0%,100%{opacity:.04;filter:blur(40px)} 50%{opacity:.14;filter:blur(60px)} }
+@keyframes line-grow-x    { 0%{transform:scaleX(0);transform-origin:left} 100%{transform:scaleX(1)} }
+@keyframes count-up       { 0%{opacity:0;transform:translateY(16px)} 100%{opacity:1;transform:none} }
+@keyframes spotlight-move { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes noise-drift    { 0%{transform:translate(0,0)} 25%{transform:translate(-2px,2px)} 50%{transform:translate(2px,-2px)} 75%{transform:translate(-1px,1px)} 100%{transform:translate(0,0)} }
+
+/* ── Reveal base — upgraded ─────────────────────────── */
+.rv{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+  will-change:opacity,transform;
+}
 .rv.in{ opacity:1;transform:none }
+
+/* ── Per-section card entrance variants ─────────────── */
+/* Metrics strip — slide from left, staggered */
+.hm{ animation:none }
+.hm.hm-in{
+  animation:card-slide-l .65s cubic-bezier(.22,1,.36,1) both;
+}
+.hm:nth-child(1).hm-in{animation-delay:.05s}
+.hm:nth-child(2).hm-in{animation-delay:.18s}
+.hm:nth-child(3).hm-in{animation-delay:.31s}
+.hm:nth-child(4).hm-in{animation-delay:.44s}
+
+/* What we do — fg-cards: blur-in stagger */
+.fg-card{
+  opacity:0;
+  animation:none;
+  transition:
+    border-color .3s,
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s cubic-bezier(.22,1,.36,1),
+    filter .3s;
+}
+.fg-card.ax-in{
+  animation:card-blur-in .7s cubic-bezier(.22,1,.36,1) both;
+}
+.fg-card:nth-child(1).ax-in{animation-delay:.0s}
+.fg-card:nth-child(2).ax-in{animation-delay:.12s}
+.fg-card:nth-child(3).ax-in{animation-delay:.24s}
+.fg-card:nth-child(4).ax-in{animation-delay:.36s}
+
+/* Arch cards — flip-up */
+.af{
+  opacity:0;
+  transition:
+    border-color .3s,
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s;
+}
+.af.ax-in{
+  animation:card-flip-up .65s cubic-bezier(.22,1,.36,1) both;
+}
+.arch-grid .af:nth-child(1).ax-in{animation-delay:.0s}
+.arch-grid .af:nth-child(2).ax-in{animation-delay:.1s}
+.arch-grid .af:nth-child(3).ax-in{animation-delay:.2s}
+.arch-grid .af:nth-child(4).ax-in{animation-delay:.3s}
+
+/* How we work — hw-cards: pop */
+.hw-card{
+  opacity:0;
+  transition:
+    border-top-color .3s,
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s;
+}
+.hw-card.ax-in{
+  animation:card-pop .6s cubic-bezier(.22,1,.36,1) both;
+}
+.hw-grid .hw-card:nth-child(1).ax-in{animation-delay:.0s}
+.hw-grid .hw-card:nth-child(2).ax-in{animation-delay:.1s}
+.hw-grid .hw-card:nth-child(3).ax-in{animation-delay:.2s}
+.hw-grid .hw-card:nth-child(4).ax-in{animation-delay:.3s}
+
+/* Thinking cards — slide from right */
+.ax-think-card{
+  opacity:0;
+  transition:border-color .3s, transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s;
+}
+.ax-think-card.ax-in{
+  animation:card-slide-r .65s cubic-bezier(.22,1,.36,1) both;
+}
+.ax-think-card:nth-child(1).ax-in{animation-delay:.0s}
+.ax-think-card:nth-child(2).ax-in{animation-delay:.1s}
+.ax-think-card:nth-child(3).ax-in{animation-delay:.2s}
+.ax-think-card:nth-child(4).ax-in{animation-delay:.3s}
+
+/* Compare cards — slide from sides */
+.cmp-d{ opacity:0; transition:border-color .3s,transform .4s,box-shadow .4s }
+.cmp-g{ opacity:0; transition:border-color .3s,transform .4s,box-shadow .4s }
+.cmp-d.ax-in{ animation:card-slide-l .65s cubic-bezier(.22,1,.36,1) both }
+.cmp-g.ax-in{ animation:card-slide-r .65s cubic-bezier(.22,1,.36,1) .1s both }
+
+/* Manifesto lines — rise stagger */
+.mf-line{ opacity:0; transform:translateY(20px); transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1) }
+.mf-line.ax-in{ opacity:1;transform:none }
+.mf-line:nth-child(1).ax-in{transition-delay:.0s}
+.mf-line:nth-child(2).ax-in{transition-delay:.15s}
+.mf-line:nth-child(3).ax-in{transition-delay:.3s}
+
+/* ── HOVER EFFECTS — next level ─────────────────────── */
+
+/* fg-cards: lift + glow + inner shimmer */
+.fg-card:hover{
+  border-color:rgba(255,255,255,.18);
+  transform:translateY(-8px) scale(1.015);
+  box-shadow:
+    0 32px 64px rgba(0,0,0,.6),
+    0 0 0 1px rgba(255,255,255,.1),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.fg-card::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);
+  background-size:300% 300%;
+  background-position:200% center;
+  transition:background-position .6s;
+  pointer-events:none;
+  border-radius:inherit;
+}
+.fg-card:hover::after{ background-position:-100% center }
+
+/* arch cards: tilt + glow */
+.af:hover{
+  border-color:rgba(255,255,255,.18);
+  transform:translateY(-6px) rotate(.4deg);
+  box-shadow:0 28px 56px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
+}
+
+/* hw-cards: lift + top-line glow */
+.hw-card:hover{
+  border-top-color:#ffffff;
+  transform:translateY(-6px);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 24px 48px rgba(0,0,0,.5);
+}
+.hw-card::after{
+  content:"";
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+.hw-card:hover::after{ transform:scaleX(1) }
+
+/* thinking cards: lift + blur siblings */
+.ax-think-card:hover{
+  border-color:rgba(255,255,255,.2);
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 32px 64px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.1);
+  z-index:2;
+}
+
+/* compare cards: lift */
+.cmp-d:hover,.cmp-g:hover{
+  transform:translateY(-4px);
+  box-shadow:0 24px 48px rgba(0,0,0,.5);
+}
+
+/* hm cards already have spinning border — add lift */
+.hm:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 24px 48px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.12);
+}
+
+/* ── Section ambient glow orbs ───────────────────────── */
+.sec::before{
+  content:"";
+  position:absolute;pointer-events:none;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.03),transparent 65%);
+  filter:blur(80px);
+  top:-20%;right:-10%;
+  animation:glow-breathe 8s ease-in-out infinite;
+  z-index:0;
+}
+
+/* ── Eyebrow line-grow on reveal ─────────────────────── */
+.eyebrow::before{
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+  transform:scaleX(0);
+  transform-origin:left;
+}
+.rv.in .eyebrow::before,.ax-in .eyebrow::before{ transform:scaleX(1) }
+
+/* ── Manifesto line hover ────────────────────────────── */
+.mf-line{ cursor:default }
+.mf-line:hover .mf-t{ color:rgba(255,255,255,.9);transition:color .3s }
+.mf-line:hover .mf-t.gold{ color:#ffffff }
+
+/* ── Thinking section — sibling blur on hover ────────── */
+#thinking:hover .ax-think-card:not(:hover){
+  filter:blur(1.5px);
+  opacity:.55;
+  transform:scale(.98);
+  transition:filter .3s,opacity .3s,transform .3s;
+}
+#thinking .ax-think-card{
+  transition:filter .3s,opacity .3s,transform .4s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .4s;
+}
+
+/* ── What we do — sibling blur on hover ─────────────── */
+#what:hover .fg-card:not(:hover){
+  filter:blur(1px);
+  opacity:.5;
+  transform:scale(.97);
+}
+#what .fg-card{
+  transition:filter .3s,opacity .3s,transform .4s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .4s;
+}
+
+/* ── Arch section — sibling blur ────────────────────── */
+#arch:hover .af:not(:hover){
+  filter:blur(1px);
+  opacity:.5;
+  transform:scale(.97);
+}
+#arch .af{
+  transition:filter .3s,opacity .3s,transform .4s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .4s;
+}
+
+/* ── How we work — sibling blur ─────────────────────── */
+#how:hover .hw-card:not(:hover){
+  filter:blur(1px);
+  opacity:.5;
+}
+#how .hw-card{
+  transition:filter .3s,opacity .3s,transform .4s cubic-bezier(.22,1,.36,1),border-top-color .3s,box-shadow .4s;
+}
+
+/* ── Scroll progress indicator ───────────────────────── */
+.ax-scroll-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,rgba(255,255,255,.8),rgba(255,255,255,.3));
+  z-index:9999;
+  transform-origin:left;
+  transform:scaleX(0);
+  transition:transform .1s linear;
+  pointer-events:none;
+}
+
+/* ── CTA mini-cards hover ────────────────────────────── */
+.ax-cta-card{
+  transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .35s;
+}
+.ax-cta-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,255,255,.35) !important;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+
+/* ── Fan accordion — enhanced hover ─────────────────── */
+.fc:hover:not(.on){
+  filter:brightness(1.15);
+  border-color:rgba(255,255,255,.12);
+}
+.fc.on{
+  box-shadow:0 24px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(255,255,255,.1);
+}
+
+/* ── Ticker hover pause ──────────────────────────────── */
+.ax-ticker:hover > div{ animation-play-state:paused }
+
+/* ── Reduced motion ──────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .rv,.hm,.fg-card,.af,.hw-card,.ax-think-card,.cmp-d,.cmp-g,.mf-line{
+    animation:none !important;
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+  }
+}
 @media(max-width:640px){.cta-mini-grid{grid-template-columns:1fr!important}}
 @media(max-width:980px){
   .hero-grid,.cta-grid,.cmp{ grid-template-columns:1fr }

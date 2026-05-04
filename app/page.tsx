@@ -582,6 +582,80 @@ const BODY_HTML = `<div class="wrap">
 </div>`;
 
 const PAGE_SCRIPT = `
+// Scroll progress bar
+(function(){
+  var bar=document.createElement('div');
+  bar.className='ax-scroll-bar';
+  bar.style.width='100%';
+  document.body.appendChild(bar);
+  window.addEventListener('scroll',function(){
+    var s=document.documentElement.scrollTop;
+    var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+    bar.style.transform='scaleX('+(s/h)+')';
+  },{passive:true});
+})();
+
+// Per-card IntersectionObserver for ax-in class
+(function(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('ax-in'); io.unobserve(e.target); }
+    });
+  },{threshold:.08,rootMargin:'0px 0px -32px 0px'});
+  document.querySelectorAll('.fg-card,.af,.hw-card,.ax-think-card,.cmp-d,.cmp-g').forEach(function(el){
+    io.observe(el);
+  });
+})();
+
+// Manifesto lines reveal
+(function(){
+  var io2=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('ax-in'); io2.unobserve(e.target); }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.mf-line').forEach(function(el){ io2.observe(el); });
+})();
+
+// Metrics strip hm-in
+(function(){
+  var io3=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('hm-in'); io3.unobserve(e.target); }
+    });
+  },{threshold:.1});
+  document.querySelectorAll('.hm').forEach(function(el){ io3.observe(el); });
+})();
+
+// Tag thinking cards
+(function(){
+  var sec=document.getElementById('thinking');
+  if(!sec)return;
+  sec.querySelectorAll('[style*="min-height:340px"]').forEach(function(el){
+    el.classList.add('ax-think-card');
+  });
+  // re-observe after tagging
+  var io4=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('ax-in'); io4.unobserve(e.target); }
+    });
+  },{threshold:.08});
+  sec.querySelectorAll('.ax-think-card').forEach(function(el){ io4.observe(el); });
+})();
+
+// Tag CTA mini-cards
+(function(){
+  document.querySelectorAll('[style*="min-height:140px"]').forEach(function(el){
+    el.classList.add('ax-cta-card');
+  });
+})();
+
+// Tag ticker for hover-pause
+(function(){
+  var tickerWrap=document.querySelector('[style*="overflow:hidden"]');
+  if(tickerWrap) tickerWrap.classList.add('ax-ticker');
+})();
+
 function openFan(el){
   document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
