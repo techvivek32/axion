@@ -38,7 +38,7 @@ export default function NavBar() {
         padding: '14px 56px',
         borderBottom: '1px solid rgba(255,255,255,.06)',
         backdropFilter: 'blur(24px)',
-        background: 'rgba(7,7,6,.88)',
+        background: 'rgba(8,8,8,.88)',
         position: 'sticky',
         top: 0,
         zIndex: 200,
@@ -47,12 +47,12 @@ export default function NavBar() {
 
         {/* Logo — exact match */}
         <Link href="/" aria-label="AX/ON Index" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 0 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0, lineHeight: 1, paddingRight: '12px', borderRight: '1.5px solid rgba(200,168,108,.55)' }}>
-            <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '22px', fontWeight: 900, color: '#f5f0e6', letterSpacing: '-.06em', lineHeight: '.92' }}>AX</span>
-            <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '22px', fontWeight: 200, color: 'rgba(200,168,108,.8)', letterSpacing: '-.05em', lineHeight: '.92' }}>ON</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0, lineHeight: 1, paddingRight: '12px', borderRight: '1.5px solid rgba(255,255,255,.2)' }}>
+            <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '22px', fontWeight: 900, color: '#f8fafc', letterSpacing: '-.06em', lineHeight: '.92' }}>AX</span>
+            <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '22px', fontWeight: 200, color: 'rgba(255,255,255,.7)', letterSpacing: '-.05em', lineHeight: '.92' }}>ON</span>
           </div>
           <div style={{ paddingLeft: '12px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '38px', fontWeight: 500, fontStyle: 'italic', color: '#f5f0e6', letterSpacing: '-.01em', lineHeight: '.92' }}>Index</span>
+            <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '38px', fontWeight: 500, fontStyle: 'italic', color: '#f8fafc', letterSpacing: '-.01em', lineHeight: '.92' }}>Index</span>
           </div>
         </Link>
 
@@ -80,8 +80,8 @@ export default function NavBar() {
                 top: 'calc(100% + 14px)',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                background: 'rgba(8,7,6,.97)',
-                border: '1px solid rgba(200,168,108,.18)',
+                background: 'rgba(8,8,8,.97)',
+                border: '1px solid rgba(255,255,255,.1)',
                 borderRadius: '14px',
                 padding: '8px',
                 minWidth: '200px',
@@ -98,14 +98,14 @@ export default function NavBar() {
                       display: 'block',
                       padding: '10px 14px',
                       fontSize: '12px',
-                      color: 'rgba(210,205,195,.7)',
+                      color: 'rgba(226,232,240,.7)',
                       letterSpacing: '.04em',
                       borderRadius: '8px',
                       transition: 'background .15s,color .15s',
                       textDecoration: 'none',
                     }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(200,168,108,.08)'; e.currentTarget.style.color = '#c8a86c'; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(210,205,195,.7)'; }}
+                    onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,.08)'; e.currentTarget.style.color = '#ffffff'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(226,232,240,.7)'; }}
                   >
                     {d.label}
                   </Link>
@@ -134,7 +134,7 @@ export default function NavBar() {
           {[0, 1, 2].map((i) => (
             <span key={i} style={{
               display: 'block', width: '24px', height: '2px',
-              background: '#c8a86c',
+              background: '#ffffff',
               transition: 'all 0.3s',
               transform: mobileOpen
                 ? i === 0 ? 'rotate(45deg) translateY(7px)'
@@ -153,7 +153,7 @@ export default function NavBar() {
           onClick={() => setMobileOpen(false)}
           style={{
             position: 'fixed', inset: 0,
-            background: 'rgba(7,7,6,0.98)',
+            background: 'rgba(8,8,8,0.98)',
             zIndex: 199,
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
@@ -169,7 +169,7 @@ export default function NavBar() {
                 style={{
                   display: 'block', width: '100%', textAlign: 'center',
                   fontSize: 'clamp(16px,4vw,20px)',
-                  color: 'rgba(210,205,195,.55)',
+                  color: 'rgba(226,232,240,.55)',
                   textDecoration: 'none',
                   letterSpacing: '.06em',
                   fontWeight: 500,
@@ -178,8 +178,8 @@ export default function NavBar() {
                   transition: 'color .2s',
                   fontFamily: 'Inter,-apple-system,sans-serif',
                 }}
-                onMouseOver={(e) => e.currentTarget.style.color = '#c8a86c'}
-                onMouseOut={(e) => e.currentTarget.style.color = 'rgba(210,205,195,.55)'}
+                onMouseOver={(e) => e.currentTarget.style.color = '#ffffff'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'rgba(226,232,240,.55)'}
               >
                 {l.label}
               </Link>
@@ -187,7 +187,7 @@ export default function NavBar() {
 
             {/* Expertise in mobile — expanded list */}
             <div style={{ width: '100%', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-              <div style={{ textAlign: 'center', fontSize: 'clamp(16px,4vw,20px)', color: 'rgba(210,205,195,.35)', padding: '14px 0', letterSpacing: '.06em', fontWeight: 500 }}>
+              <div style={{ textAlign: 'center', fontSize: 'clamp(16px,4vw,20px)', color: 'rgba(226,232,240,.35)', padding: '14px 0', letterSpacing: '.06em', fontWeight: 500 }}>
                 Expertise
               </div>
               {dropLinks.map((d) => (
@@ -198,7 +198,7 @@ export default function NavBar() {
                   style={{
                     display: 'block', textAlign: 'center',
                     fontSize: '14px',
-                    color: 'rgba(200,168,108,.65)',
+                    color: 'rgba(255,255,255,.65)',
                     textDecoration: 'none',
                     letterSpacing: '.06em',
                     padding: '10px 0',

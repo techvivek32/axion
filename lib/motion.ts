@@ -40,7 +40,7 @@ export const cardHover = {
   hover: {
     scale: 1.02,
     y: -6,
-    borderColor: 'rgba(200,168,108,0.4)',
+    borderColor: 'rgba(56,189,248,0.4)',
     transition: { duration: 0.25, ease: 'easeOut' as const },
   },
 };

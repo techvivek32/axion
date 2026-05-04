@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',RUST='#8C3B28';
+const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.6)',SOFT='rgba(255,255,255,.35)',LINE='rgba(255,255,255,.08)',GOLD='#ffffff',GOLDB='#cccccc',RUST='#444444';
 const VP={once:false,margin:'-60px'};
 const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
 const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
@@ -46,8 +46,8 @@ const WORKERS = [
   {no:'06',name:'Platform Worker',desc:'Aggregator contribution obligations',codes:['CSS']},
 ];
 
-const CODE_COLORS:Record<string,string>={CW:'rgba(200,168,108,.2)',CIR:'rgba(107,127,153,.2)',CSS:'rgba(60,140,100,.2)',COSH:'rgba(140,59,40,.2)'};
-const CODE_TEXT:Record<string,string>={CW:GOLD,CIR:'#8aaccc',CSS:'#7ab895',COSH:'#c4956a'};
+const CODE_COLORS:Record<string,string>={CW:'rgba(255,255,255,.1)',CIR:'rgba(255,255,255,.08)',CSS:'rgba(255,255,255,.06)',COSH:'rgba(255,255,255,.04)'};
+const CODE_TEXT:Record<string,string>={CW:'#ffffff',CIR:'#eeeeee',CSS:'#dddddd',COSH:'#cccccc'};
 
 // ── Four Codes ──────────────────────────────────────────
 const FOUR_CODES = [
@@ -114,7 +114,7 @@ function TypewriterText({text}:{text:string}){
   },[text]);
   return(
     <span style={{
-      background:'linear-gradient(90deg, #f5f2eb 0%, #e5c385 30%, #c8a86c 55%, #f5f2eb 80%, #e5c385 100%)',
+      background:'linear-gradient(90deg, #ffffff 0%, #dddddd 30%, #bbbbbb 55%, #ffffff 80%, #dddddd 100%)',
       backgroundSize:'200% auto',
       WebkitBackgroundClip:'text',
       WebkitTextFillColor:'transparent',
@@ -126,7 +126,7 @@ function TypewriterText({text}:{text:string}){
         <motion.span
           animate={{opacity:[1,0]}}
           transition={{duration:0.5,repeat:Infinity,repeatType:'reverse'}}
-          style={{display:'inline-block',width:'3px',height:'0.85em',background:GOLD,marginLeft:'4px',verticalAlign:'middle',borderRadius:'1px',WebkitTextFillColor:'initial'}}
+          style={{display:'inline-block',width:'3px',height:'0.85em',background:'#ffffff',marginLeft:'4px',verticalAlign:'middle',borderRadius:'1px',WebkitTextFillColor:'initial'}}
         />
       )}
     </span>
@@ -180,9 +180,9 @@ function ParticleSphere(){
       const cosY=Math.cos(rotY),sinY=Math.sin(rotY);
       // deep amber outer glow
       const glow=ctx.createRadialGradient(CX,CY,R*0.6,CX,CY,R*1.6);
-      glow.addColorStop(0,'rgba(180,90,20,0.0)');
-      glow.addColorStop(0.5,'rgba(160,75,15,0.12)');
-      glow.addColorStop(0.8,'rgba(120,50,10,0.06)');
+      glow.addColorStop(0,'rgba(255,255,255,0.0)');
+      glow.addColorStop(0.5,'rgba(255,255,255,0.08)');
+      glow.addColorStop(0.8,'rgba(255,255,255,0.04)');
       glow.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=glow;
       ctx.beginPath();ctx.arc(CX,CY,R*1.6,0,Math.PI*2);ctx.fill();
@@ -195,13 +195,11 @@ function ParticleSphere(){
         if(e.life>e.maxLife){ejected.splice(i,1);continue;}
         const t=e.life/e.maxLife;
         const alpha=(1-t)*(1-t)*0.7;
-        // ember: bright orange-gold fading to dark red
-        const rr=Math.round(220-t*80);
-        const gg=Math.round(120-t*90);
-        const bb=Math.round(20-t*15);
+        // monochrome palette: white to gray
+        const v=Math.round(255-t*150);
         ctx.beginPath();
         ctx.arc(e.x,e.y,e.size*(1-t*0.6),0,Math.PI*2);
-        ctx.fillStyle=`rgba(${rr},${gg},${bb},${alpha})`;
+        ctx.fillStyle=`rgba(${v},${v},${v},${alpha})`;
         ctx.fill();
       }
       // sphere particles
@@ -220,13 +218,11 @@ function ParticleSphere(){
         const brightness=limb*frontBoost;
         if(brightness<0.05)continue;
         const alpha=p.opacity*brightness*0.9;
-        // deep ember palette: dark red-brown back → bright amber-gold front
-        const rr=Math.round(80+depth*170);
-        const gg=Math.round(25+depth*110);
-        const bb=Math.round(5+depth*30);
+        // monochrome palette: dark gray back → white front
+        const v=Math.round(50+depth*205);
         ctx.beginPath();
         ctx.arc(px,py,p.size*(0.3+depth*0.85),0,Math.PI*2);
-        ctx.fillStyle=`rgba(${rr},${gg},${bb},${alpha})`;
+        ctx.fillStyle=`rgba(${v},${v},${v},${alpha})`;
         ctx.fill();
       }
       raf=requestAnimationFrame(draw);
@@ -265,7 +261,7 @@ export default function LabourCodes(){
       <NavBar/>
 
       {/* TICKER */}
-      <div style={{background:'#0a0a09',borderBottom:`1px solid ${LINE}`,overflow:'hidden',position:'sticky',top:'57px',zIndex:190}}>
+      <div style={{background:'#020617',borderBottom:`1px solid ${LINE}`,overflow:'hidden',position:'sticky',top:'57px',zIndex:190}}>
         <div style={{display:'flex',alignItems:'stretch'}}>
           <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 20px',borderRight:`1px solid ${LINE}`,flexShrink:0}}>
             <span style={{width:'6px',height:'6px',borderRadius:'50%',background:GOLD,animation:'pulse 2s infinite',flexShrink:0}}/>
@@ -274,7 +270,7 @@ export default function LabourCodes(){
           <div style={{flex:1,overflow:'hidden',position:'relative'}}>
             <div ref={tickerRef} style={{display:'flex',alignItems:'center',height:'100%',whiteSpace:'nowrap',willChange:'transform'}}>
               {[...TICKER_ITEMS,...TICKER_ITEMS].map((item,i)=>(
-                <span key={i} style={{fontSize:'10px',color:'rgba(245,242,235,.5)',letterSpacing:'0.03em',padding:'7px 32px 7px 0'}}>{item}</span>
+                <span key={i} style={{fontSize:'10px',color:'rgba(226,232,240,.5)',letterSpacing:'0.03em',padding:'7px 32px 7px 0'}}>{item}</span>
               ))}
             </div>
           </div>
@@ -284,14 +280,14 @@ export default function LabourCodes(){
       {/* HERO */}
       <section style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 40% 50%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 40% 50%,rgba(255,255,255,.05),transparent 60%)',zIndex:0}}/>
         {/* dot grid overlay */}
         <div style={{position:'absolute',inset:0,zIndex:0,pointerEvents:'none',
-          backgroundImage:'radial-gradient(circle, rgba(200,168,108,0.18) 1px, transparent 1px)',
+          backgroundImage:'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
           backgroundSize:'32px 32px',
           maskImage:'radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)',
           WebkitMaskImage:'radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)',
-          opacity:0.5
+          opacity:0.3
         }}/>
         {/* Particle sphere — between columns */}
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2,delay:0.5}}
@@ -312,7 +308,7 @@ export default function LabourCodes(){
             <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.4}}
               style={{display:'flex',gap:'14px',flexWrap:'wrap'}}>
               <a href="#four-codes"
-                style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
+                style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
                 onMouseOver={e=>e.currentTarget.style.background=GOLDB}
                 onMouseOut={e=>e.currentTarget.style.background=GOLD}>
                 Explore the Four Codes ↓
@@ -370,11 +366,11 @@ export default function LabourCodes(){
                   </defs>
                   {/* base dim border */}
                   <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
-                    rx="16" fill="none" stroke="rgba(200,168,108,0.08)" strokeWidth="1"
+                    rx="16" fill="none" stroke="rgba(56,189,248,0.08)" strokeWidth="1"
                   />
                   {/* glowing trail */}
                   <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
-                    rx="16" fill="none" stroke="rgba(200,168,108,0.9)" strokeWidth="2"
+                    rx="16" fill="none" stroke="rgba(56,189,248,0.9)" strokeWidth="2"
                     strokeDasharray="40 1020"
                     strokeLinecap="round"
                     filter={`url(#glow${i})`}
@@ -382,7 +378,7 @@ export default function LabourCodes(){
                   />
                   {/* soft fade tail */}
                   <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)"
-                    rx="16" fill="none" stroke="rgba(200,168,108,0.25)" strokeWidth="4"
+                    rx="16" fill="none" stroke="rgba(56,189,248,0.25)" strokeWidth="4"
                     strokeDasharray="80 980"
                     strokeLinecap="round"
                     filter={`url(#glow${i})`}
@@ -416,7 +412,7 @@ export default function LabourCodes(){
                 style={{background:PANEL,border:`1px solid ${LINE}`,padding:'32px 28px',position:'relative',overflow:'hidden'}}>
                 <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:CODE_TEXT[c.code],opacity:0.5}}/>
                 <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px'}}>
-                  <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'28px',fontWeight:400,color:'rgba(200,168,108,.3)',lineHeight:1}}>{c.num}</span>
+                  <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'28px',fontWeight:400,color:'rgba(56,189,248,.3)',lineHeight:1}}>{c.num}</span>
                   <span style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:CODE_TEXT[c.code],padding:'3px 10px',background:CODE_COLORS[c.code],borderRadius:'4px'}}>{c.code} · {c.year}</span>
                 </div>
                 <div style={{fontSize:'18px',fontWeight:600,color:TEXT,marginBottom:'10px',letterSpacing:'-0.01em'}}>{c.name}</div>
@@ -540,7 +536,7 @@ export default function LabourCodes(){
             style={{display:'flex',flexWrap:'wrap',gap:'8px',marginBottom:'32px'}}>
             {['All',...CATEGORIES].map(c=>(
               <button key={c} onClick={()=>setActiveCat(c)}
-                style={{padding:'6px 16px',borderRadius:'999px',border:'1px solid',borderColor:activeCat===c?GOLD:LINE,background:activeCat===c?'rgba(200,168,108,.1)':'rgba(255,255,255,.02)',color:activeCat===c?GOLD:SOFT,fontSize:'11px',fontWeight:activeCat===c?700:400,cursor:'pointer',letterSpacing:'0.04em',transition:'all .2s'}}>
+                style={{padding:'6px 16px',borderRadius:'999px',border:'1px solid',borderColor:activeCat===c?GOLD:LINE,background:activeCat===c?'rgba(56,189,248,.1)':'rgba(255,255,255,.02)',color:activeCat===c?GOLD:SOFT,fontSize:'11px',fontWeight:activeCat===c?700:400,cursor:'pointer',letterSpacing:'0.04em',transition:'all .2s'}}>
                 {c}
               </button>
             ))}
@@ -610,17 +606,17 @@ export default function LabourCodes(){
 
       {/* CTA */}
       <section style={{background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(200,168,108,.06),transparent 60%)',zIndex:0}}/>
-        <div style={{position:'relative',zIndex:1}}>
-          <motion.p initial={{opacity:0,scale:0.95}} whileInView={{opacity:1,scale:1}} viewport={VP} transition={{duration:0.8,ease:'easeOut'}}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4.5vw,56px)',fontWeight:400,lineHeight:1.05,letterSpacing:'-0.04em',color:TEXT,marginBottom:'40px'}}>
-            Treat compliance as architecture.
-          </motion.p>
-          <motion.div initial={{opacity:0,y:12}} whileInView={{opacity:1,y:0}} viewport={VP} transition={{delay:0.3,duration:0.6}}
+        <motion.div initial={{opacity:0}} whileInView={{opacity:1}} viewport={VP} transition={{duration:2.5}}
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.05),transparent 60%)',zIndex:0}}/>
+        <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
+          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
+            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4vw,52px)',fontWeight:400,lineHeight:1.15,letterSpacing:'-0.03em',color:TEXT,fontStyle:'italic',marginBottom:'42px'}}>
+            &ldquo;Regulation is not an event to be filed. It is an architecture to be designed.&rdquo;
+          </motion.h2>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
             style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
             <Link href="/connect"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(200,168,108,.3)'}}
+              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#000000',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(255,255,255,.1)'}}
               onMouseOver={e=>{e.currentTarget.style.background=GOLDB;e.currentTarget.style.transform='translateY(-2px)'}}
               onMouseOut={e=>{e.currentTarget.style.background=GOLD;e.currentTarget.style.transform='translateY(0)'}}>
               Request a Labour Codes Diagnostic →

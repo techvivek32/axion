@@ -36,16 +36,16 @@ const numScale = {
 const VP = { once: false, margin: '-60px' };
 
 /* ── Homepage color tokens ────────────────────────────── */
-const BG    = '#080706';
-const BG2   = '#0d0c0b';
-const PANEL = '#171717';
-const TEXT  = '#f5f2eb';
-const MUTED = 'rgba(210,205,195,.62)';
-const SOFT  = 'rgba(210,205,195,.38)';
-const LINE  = 'rgba(255,255,255,.06)';
-const GOLD  = '#c8a86c';
-const GOLDB = '#e5c385';
-const RUST  = '#8C3B28';
+const BG    = '#080808';
+const BG2   = '#121212';
+const PANEL = '#1a1a1a';
+const TEXT  = '#ffffff';
+const MUTED = 'rgba(255,255,255,.6)';
+const SOFT  = 'rgba(255,255,255,.35)';
+const LINE  = 'rgba(255,255,255,.08)';
+const GOLD  = '#ffffff';
+const GOLDB = '#cccccc';
+const RUST  = '#444444';
 
 /* ── Eyebrow ──────────────────────────────────────────── */
 function Eyebrow({ label }: { label: string }) {
@@ -128,7 +128,7 @@ export default function Founder() {
       {/* ── 3.1 POSITIONING LINE ────────────────────── */}
       <section id="position" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', position: 'relative', overflow: 'hidden' }}>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
-          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(200,168,108,.05), transparent 60%)', zIndex: 0 }} />
+          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(255,255,255,.03), transparent 60%)', zIndex: 0 }} />
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '64px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
 
           {/* Portrait */}
@@ -137,7 +137,7 @@ export default function Founder() {
             <img src="/portrait.jpg" alt="Nitin Nahata"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
             {/* Gold shimmer top */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(200,168,108,.5),transparent)` }} />
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)` }} />
           </motion.div>
 
           {/* Text */}
@@ -192,10 +192,9 @@ export default function Founder() {
               style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               {arc.map((item, i) => (
                 <motion.div key={item.org} variants={slideLeft}
-                  whileHover={{ y: -5, borderColor: `rgba(200,168,108,.3)`, transition: { duration: 0.2 } }}
-                  style={{ background: PANEL, border: `1px solid ${LINE}`, padding: '32px 28px', position: 'relative', overflow: 'hidden' }}>
-                  {/* Top shimmer */}
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(200,168,108,.3),transparent)` }} />
+                  whileHover={{ y: -5, borderColor: `rgba(255,255,255,.2)`, transition: { duration: 0.2 } }}
+                  style={{ padding: '24px', background: BG, border: `1px solid rgba(255,255,255,.08)`, borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)` }} />
                   {/* Timeline dot */}
                   <div style={{ position: 'absolute', left: '-37px', top: '36px', width: '10px', height: '10px', borderRadius: '50%', background: RUST, border: `2px solid ${BG}` }} />
 
@@ -232,9 +231,9 @@ export default function Founder() {
             {codified.map((row, i) => (
               <motion.div key={row.no} variants={fadeUp}
                 style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: '28px', alignItems: 'start', background: PANEL, padding: '28px 24px', borderTop: `1px solid ${LINE}`, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(200,168,108,.25),transparent)` }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)` }} />
                 <motion.div variants={numScale}
-                  style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '40px', fontWeight: 400, color: `rgba(200,168,108,.35)`, lineHeight: 1, letterSpacing: '-0.04em' }}>
+                  style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '40px', fontWeight: 400, color: `rgba(255,255,255,.2)`, lineHeight: 1, letterSpacing: '-0.04em' }}>
                   {row.no}
                 </motion.div>
                 <div>
@@ -250,14 +249,14 @@ export default function Founder() {
       {/* ── 3.5 THESIS ──────────────────────────────── */}
       <section id="thesis" style={{ background: BG, borderBottom: `1px solid ${LINE}`, padding: '120px 56px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
-          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(200,168,108,.06), transparent 60%)', zIndex: 0 }} />
+          style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.03), transparent 60%)', zIndex: 0 }} />
         <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.p
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={VP}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(24px,3.5vw,44px)', fontWeight: 400, lineHeight: 1.35, letterSpacing: '-0.03em', color: TEXT, fontStyle: 'italic', textShadow: `0 0 80px rgba(200,168,108,.15)` }}>
+            style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(24px,3.5vw,44px)', fontWeight: 400, lineHeight: 1.35, letterSpacing: '-0.03em', color: TEXT, fontStyle: 'italic', textShadow: `0 0 80px rgba(255,255,255,.06)` }}>
             &ldquo;I architect order before scale demands it. The work is to make the patterns survive the person.&rdquo;
           </motion.p>
         </div>
@@ -280,15 +279,15 @@ export default function Founder() {
           style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '36px' }}
         >
           <Link href="/about"
-            style={{ display: 'inline-block', padding: '11px 26px', background: '#c8a86c', color: '#2a1800', fontSize: '13px', fontWeight: 600, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'background .2s,transform .18s', boxShadow: '0 12px 40px rgba(200,168,108,.3)', whiteSpace: 'nowrap' }}
-            onMouseOver={(e) => { e.currentTarget.style.background = '#e5c385'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.background = '#c8a86c'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+            style={{ display: 'inline-block', padding: '11px 26px', background: GOLD, color: '#080808', fontSize: '13px', fontWeight: 600, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'background .2s,transform .18s', boxShadow: '0 12px 40px rgba(255,255,255,.1)', whiteSpace: 'nowrap' }}
+            onMouseOver={(e) => { e.currentTarget.style.background = GOLDB; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.transform = 'translateY(0)'; }}>
             Read About Axion Index
           </Link>
           <Link href="/connect"
-            style={{ display: 'inline-block', padding: '11px 26px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.12)', color: 'rgba(210,205,195,.62)', fontSize: '13px', fontWeight: 500, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'border-color .2s,color .2s,transform .18s', whiteSpace: 'nowrap' }}
-            onMouseOver={(e) => { e.currentTarget.style.borderColor = '#c8a86c'; e.currentTarget.style.color = '#c8a86c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,.12)'; e.currentTarget.style.color = 'rgba(210,205,195,.62)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+            style={{ display: 'inline-block', padding: '11px 26px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.12)', color: MUTED, fontSize: '13px', fontWeight: 500, letterSpacing: '.04em', borderRadius: '999px', textDecoration: 'none', transition: 'border-color .2s,color .2s,transform .18s', whiteSpace: 'nowrap' }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = GOLD; e.currentTarget.style.color = GOLD; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,.12)'; e.currentTarget.style.color = MUTED; e.currentTarget.style.transform = 'translateY(0)'; }}>
             Start a Conversation
           </Link>
         </motion.div>

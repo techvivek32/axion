@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useEffect } from 'react';
 
 const BODY_HTML = `<div class="wrap">
@@ -7,12 +7,12 @@ const BODY_HTML = `<div class="wrap">
 <nav id="site-nav">
   <div style="line-height:1">
     <a href="/" aria-label="Axion Index" style="text-decoration:none;display:flex;align-items:center;gap:0">
-      <div style="display:flex;flex-direction:column;gap:0;line-height:1;padding-right:12px;border-right:1.5px solid rgba(200,168,108,.55)">
-        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:900;color:#f5f0e6;letter-spacing:-.06em;line-height:.92">AX</span>
-        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:200;color:rgba(200,168,108,.8);letter-spacing:-.05em;line-height:.92">ON</span>
+      <div style="display:flex;flex-direction:column;gap:0;line-height:1;padding-right:12px;border-right:1.5px solid rgba(255,255,255,.2)">
+        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:-.06em;line-height:.92">AX</span>
+        <span style="font-family:Inter,sans-serif;font-size:22px;font-weight:200;color:rgba(255,255,255,.7);letter-spacing:-.05em;line-height:.92">ON</span>
       </div>
       <div style="padding-left:12px;display:flex;align-items:center">
-        <span style="font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:500;font-style:italic;color:#f5f0e6;letter-spacing:-.01em;line-height:.92">Index</span>
+        <span style="font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:500;font-style:italic;color:#f8fafc;letter-spacing:-.01em;line-height:.92">Index</span>
       </div>
     </a>
   </div>
@@ -24,11 +24,11 @@ const BODY_HTML = `<div class="wrap">
       <button class="nl nav-exp-btn" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--muted);letter-spacing:.02em;display:flex;align-items:center;gap:5px;padding:0;font-family:Inter,-apple-system,sans-serif">
         Expertise <span style="font-size:9px;opacity:.6">▾</span>
       </button>
-      <div class="nav-exp-drop" style="display:none;position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:rgba(8,7,6,.97);border:1px solid rgba(200,168,108,.18);border-radius:14px;padding:8px;min-width:200px;z-index:300;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.6)">
-        <a href="/expertise/labour-codes" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">Labour Codes</a>
-        <a href="/expertise/ai-edge-lab" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">AI Edge Lab</a>
-        <a href="/expertise/family-business" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">Family Business</a>
-        <a href="/expertise/people-architecture" style="display:block;padding:10px 14px;font-size:12px;color:rgba(210,205,195,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(200,168,108,.08)';this.style.color='#c8a86c'" onmouseout="this.style.background='transparent';this.style.color='rgba(210,205,195,.7)'">People Architecture</a>
+      <div class="nav-exp-drop" style="display:none;position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:rgba(8,8,8,.97);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:8px;min-width:200px;z-index:300;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.6)">
+        <a href="/expertise/labour-codes" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">Labour Codes</a>
+        <a href="/expertise/ai-edge-lab" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">AI Edge Lab</a>
+        <a href="/expertise/family-business" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">Family Business</a>
+        <a href="/expertise/people-architecture" style="display:block;padding:10px 14px;font-size:12px;color:rgba(226,232,240,.7);letter-spacing:.04em;border-radius:8px;transition:background .15s,color .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#ffffff'" onmouseout="this.style.background='transparent';this.style.color='rgba(226,232,240,.7)'">People Architecture</a>
       </div>
     </div>
     <a href="/connect" class="nl">Connect</a>
@@ -37,14 +37,14 @@ const BODY_HTML = `<div class="wrap">
     <a href="/connect" class="btn-primary" style="padding:8px 18px;font-size:11px;text-decoration:none">Book Diagnostic</a>
   </div>
   <button id="mob-btn-hp" style="display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;z-index:201">
-    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
-    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
-    <span style="display:block;width:24px;height:2px;background:#c8a86c;transition:all 0.3s;border-radius:2px"></span>
+    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
+    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
+    <span style="display:block;width:24px;height:2px;background:#ffffff;transition:all 0.3s;border-radius:2px"></span>
   </button>
 </nav>
 
 <!-- LIVE TICKER -->
-<div style="border-bottom:1px solid var(--line);background:rgba(200,168,108,.03);overflow:hidden">
+<div style="border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);overflow:hidden">
   <div style="display:flex;white-space:nowrap;animation:ticker 30s linear infinite">
     <span style="padding:9px 24px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-primary);font-weight:700">&#11044;&ensp;Live signals</span>
     <span style="padding:9px 24px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);font-weight:700">Labour Codes &rarr;</span>
@@ -116,39 +116,39 @@ const BODY_HTML = `<div class="wrap">
       <p style="margin-top:16px;max-width:560px;font-size:14px;color:var(--muted);line-height:1.88">Decision-grade clarity for the people who run organisations &mdash; not advice, not software. Diagnosis, redesign, and preparation in a single operating lens.</p>
     </div>
     <div class="fg rv">
-      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="fg-no">01 &mdash; Diagnose</span>
         <h3 class="sr">Diagnose where your system is already failing</h3>
         <p>Work, ownership, and compliance exposure read as one architecture â€” structural stress identified before it shows up in margin.</p>
         <div class="you-receive">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,78,.5);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Workforce layer map &middot; Labour Code exposure scan &middot; Decision ownership audit</p>
         </div>
       </div>
-      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="fg-no">02 &mdash; Redesign</span>
         <h3 class="sr">Redesign decision architecture, not roles</h3>
         <p>Accountability and decision rights rebuilt from the operating layer up &mdash; not described in job titles &mdash; so clarity, transferability, and scale actually hold.</p>
         <div class="you-receive">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,78,.5);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Redesign blueprint &middot; Decision rights specification &middot; Implementation roadmap</p>
         </div>
       </div>
-      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="fg-no">03 &mdash; Prepare</span>
         <h3 class="sr">Prepare for AI before accountability breaks</h3>
         <p>Labour Codes and AI compression mapped to your operating layer before they hit the balance sheet.</p>
         <div class="you-receive">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,78,.5);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Readiness scorecard &middot; Risk delta report &middot; Structural advisory</p>
         </div>
       </div>
-      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="fg-card"><div class="fc-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="fg-no">04 &mdash; Translate</span>
         <h3 class="sr">Translate regulation into control, not compliance</h3>
         <p>India&rsquo;s Labour Codes converted into cost, classification, and operating architecture decisions &mdash; not compliance checklists.</p>
         <div class="you-receive">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,78,.5);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Labour Code exposure map &middot; Classification audit &middot; Control redesign</p>
         </div>
       </div>
@@ -167,28 +167,28 @@ const BODY_HTML = `<div class="wrap">
       <p style="font-size:14px;color:var(--muted);line-height:1.88;padding-bottom:6px">Not in strategy. Not in intent. In how work, decisions, and accountability move beneath the surface &mdash; accumulating cost long before leadership can see it.</p>
     </div>
     <div class="arch-grid rv">
-      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg><div class="ac-orb"></div>
+      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg><div class="ac-orb"></div>
         <div class="af-ghost" aria-hidden="true">01</div>
         <div class="af-top"><span class="af-num">01 &middot; Execution layer</span><span class="af-tag">Work</span></div>
         <h3>WORK</h3>
         <p class="af-sub">Tasks &middot; Roles &middot; Execution flow</p>
-        <p>Work changes faster than structure â€” where AI compression hits first and where role design falls furthest behind.</p>
+        <p>Work changes faster than structure âmdash; where AI compression hits first and where role design falls furthest behind.</p>
       </div>
-      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg><div class="ac-orb"></div>
+      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg><div class="ac-orb"></div>
         <div class="af-ghost" aria-hidden="true">02</div>
         <div class="af-top"><span class="af-num">02 &middot; Judgment shift</span><span class="af-tag">Decisions</span></div>
         <h3>DECISIONS</h3>
         <p class="af-sub">Judgment &middot; Ownership &middot; Escalation</p>
         <p>Authority migrates informally while accountability maps stay frozen. Decisions move; ownership does not.</p>
       </div>
-      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg><div class="ac-orb"></div>
+      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg><div class="ac-orb"></div>
         <div class="af-ghost" aria-hidden="true">03</div>
         <div class="af-top"><span class="af-num">03 &middot; Ownership break</span><span class="af-tag">Accountability</span></div>
         <h3>ACCOUNTABILITY</h3>
         <p class="af-sub">Who owns the outcome</p>
         <p>Ownership becomes unclear long before leadership realises it. No redesign holds without fixing this layer first.</p>
       </div>
-      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg><div class="ac-orb"></div>
+      <div class="af"><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg><div class="ac-orb"></div>
         <div class="af-ghost" aria-hidden="true">04</div>
         <div class="af-top"><span class="af-num">04 &middot; System outcome</span><span class="af-tag">Consequences</span></div>
         <h3>CONSEQUENCES</h3>
@@ -221,7 +221,7 @@ const BODY_HTML = `<div class="wrap">
       <p style="font-size:14px;color:var(--muted);line-height:1.88;padding-bottom:6px">We do not stop at interpretation, adoption, or organisational description. We translate structural diagnosis into redesign.</p>
     </div>
     <div class="cmp rv">
-      <div class="cmp-d"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(180,120,60,.35),transparent);z-index:2"></div>
+      <div class="cmp-d"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);z-index:2"></div>
         <h3 class="sr">Typical advisory</h3>
         <ul>
           <li><strong>Symptoms first</strong>Treats hiring, execution, compliance, and leadership fatigue as separate problems while the structure producing them stays intact.</li>
@@ -229,7 +229,7 @@ const BODY_HTML = `<div class="wrap">
           <li><strong>Deck-heavy outcome</strong>Leaders leave with frameworks and language, not stronger operating control.</li>
         </ul>
       </div>
-      <div class="cmp-g"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,108,.55),transparent);z-index:2"></div>
+      <div class="cmp-g"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);z-index:2"></div>
         <h3 class="sr">Axion Index</h3>
         <ul>
           <li><strong>System first</strong>Reads labour, people, AI, and succession pressures as one operating architecture â€” not four disconnected categories.</li>
@@ -259,7 +259,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="fgh" aria-hidden="true">01</div>
         <div class="fvt">Labour Codes</div>
         <div class="fbd">
-          <span class="ftag" style="color:var(--gold-primary);border-color:rgba(200,168,108,.3);background:rgba(200,168,108,.06)">Beyond compliance readiness</span>
+          <span class="ftag" style="color:var(--gold-primary);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)">Beyond compliance readiness</span>
           <div class="fh">Labour Codes Command Centre</div>
           <p class="fp">The market reads regulation as compliance. Axion Index reads it as workforce architecture: cost, classification, contractor logic, and control exposure â€” redesigned, not filed.</p>
           <div class="fc-cta">Map cost and control exposure &rarr;</div>
@@ -269,7 +269,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="fgh" aria-hidden="true">02</div>
         <div class="fvt">AI Edge Lab</div>
         <div class="fbd">
-          <span class="ftag" style="color:rgba(90,180,120,.85);border-color:rgba(50,130,80,.3)">Beyond AI pilot labs</span>
+          <span class="ftag" style="color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)">Beyond AI pilot labs</span>
           <div class="fh">AI Edge Lab</div>
           <p class="fp">Map work&#8209;layer compression, identify what must remain human, and redesign authority before intelligence abundance turns into accountability drift.</p>
           <div class="fc-cta">See the compression model &rarr;</div>
@@ -279,7 +279,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="fgh" aria-hidden="true">03</div>
         <div class="fvt">People Architecture</div>
         <div class="fbd">
-          <span class="ftag" style="color:rgba(140,130,220,.85);border-color:rgba(90,80,170,.3)">Beyond org charts</span>
+          <span class="ftag" style="color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)">Beyond org charts</span>
           <div class="fh">People Architecture</div>
           <p class="fp">Rebuild accountability for scale and continuity &mdash; for startups moving past founder improvisation and family businesses navigating professionalisation.</p>
           <div class="fc-cta">Run the people architecture scan &rarr;</div>
@@ -289,7 +289,7 @@ const BODY_HTML = `<div class="wrap">
         <div class="fgh" aria-hidden="true">04</div>
         <div class="fvt">Family Business</div>
         <div class="fbd">
-          <span class="ftag" style="color:rgba(200,168,108,.85);border-color:rgba(160,120,40,.3)">Beyond handover plans</span>
+          <span class="ftag" style="color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.3)">Beyond handover plans</span>
           <div class="fh">Succession Architecture</div>
           <p class="fp">Governance architecture for the next generation &mdash; not a handover plan, a structured transition that preserves what was built and creates what comes next.</p>
           <div class="fc-cta">Design the succession architecture &rarr;</div>
@@ -310,39 +310,39 @@ const BODY_HTML = `<div class="wrap">
       <p style="font-size:14px;color:var(--muted);line-height:1.88;padding-bottom:6px">Every engagement moves through the same four movements. The doctrine does not compress.</p>
     </div>
     <div class="hw-grid rv">
-      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="hw-step">Step 01</span>
         <h3 class="sr">Detect</h3>
         <p>Read the weak signals &mdash; regulatory shifts, AI compression, founder dependence, succession strain, and decision ambiguity.</p>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(154,122,58,.6);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Signal map &middot; Structural stress index &middot; Entry diagnosis</p>
         </div>
       </div>
-      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="hw-step">Step 02</span>
         <h3 class="sr">Map</h3>
         <p>Locate where work, control, judgment, and accountability are no longer aligned with the operating model.</p>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(154,122,58,.6);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Workforce layer map &middot; Decision rights audit &middot; Exposure scan</p>
         </div>
       </div>
-      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="hw-step">Step 03</span>
         <h3 class="sr">Diagnose</h3>
         <p>Define the structural failure precisely &mdash; cost risk, ownership drift, role distortion, or hidden fragility in the system.</p>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(154,122,58,.6);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Cost/risk segmentation &middot; Hidden exposure map &middot; Board-grade narrative</p>
         </div>
       </div>
-      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div class="hw-card"><div class="hw-orb"></div><svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <span class="hw-step">Step 04</span>
         <h3 class="sr">Redesign</h3>
         <p>Translate diagnosis into a structural recommendation leadership can act on &mdash; not a report. A redesign blueprint, brutal for outcomes.</p>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(154,122,58,.6);margin-bottom:4px">You receive</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">You receive</div>
           <p style="font-size:11px;color:var(--soft);line-height:1.6">Redesign blueprint &middot; Role &amp; decision spec &middot; Implementation roadmap</p>
         </div>
       </div>
@@ -355,62 +355,62 @@ const BODY_HTML = `<div class="wrap">
   <div class="inner">
     <div class="rv" style="margin-bottom:40px">
       <div class="eyebrow">The Operating Architect &middot; Latest thinking</div>
-      <h2 class="sr" style="font-size:clamp(28px,3.5vw,50px);font-weight:400;letter-spacing:-.04em;line-height:1.05">Signals from the <em style="color:var(--gold-primary);font-style:italic">operating layer.</em></h2>
+      <h2 class="sr" style="font-size:clamp(28px,3.5vw,50px);font-weight:400;letter-spacing:-.04em;line-height:1.05">Signals from the <m style="color:var(--gold-primary);font-style:italic">operating layer.</m></h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" class="rv">
 
       <!-- Card 1 â€” Featured -->
-      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#0d0b0a,#090706,#060404);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
-        <div style="position:absolute;top:-20%;right:0;width:100px;height:100px;background:radial-gradient(circle,rgba(160,90,40,.09),transparent 65%);filter:blur(28px)"></div>
-        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
+        <div style="position:absolute;top:-20%;right:0;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,.09),transparent 65%);filter:blur(28px)"></div>
+        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;position:relative;z-index:1">
-          <span style="width:18px;height:1px;background:rgba(200,168,108,.4);flex-shrink:0"></span>
-          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(184,146,78,.75)">Featured &middot; Long form</span>
+          <span style="width:18px;height:1px;background:rgba(255,255,255,.4);flex-shrink:0"></span>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)">Featured &middot; Long form</span>
         </div>
         <h3 class="sr" style="font-size:22px;font-weight:400;line-height:1.22;letter-spacing:-.02em;color:var(--text);margin-bottom:12px;position:relative;z-index:1">The CHRO-to-CEO transition: why the next wave of CEOs will come from HR</h3>
         <p style="font-size:13px;color:var(--muted);line-height:1.72;flex:1;position:relative;z-index:1">The functions closest to operating rhythm will produce the next wave of enterprise leaders.</p>
-        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(200,168,108,.8);position:relative;z-index:1">Read &rarr;</a>
+        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8);position:relative;z-index:1">Read &rarr;</a>
       </div>
 
       <!-- Card 2 -->
-      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#090c14,#07090d,#05060a);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
-        <div style="position:absolute;bottom:5%;left:0;width:100px;height:100px;background:radial-gradient(circle,rgba(80,100,150,.09),transparent 65%);filter:blur(28px)"></div>
-        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
+        <div style="position:absolute;bottom:5%;left:0;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,.09),transparent 65%);filter:blur(28px)"></div>
+        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;position:relative;z-index:1">
-          <span style="width:18px;height:1px;background:rgba(200,168,108,.4);flex-shrink:0"></span>
-          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(184,146,78,.75)">Essay &middot; AI &amp; Org design</span>
+          <span style="width:18px;height:1px;background:rgba(255,255,255,.4);flex-shrink:0"></span>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)">Essay &middot; AI &amp; Org design</span>
         </div>
         <h3 class="sr" style="font-size:22px;font-weight:400;line-height:1.22;letter-spacing:-.02em;color:var(--text);margin-bottom:12px;position:relative;z-index:1">AI doesn&rsquo;t disrupt organisations. It exposes the ones already broken.</h3>
         <p style="font-size:13px;color:var(--muted);line-height:1.72;flex:1;position:relative;z-index:1">Companies struggling with AI had rhythm failures long before the models arrived.</p>
-        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(200,168,108,.8);position:relative;z-index:1">Read &rarr;</a>
+        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8);position:relative;z-index:1">Read &rarr;</a>
       </div>
 
       <!-- Card 3 -->
-      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#0b0b0e,#08080b,#060608);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
-        <div style="position:absolute;top:10%;right:10%;width:100px;height:100px;background:radial-gradient(circle,rgba(200,195,215,.06),transparent 65%);filter:blur(28px)"></div>
-        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
+        <div style="position:absolute;top:10%;right:10%;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 65%);filter:blur(28px)"></div>
+        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;position:relative;z-index:1">
-          <span style="width:18px;height:1px;background:rgba(200,168,108,.4);flex-shrink:0"></span>
-          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(184,146,78,.75)">Essay &middot; Compliance</span>
+          <span style="width:18px;height:1px;background:rgba(255,255,255,.4);flex-shrink:0"></span>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)">Essay &middot; Compliance</span>
         </div>
         <h3 class="sr" style="font-size:22px;font-weight:400;line-height:1.22;letter-spacing:-.02em;color:var(--text);margin-bottom:12px;position:relative;z-index:1">Compliance is not a backend function. It is a structural signal.</h3>
         <p style="font-size:13px;color:var(--muted);line-height:1.72;flex:1;position:relative;z-index:1">How organisations read compliance reveals whether they are building for durability.</p>
-        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(200,168,108,.8);position:relative;z-index:1">Read &rarr;</a>
+        <a href="#" style="margin-top:20px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8);position:relative;z-index:1">Read &rarr;</a>
       </div>
 
       <!-- Card 4 â€” Newsletter -->
-      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#0d0b09,#0a0807,#070605);border:1px solid rgba(200,168,108,.18);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
-        <div style="position:absolute;bottom:-10%;right:5%;width:110px;height:110px;background:radial-gradient(circle,rgba(200,168,108,.1),transparent 65%);filter:blur(28px)"></div>
-        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#c8a86c" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#c8a86c"/></svg>
+      <div style="padding:26px;border-radius:24px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.18);display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px">
+        <div style="position:absolute;bottom:-10%;right:5%;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);filter:blur(28px)"></div>
+        <svg style="position:absolute;bottom:16px;right:16px;opacity:.07;pointer-events:none" width="28" height="24" viewBox="0 0 32 28" fill="none"><path d="M16 2L30 26H2L16 2Z" stroke="#ffffff" stroke-width="1.5"/><circle cx="16" cy="21" r="2.5" fill="#ffffff"/></svg>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;position:relative;z-index:1">
-          <span style="width:18px;height:1px;background:rgba(200,168,108,.4);flex-shrink:0"></span>
-          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(184,146,78,.75)">Newsletter</span>
+          <span style="width:18px;height:1px;background:rgba(255,255,255,.4);flex-shrink:0"></span>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)">Newsletter</span>
         </div>
         <p class="sr" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:400;font-style:italic;line-height:1.3;color:var(--text);margin-bottom:12px;position:relative;z-index:1">&ldquo;Thinking from the operating floor.&rdquo;</p>
         <p style="font-size:13px;color:var(--muted);line-height:1.72;flex:1;position:relative;z-index:1">Weekly intelligence on org design, AI, and judgment in practice.</p>
         <div style="margin-top:18px;position:relative;z-index:1">
           <input type="email" placeholder="your@email.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;outline:none;margin-bottom:8px;transition:border-color .2s">
-          <button style="width:100%;padding:11px;background:var(--gold-primary);color:#1a1208;border:none;border-radius:10px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .2s">Subscribe &rarr;</button>
+          <button style="width:100%;padding:11px;background:var(--gold-primary);color:#080808;border:none;border-radius:10px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .2s">Subscribe &rarr;</button>
         </div>
       </div>
 
@@ -430,29 +430,29 @@ const BODY_HTML = `<div class="wrap">
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px">
 
             <!-- Card 1: Structural Map â€” amber -->
-            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#0d0b0a,#090706,#060404);border:1px solid rgba(160,90,40,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(180,100,40,.4),transparent)"></div>
-              <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(160,90,40,.16),transparent 65%);filter:blur(24px)"></div>
-              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(120,60,20,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,140,70,.8);margin-bottom:10px;position:relative;z-index:1">01 â€” Structural map</div>
+            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent)"></div>
+              <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);filter:blur(24px)"></div>
+              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);filter:blur(20px)"></div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:10px;position:relative;z-index:1">01 â€” Structural map</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">Operating layer strain identified with cause, not just symptom.</p>
             </div>
 
             <!-- Card 2: Decision Rights â€” blue -->
-            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#090c14,#07090d,#05060a);border:1px solid rgba(80,100,150,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(100,130,180,.35),transparent)"></div>
-              <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(80,100,150,.16),transparent 65%);filter:blur(24px)"></div>
-              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(60,80,130,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(140,160,200,.8);margin-bottom:10px;position:relative;z-index:1">02 â€” Decision-rights audit</div>
+            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.2);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent)"></div>
+              <div style="position:absolute;top:-15%;right:-5%;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);filter:blur(24px)"></div>
+              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);filter:blur(20px)"></div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:10px;position:relative;z-index:1">02 â€” Decision-rights audit</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">Who owns decisions â€” and where ownership has drifted.</p>
             </div>
 
             <!-- Card 3: Structural Recommendation â€” gold -->
-            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#0e0c09,#0b0907,#080705);border:1px solid rgba(200,168,108,.25);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,108,.5),transparent)"></div>
-              <div style="position:absolute;top:-15%;right:-5%;width:110px;height:110px;background:radial-gradient(circle,rgba(200,168,108,.18),transparent 65%);filter:blur(26px)"></div>
-              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(180,140,60,.1),transparent 65%);filter:blur(20px)"></div>
-              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,168,108,.85);margin-bottom:10px;position:relative;z-index:1">03 â€” Structural recommendation</div>
+            <div style="padding:24px 20px;border-radius:18px;background:linear-gradient(145deg,#121212,#080808,#080808);border:1px solid rgba(255,255,255,.25);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent)"></div>
+              <div style="position:absolute;top:-15%;right:-5%;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);filter:blur(26px)"></div>
+              <div style="position:absolute;bottom:-10%;left:0%;width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);filter:blur(20px)"></div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-bottom:10px;position:relative;z-index:1">03 â€” Structural recommendation</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.7;position:relative;z-index:1;flex:1">A concrete redesign priority to act on immediately.</p>
             </div>
 
@@ -480,7 +480,7 @@ const BODY_HTML = `<div class="wrap">
 
 <!-- FOOTER -->
 <footer style="padding:32px 56px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
-  <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:400;color:rgba(245,242,235,.45);letter-spacing:-.01em">Axion<span style="color:var(--gold-primary)">.</span>Index</div>
+  <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:400;color:rgba(226,232,240,.45);letter-spacing:-.01em">Axion<span style="color:var(--gold-primary)">.</span>Index</div>
   <div style="display:flex;gap:24px">
     <a href="#arch" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">Architecture</a>
     <a href="#what" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">What we do</a>
@@ -488,7 +488,7 @@ const BODY_HTML = `<div class="wrap">
     <a href="#practices" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">Practices</a>
     <a href="#contact" style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">Contact</a>
   </div>
-  <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,242,235,.22)">&copy; 2025 Axion Index &middot; Bengaluru</div>
+  <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(226,232,240,.22)">&copy; 2025 Axion Index &middot; Bengaluru</div>
 </footer>
 
 </div>`;
@@ -519,22 +519,22 @@ function openFan(el){
   var btn=document.getElementById('mob-btn-hp');
   if(!btn)return;
   var overlay=document.createElement('div');
-  overlay.style.cssText='display:none;position:fixed;inset:0;background:rgba(7,7,6,.98);z-index:199;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto';
+  overlay.style.cssText='display:none;position:fixed;inset:0;background:rgba(2,6,23,.98);z-index:199;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto';
   var inner=document.createElement('div');
   inner.style.cssText='display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:40px 24px';
   var links=[['/', 'Home'],['/about','About Us'],['/founder','Founder'],['/expertise/labour-codes','Labour Codes'],['/expertise/ai-edge-lab','AI Edge Lab'],['/expertise/family-business','Family Business'],['/expertise/people-architecture','People Architecture'],['/connect','Connect']];
   links.forEach(function(l){
     var a=document.createElement('a');
     a.href=l[0];a.textContent=l[1];
-    a.style.cssText='display:block;width:100%;text-align:center;font-size:18px;color:rgba(210,205,195,.55);text-decoration:none;letter-spacing:.06em;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s;font-family:Inter,-apple-system,sans-serif';
-    a.onmouseover=function(){a.style.color='#c8a86c'};
-    a.onmouseout=function(){a.style.color='rgba(210,205,195,.55)'};
+    a.style.cssText='display:block;width:100%;text-align:center;font-size:18px;color:rgba(226,232,240,.55);text-decoration:none;letter-spacing:.06em;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s;font-family:Inter,-apple-system,sans-serif';
+    a.onmouseover=function(){a.style.color='#ffffff'};
+    a.onmouseout=function(){a.style.color='rgba(226,232,240,.55)'};
     a.onclick=function(){toggle()};
     inner.appendChild(a);
   });
   var cta=document.createElement('a');
   cta.href='/connect';cta.textContent='Book Diagnostic';
-  cta.style.cssText='display:inline-block;margin-top:28px;padding:12px 32px;background:#c8a86c;color:#2a1800;font-size:13px;font-weight:700;letter-spacing:.06em;border-radius:999px;text-decoration:none';
+  cta.style.cssText='display:inline-block;margin-top:28px;padding:12px 32px;background:#ffffff;color:#020617;font-size:13px;font-weight:700;letter-spacing:.06em;border-radius:999px;text-decoration:none';
   cta.onclick=function(){toggle()};
   inner.appendChild(cta);
   overlay.appendChild(inner);
@@ -576,7 +576,7 @@ var io=new IntersectionObserver(entries=>{
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 window.addEventListener('scroll',()=>{
   document.querySelector('nav').style.background=
-    window.scrollY>40?'rgba(8,7,6,.95)':'rgba(8,7,6,.88)';
+    window.scrollY>40?'rgba(8,8,8,.95)':'rgba(8,8,8,.88)';
 },{passive:true});
 `;
 

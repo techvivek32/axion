@@ -4,16 +4,16 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG = '#080706';
-const BG2 = '#0d0c0b';
-const PANEL = '#171717';
-const TEXT = '#f5f2eb';
-const MUTED = 'rgba(210,205,195,.62)';
-const SOFT = 'rgba(210,205,195,.38)';
+const BG = '#080808';
+const BG2 = '#121212';
+const PANEL = '#1a1a1a';
+const TEXT = '#ffffff';
+const MUTED = 'rgba(255,255,255,.62)';
+const SOFT = 'rgba(255,255,255,.38)';
 const LINE = 'rgba(255,255,255,.06)';
-const GOLD = '#c8a86c';
-const GOLDB = '#e5c385';
-const RUST = '#8C3B28';
+const GOLD = '#ffffff';
+const GOLDB = '#eeeeee';
+const RUST = '#ffffff';
 
 const VP = { once: false, margin: '-60px' };
 const fadeUp = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } } };
@@ -46,7 +46,7 @@ export default function AIEdgeLab() {
 
       {/* SECTION 5.1 - HERO */}
       <section id="hero" style={{ background: BG, borderBottom: '1px solid ' + LINE, padding: '0 56px', minHeight: '80vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.5 }} style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%,rgba(200,168,108,.05),transparent 60%)', zIndex: 0 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.5 }} style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%,rgba(255,255,255,.05),transparent 60%)', zIndex: 0 }} />
 
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '64px', alignItems: 'center', position: 'relative', zIndex: 1, width: '100%', padding: '96px 0' }}>
           <div>
@@ -67,7 +67,7 @@ export default function AIEdgeLab() {
             </motion.p>
 
             <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.4 }} style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '40px' }}>
-              <Link href="#assessments" style={{ display: 'inline-block', padding: '11px 26px', background: GOLD, color: '#2a1800', fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em', borderRadius: '999px', textDecoration: 'none' }}>Take the Quick Mirror</Link>
+              <Link href="#assessments" style={{ display: 'inline-block', padding: '11px 26px', background: GOLD, color: '#020617', fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em', borderRadius: '999px', textDecoration: 'none', transition: 'background .2s' }} onMouseOver={e => e.currentTarget.style.background = GOLDB} onMouseOut={e => e.currentTarget.style.background = GOLD}>Take the Quick Mirror</Link>
               <a href="#laws" style={{ display: 'inline-block', padding: '11px 26px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.12)', color: MUTED, fontSize: '13px', letterSpacing: '0.04em', borderRadius: '999px', textDecoration: 'none' }}>Read the Three Laws</a>
             </motion.div>
 
@@ -103,7 +103,7 @@ export default function AIEdgeLab() {
               { num: 'IV', name: 'Organisation', reckoning: 'Investment high, outcomes low.', question: '"What is structurally missing?"' },
             ].map((actor, i) => (
               <motion.div key={actor.num} variants={fadeUp} onClick={() => setActiveActor(activeActor === i ? null : i)} style={{ background: PANEL, border: '1px solid ' + (activeActor === i ? GOLD : 'rgba(255,255,255,.07)'), padding: '32px 28px', cursor: 'pointer', position: 'relative' }}>
-                <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '36px', fontWeight: 400, color: 'rgba(200,168,108,.4)', lineHeight: 1, display: 'block', marginBottom: '16px' }}>{actor.num}</span>
+                <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '36px', fontWeight: 400, color: 'rgba(255,255,255,.4)', lineHeight: 1, display: 'block', marginBottom: '16px' }}>{actor.num}</span>
                 <h3 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '24px', fontWeight: 400, marginBottom: '12px', letterSpacing: '-0.02em', color: TEXT }}>{actor.name}</h3>
                 <p style={{ fontSize: '14px', color: MUTED, lineHeight: 1.7, marginBottom: '12px' }}>{actor.reckoning}</p>
                 <p style={{ fontSize: '12px', color: SOFT, fontStyle: 'italic' }}>{actor.question}</p>
@@ -128,7 +128,7 @@ export default function AIEdgeLab() {
             ].map((law) => (
               <motion.div key={law.num} variants={fadeUp} style={{ background: PANEL, borderLeft: '3px solid ' + RUST, padding: '28px 28px 28px 24px', position: 'relative', borderTop: '1px solid rgba(255,255,255,.06)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: '24px', alignItems: 'start' }}>
-                  <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '32px', fontWeight: 400, color: 'rgba(200,168,108,.4)', lineHeight: 1 }}>{law.num}</span>
+                  <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '32px', fontWeight: 400, color: 'rgba(255,255,255,.4)', lineHeight: 1 }}>{law.num}</span>
                   <div>
                     <div style={{ fontSize: '18px', fontWeight: 600, color: TEXT, marginBottom: '8px', letterSpacing: '-0.01em' }}>{law.name}</div>
                     <div style={{ fontSize: '14px', color: MUTED, lineHeight: 1.7, marginBottom: '8px' }}>{law.statement}</div>
@@ -333,13 +333,18 @@ export default function AIEdgeLab() {
 
       {/* SECTION 5.12 - CTA */}
       <section id="cta" style={{ background: BG, padding: '120px 56px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%,rgba(200,168,108,.06),transparent 60%)', zIndex: 0 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.06),transparent 60%)', zIndex: 0 }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <motion.p initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={VP} transition={{ duration: 0.8, ease: 'easeOut' }} style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(32px,5vw,60px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.04em', color: TEXT, marginBottom: '40px' }}>
             Know where you stand<br />before AI decides it.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={VP} transition={{ delay: 0.3, duration: 0.6 }}>
-            <Link href="#assessments" style={{ display: 'inline-block', padding: '14px 32px', background: GOLD, color: '#2a1800', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', borderRadius: '999px', textDecoration: 'none', boxShadow: '0 12px 40px rgba(200,168,108,.3)' }}>Take the Quick Mirror</Link>
+            <Link href="/connect"
+              style={{ display: 'inline-block', padding: '14px 32px', background: GOLD, color: '#020617', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', borderRadius: '999px', textDecoration: 'none', transition: 'background .2s, transform .18s', boxShadow: '0 12px 40px rgba(255,255,255,.3)' }}
+              onMouseOver={e => { e.currentTarget.style.background = GOLDB; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseOut={e => { e.currentTarget.style.background = GOLD; e.currentTarget.style.transform = 'translateY(0)' }}>
+              Request an AI Compression Diagnostic →
+            </Link>
           </motion.div>
         </div>
       </section>

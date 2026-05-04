@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',ERR='#c0392b';
+const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.6)',SOFT='rgba(255,255,255,.35)',LINE='rgba(255,255,255,.08)',GOLD='#ffffff',GOLDB='#cccccc',ERR='#c0392b';
 const VP={once:false,margin:'-60px'};
 const fadeUp={hidden:{opacity:0,y:40},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
 const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.5,ease:[0.22,1,0.36,1]as const}}};
@@ -15,12 +15,12 @@ const CONTEXT_LABELS:Record<string,string>={'labour-codes':'Labour Codes','ai-ed
 const CONTEXT_HINTS:Record<string,string>={'labour-codes':'This will begin with exposure mapping across the four Codes — wages, classification, social security, and safety.','ai-edge':'This will route your request through the AI Edge diagnostic layer — work compression, judgment ownership, and structural readiness.','people-architecture':'This will begin with a BCR stage diagnosis — where the organisation is stuck between Belief, Conviction, and Rhythm.','family-business':'This will begin with a Five Architectures scan — Authority, Leadership, Governance, Succession, and Capabilities.','exploratory':'We will read your context and identify the most relevant structural layer before responding.'};
 const LOADING_MSGS=['Reading your context...','Mapping your architecture...','Preparing diagnostic entry...'];
 
-const inputBase:React.CSSProperties={width:'100%',padding:'13px 16px',background:'rgba(255,255,255,.04)',border:`1px solid rgba(255,255,255,.06)`,borderRadius:'2px',color:'#f5f2eb',fontSize:'14px',fontFamily:'Inter,-apple-system,sans-serif',outline:'none',transition:'border-color .2s,box-shadow .2s',appearance:'none' as const};
+const inputBase:React.CSSProperties={width:'100%',padding:'13px 16px',background:'rgba(255,255,255,.04)',border:`1px solid rgba(255,255,255,.06)`,borderRadius:'2px',color:'#f8fafc',fontSize:'14px',fontFamily:'Inter,-apple-system,sans-serif',outline:'none',transition:'border-color .2s,box-shadow .2s',appearance:'none' as const};
 
 function Label({children,required}:{children:React.ReactNode;required?:boolean}){
   return(
-    <div style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase' as const,color:'rgba(210,205,195,.38)',marginBottom:'8px',display:'flex',alignItems:'center',gap:'6px'}}>
-      {children}{required&&<span style={{color:'#c8a86c',fontSize:'12px',lineHeight:'1'}}>*</span>}
+    <div style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase' as const,color:'rgba(226,232,240,.38)',marginBottom:'8px',display:'flex',alignItems:'center',gap:'6px'}}>
+      {children}{required&&<span style={{color:GOLD,fontSize:'12px',lineHeight:'1'}}>*</span>}
     </div>
   );
 }
@@ -38,8 +38,8 @@ function Field({label,required,error,children}:{label:string;required?:boolean;e
 function Eyebrow({label}:{label:string}){
   return(
     <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={VP}
-      style={{display:'inline-flex',alignItems:'center',gap:'10px',fontSize:'10px',fontWeight:700,letterSpacing:'0.22em',textTransform:'uppercase' as const,color:'#c8a86c',marginBottom:'20px'}}>
-      <span style={{width:'24px',height:'1px',background:'#c8a86c',flexShrink:0}}/>
+      style={{display:'inline-flex',alignItems:'center',gap:'10px',fontSize:'10px',fontWeight:700,letterSpacing:'0.22em',textTransform:'uppercase' as const,color:GOLD,marginBottom:'20px'}}>
+      <span style={{width:'24px',height:'1px',background:GOLD,flexShrink:0}}/>
       {label}
     </motion.div>
   );
@@ -109,7 +109,7 @@ export default function Connect(){
     }catch{setStatus('error');setApiError('Submission failed. Please try again.');}
   }
 
-  function onFocus(e:React.FocusEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>){e.target.style.borderColor='#c8a86c';e.target.style.boxShadow='0 0 0 2px rgba(200,168,108,.12)';}
+  function onFocus(e:React.FocusEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>){e.target.style.borderColor=GOLD;e.target.style.boxShadow='0 0 0 2px rgba(255,255,255,.08)';}
   function onBlurInput(e:React.FocusEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>,field:string){e.target.style.borderColor=errors[field]?'#c0392b':'rgba(255,255,255,.06)';e.target.style.boxShadow='none';handleBlur(field);}
 
   const contextTag=form.context?CONTEXT_TAGS[form.context]:null;
@@ -121,7 +121,7 @@ export default function Connect(){
       {/* HERO */}
       <section style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'96px 56px 72px',textAlign:'center',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 60%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 60%,rgba(255,255,255,.03),transparent 60%)',zIndex:0}}/>
         <div style={{maxWidth:'640px',margin:'0 auto',position:'relative',zIndex:1}}>
           <motion.div variants={stagger(0.08)} initial="hidden" animate="show">
             <motion.div variants={fadeUp} style={{display:'inline-flex',alignItems:'center',gap:'10px',fontSize:'10px',fontWeight:700,letterSpacing:'0.22em',textTransform:'uppercase' as const,color:GOLD,marginBottom:'20px'}}>
@@ -155,7 +155,7 @@ export default function Connect(){
             ].map((item,i)=>(
               <motion.div key={item.role} variants={fadeUp}
                 style={{background:PANEL,border:`1px solid ${LINE}`,padding:'28px 24px',position:'relative',overflow:'hidden'}}>
-                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(200,168,108,.25),transparent)`}}/>
+                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)`}}/>
                 <div style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase' as const,color:GOLD,marginBottom:'12px'}}>{item.role}</div>
                 <p style={{fontSize:'14px',color:MUTED,lineHeight:1.8}}>{item.body}</p>
               </motion.div>
@@ -174,7 +174,7 @@ export default function Connect(){
           </motion.h2>
           <div style={{position:'relative',paddingLeft:'32px'}}>
             <motion.div initial={{scaleY:0,originY:0}} whileInView={{scaleY:1}} viewport={VP} transition={{duration:1,ease:'easeOut'}}
-              style={{position:'absolute',left:'7px',top:'8px',bottom:'8px',width:'2px',background:`linear-gradient(to bottom,${GOLD},rgba(200,168,108,.1))`}}/>
+              style={{position:'absolute',left:'7px',top:'8px',bottom:'8px',width:'2px',background:`linear-gradient(to bottom,${GOLD},rgba(255,255,255,.05))`}}/>
             <motion.div variants={stagger(0.15)} initial="hidden" whileInView="show" viewport={VP}
               style={{display:'flex',flexDirection:'column' as const,gap:'2px'}}>
               {[
@@ -291,10 +291,10 @@ export default function Connect(){
                 <AnimatePresence>
                   {contextTag&&(
                     <motion.div key={contextTag} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.3}}
-                      style={{background:PANEL,border:`1px solid rgba(200,168,108,.18)`,padding:'16px 20px',borderLeft:`3px solid ${GOLD}`}}>
+                      style={{background:PANEL,border:`1px solid rgba(255,255,255,.12)`,padding:'16px 20px',borderLeft:`3px solid ${GOLD}`}}>
                       <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'6px'}}>
                         <span style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase' as const,color:SOFT}}>Tagged as:</span>
-                        <span style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase' as const,color:GOLD,padding:'3px 10px',border:`1px solid rgba(200,168,108,.3)`,background:'rgba(200,168,108,.06)'}}>
+                        <span style={{fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase' as const,color:GOLD,padding:'3px 10px',border:`1px solid rgba(255,255,255,.2)`,background:'rgba(255,255,255,.06)'}}>
                           {CONTEXT_LABELS[contextTag]}
                         </span>
                       </div>
@@ -333,9 +333,9 @@ export default function Connect(){
                 </Field>
                 <div style={{height:'1px',background:LINE}}/>
                 <motion.button type="submit" disabled={!isValid}
-                  whileHover={isValid?{scale:1.01,boxShadow:'0 8px 32px rgba(200,168,108,.25)'}:{}}
+                  whileHover={isValid?{scale:1.01,boxShadow:'0 8px 32px rgba(255,255,255,.08)'}:{}}
                   whileTap={isValid?{scale:0.99}:{}}
-                  style={{width:'100%',padding:'15px',background:isValid?GOLD:'rgba(200,168,108,.2)',color:isValid?'#1a1208':'rgba(200,168,108,.4)',border:'none',borderRadius:'2px',fontSize:'13px',fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase' as const,cursor:isValid?'pointer':'not-allowed',transition:'background .2s,color .2s',fontFamily:'Inter,-apple-system,sans-serif'}}>
+                  style={{width:'100%',padding:'15px',background:isValid?GOLD:'rgba(255,255,255,.08)',color:isValid?'#080808':'rgba(255,255,255,.25)',border:'none',borderRadius:'2px',fontSize:'13px',fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase' as const,cursor:isValid?'pointer':'not-allowed',transition:'background .2s,color .2s',fontFamily:'Inter,-apple-system,sans-serif'}}>
                   Begin a Diagnostic →
                 </motion.button>
                 <p style={{fontSize:'11px',color:SOFT,textAlign:'center',fontFamily:'monospace',letterSpacing:'0.04em',lineHeight:1.6}}>
@@ -350,9 +350,9 @@ export default function Connect(){
       {/* CLOSING STRIP */}
       <section style={{background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.03),transparent 60%)',zIndex:0}}/>
         <motion.p initial={{opacity:0}} whileInView={{opacity:1}} viewport={VP} transition={{duration:1.2,ease:'easeOut'}}
-          style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,5vw,56px)',fontWeight:400,letterSpacing:'-0.04em',lineHeight:1.05,color:GOLD,position:'relative',zIndex:1,textShadow:'0 0 80px rgba(200,168,108,.15)'}}>
+          style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,5vw,56px)',fontWeight:400,letterSpacing:'-0.04em',lineHeight:1.05,color:GOLD,position:'relative',zIndex:1,textShadow:'0 0 80px rgba(255,255,255,.08)'}}>
           From ambiguity to architecture.
         </motion.p>
       </section>
@@ -368,7 +368,7 @@ export default function Connect(){
 
       <style>{`
         @keyframes spin{to{transform:rotate(360deg)}}
-        select option{background:#171717;color:#f5f2eb}
+        select option{background:#1e293b;color:#f8fafc}
         @media(max-width:767px){
           section{padding:56px 20px!important}
           footer{padding:20px!important;flex-direction:column!important;text-align:center!important}

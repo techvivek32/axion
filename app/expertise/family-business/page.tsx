@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',RUST='#8C3B28';
+const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.62)',SOFT='rgba(255,255,255,.38)',LINE='rgba(255,255,255,.06)',GOLD='#ffffff',GOLDB='#eeeeee',RUST='#ffffff';
 const VP={once:false,margin:'-60px'};
 const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
 const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
@@ -48,7 +48,7 @@ export default function FamilyBusiness(){
       {/* 6.1 HERO */}
       <section id="hero" style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'0 56px',minHeight:'80vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 30% 50%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 30% 50%,rgba(255,255,255,.05),transparent 60%)',zIndex:0}}/>
         <div style={{maxWidth:'1100px',margin:'0 auto',display:'grid',gridTemplateColumns:'1.2fr 0.8fr',gap:'64px',alignItems:'center',position:'relative',zIndex:1,width:'100%',padding:'96px 0'}}>
           <div>
             <Eyebrow label="Family Business Architecture"/>
@@ -69,10 +69,10 @@ export default function FamilyBusiness(){
             <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.4}}
               style={{display:'flex',gap:'14px',flexWrap:'wrap'}}>
               <a href="#architectures"
-                style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
+                style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
                 onMouseOver={e=>e.currentTarget.style.background=GOLDB}
                 onMouseOut={e=>e.currentTarget.style.background=GOLD}>
-                See the Five Architectures ↓
+                Design the Succession Architecture ↓
               </a>
               <Link href="/connect"
                 style={{display:'inline-block',padding:'11px 26px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.12)',color:MUTED,fontSize:'13px',letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'border-color .2s,color .2s'}}
@@ -85,7 +85,7 @@ export default function FamilyBusiness(){
           {/* Roman numeral V */}
           <motion.div initial={{opacity:0,scale:0.9}} animate={{opacity:1,scale:1}} transition={{duration:1.8,ease:'easeOut'}}
             style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(120px,18vw,220px)',fontWeight:400,color:'rgba(200,168,108,.08)',lineHeight:1,userSelect:'none',letterSpacing:'-0.06em'}}>V</span>
+            <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(120px,18vw,220px)',fontWeight:400,color:'rgba(255,255,255,.08)',lineHeight:1,userSelect:'none',letterSpacing:'-0.06em'}}>V</span>
           </motion.div>
         </div>
       </section>
@@ -127,10 +127,10 @@ export default function FamilyBusiness(){
                   {/* Timeline dot */}
                   <div style={{position:'absolute',left:'-37px',top:'32px',width:'10px',height:'10px',borderRadius:'50%',background:RUST,border:`2px solid ${BG2}`}}/>
                   {/* Top shimmer */}
-                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(200,168,108,.25),transparent)`}}/>
+                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent)`}}/>
 
                   <div style={{display:'grid',gridTemplateColumns:'56px 1fr auto',gap:'20px',alignItems:'start'}}>
-                    <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'32px',fontWeight:400,color:'rgba(200,168,108,.4)',lineHeight:1}}>{a.num}</span>
+                    <span style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'32px',fontWeight:400,color:'rgba(255,255,255,.4)',lineHeight:1}}>{a.num}</span>
                     <div>
                       <div style={{fontSize:'20px',fontWeight:600,color:TEXT,marginBottom:'6px',letterSpacing:'-0.01em'}}>{a.name}</div>
                       <div style={{fontSize:'14px',color:MUTED,lineHeight:1.7,marginBottom:'8px'}}>{a.def}</div>
@@ -153,7 +153,7 @@ export default function FamilyBusiness(){
                             </div>
                             <div>
                               <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:RUST,marginBottom:'8px'}}>Failure Mode</div>
-                              <p style={{fontSize:'13px',color:'rgba(210,205,195,.55)',lineHeight:1.8,fontStyle:'italic'}}>{a.fail}</p>
+                              <p style={{fontSize:'13px',color:'rgba(226,232,240,.55)',lineHeight:1.8,fontStyle:'italic'}}>{a.fail}</p>
                             </div>
                           </div>
                         </div>
@@ -186,7 +186,7 @@ export default function FamilyBusiness(){
             {architectures.map((a,i)=>(
               <div key={a.num} style={{display:'flex',alignItems:'center'}}>
                 <motion.div variants={scaleUp}
-                  style={{padding:'16px 20px',border:`1px solid rgba(200,168,108,.25)`,background:PANEL,textAlign:'center',minWidth:'120px'}}>
+                  style={{padding:'16px 20px',border:`1px solid rgba(255,255,255,.25)`,background:PANEL,textAlign:'center',minWidth:'120px'}}>
                   <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'11px',color:GOLD,marginBottom:'4px'}}>{a.num}</div>
                   <div style={{fontSize:'13px',fontWeight:600,color:TEXT}}>{a.name}</div>
                 </motion.div>
@@ -236,20 +236,20 @@ export default function FamilyBusiness(){
 
       {/* 6.5 CTA */}
       <section id="cta" style={{background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(200,168,108,.06),transparent 60%)',zIndex:0}}/>
-        <div style={{position:'relative',zIndex:1}}>
-          <motion.p initial={{opacity:0,scale:0.95}} whileInView={{opacity:1,scale:1}} viewport={VP} transition={{duration:0.8,ease:'easeOut'}}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(32px,5vw,60px)',fontWeight:400,lineHeight:1.05,letterSpacing:'-0.04em',color:TEXT,marginBottom:'40px'}}>
-            Design what survives you.
-          </motion.p>
-          <motion.div initial={{opacity:0,y:12}} whileInView={{opacity:1,y:0}} viewport={VP} transition={{delay:0.3,duration:0.6}}
+        <motion.div initial={{opacity:0}} whileInView={{opacity:1}} viewport={VP} transition={{duration:2.5}}
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.06),transparent 60%)',zIndex:0}}/>
+        <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
+          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
+            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4vw,52px)',fontWeight:400,lineHeight:1.15,letterSpacing:'-0.03em',color:TEXT,fontStyle:'italic',marginBottom:'42px'}}>
+            &ldquo;Governance is not a handover plan. It is a structured transition that preserves what was built and creates what comes next.&rdquo;
+          </motion.h2>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
             style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
             <Link href="/connect"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(200,168,108,.3)'}}
+              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(255,255,255,.3)'}}
               onMouseOver={e=>{e.currentTarget.style.background=GOLDB;e.currentTarget.style.transform='translateY(-2px)'}}
               onMouseOut={e=>{e.currentTarget.style.background=GOLD;e.currentTarget.style.transform='translateY(0)'}}>
-              Request a Family Business Diagnostic →
+              Request a Succession Architecture Diagnostic →
             </Link>
             <Link href="/founder"
               style={{display:'inline-block',padding:'11px 26px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.12)',color:MUTED,fontSize:'13px',letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'border-color .2s,color .2s,transform .18s'}}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from '@/components/NavBar';
 
-const BG='#080706',BG2='#0d0c0b',PANEL='#171717',TEXT='#f5f2eb',MUTED='rgba(210,205,195,.62)',SOFT='rgba(210,205,195,.38)',LINE='rgba(255,255,255,.06)',GOLD='#c8a86c',GOLDB='#e5c385',RUST='#8C3B28';
+const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.62)',SOFT='rgba(255,255,255,.38)',LINE='rgba(255,255,255,.06)',GOLD='#ffffff',GOLDB='#eeeeee',RUST='#ffffff';
 const VP={once:false,margin:'-60px'};
 const fadeUp={hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
 const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.7,ease:[0.22,1,0.36,1]as const}}};
@@ -46,7 +46,7 @@ export default function PeopleArchitecture(){
       {/* 7.1 HERO */}
       <section id="hero" style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative',overflow:'hidden'}}>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2.5}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 60%,rgba(200,168,108,.05),transparent 60%)',zIndex:0}}/>
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 60%,rgba(255,255,255,.05),transparent 60%)',zIndex:0}}/>
         <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
           <Eyebrow label="People Architecture"/>
           <motion.h1 variants={stagger(0.04)} initial="hidden" animate="show"
@@ -65,7 +65,7 @@ export default function PeopleArchitecture(){
           <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{delay:0.5}}
             style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
             <a href="#bcr"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
+              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s'}}
               onMouseOver={e=>e.currentTarget.style.background=GOLDB}
               onMouseOut={e=>e.currentTarget.style.background=GOLD}>
               Read the BCR Framework ↓
@@ -102,13 +102,13 @@ export default function PeopleArchitecture(){
                   onClick={()=>setActiveBCR(activeBCR===i?null:i)}
                   style={{
                     flex:1,padding:'28px 24px',
-                    border:`1px solid ${activeBCR===i?GOLD:LINE}`,
-                    background:activeBCR===i?'rgba(200,168,108,.06)':PANEL,
+                    border:`1px solid ${activeBCR===i?GOLD:'rgba(255,255,255,.07)'}`,
+                    background:activeBCR===i?'rgba(255,255,255,.06)':PANEL,
                     cursor:'pointer',
-                    transition:'border-color .2s,background .2s',
+                    transition:'all .3s',
                     position:'relative',
                   }}>
-                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(200,168,108,.3),transparent)`}}/>
+                  <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent)`}}/>
                   <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',color:GOLD,marginBottom:'10px'}}>{String(i+1).padStart(2,'0')}</div>
                   <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'24px',fontWeight:400,color:TEXT,marginBottom:'6px'}}>{n.label}</div>
                   <div style={{fontSize:'12px',color:MUTED,marginBottom:'8px'}}>{n.sub}</div>
@@ -164,7 +164,7 @@ export default function PeopleArchitecture(){
                   overflow:'hidden',
                   transition:'border-color .2s',
                 }}>
-                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(200,168,108,.3),transparent)`}}/>
+                <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent)`}}/>
                 <div style={{fontSize:'10px',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',color:GOLD,marginBottom:'12px',display:'flex',alignItems:'center',gap:'8px'}}>
                   <span style={{width:'16px',height:'1px',background:GOLD,flexShrink:0}}/>{String(i+1).padStart(2,'0')}
                 </div>
@@ -240,20 +240,20 @@ export default function PeopleArchitecture(){
 
       {/* 7.5 CTA */}
       <section id="cta" style={{background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
-          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(200,168,108,.06),transparent 60%)',zIndex:0}}/>
-        <div style={{position:'relative',zIndex:1}}>
-          <motion.p initial={{opacity:0,scale:0.95}} whileInView={{opacity:1,scale:1}} viewport={VP} transition={{duration:0.8,ease:'easeOut'}}
-            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4.5vw,56px)',fontWeight:400,lineHeight:1.05,letterSpacing:'-0.04em',color:TEXT,marginBottom:'40px'}}>
-            Define how your organisation works.
-          </motion.p>
-          <motion.div initial={{opacity:0,y:12}} whileInView={{opacity:1,y:0}} viewport={VP} transition={{delay:0.3,duration:0.6}}
+        <motion.div initial={{opacity:0}} whileInView={{opacity:1}} viewport={VP} transition={{duration:2.5}}
+          style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 50%,rgba(56,189,248,.06),transparent 60%)',zIndex:0}}/>
+        <div style={{maxWidth:'800px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
+          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
+            style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,4vw,52px)',fontWeight:400,lineHeight:1.15,letterSpacing:'-0.03em',color:TEXT,fontStyle:'italic',marginBottom:'42px'}}>
+            &ldquo;Accountability is not an org chart attribute. It is the structural integrity of the system.&rdquo;
+          </motion.h2>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
             style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
             <Link href="/connect"
-              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#2a1800',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(200,168,108,.3)'}}
+              style={{display:'inline-block',padding:'11px 26px',background:GOLD,color:'#020617',fontSize:'13px',fontWeight:600,letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'background .2s,transform .18s',boxShadow:'0 12px 40px rgba(56,189,248,.3)'}}
               onMouseOver={e=>{e.currentTarget.style.background=GOLDB;e.currentTarget.style.transform='translateY(-2px)'}}
               onMouseOut={e=>{e.currentTarget.style.background=GOLD;e.currentTarget.style.transform='translateY(0)'}}>
-              Request a People Architecture Diagnostic →
+              Request a People Architecture Scan →
             </Link>
             <Link href="/founder"
               style={{display:'inline-block',padding:'11px 26px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.12)',color:MUTED,fontSize:'13px',letterSpacing:'.04em',borderRadius:'999px',textDecoration:'none',transition:'border-color .2s,color .2s,transform .18s'}}
