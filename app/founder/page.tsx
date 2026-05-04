@@ -45,6 +45,42 @@ function Scene3D() {
   );
 }
 
+/* ── 3D Wireframe Cube Component ────────────────────── */
+function WireframeCube({ size = 40, color = LINE }: { size?: number; color?: string }) {
+  return (
+    <motion.div
+      animate={{ 
+        rotateX: [0, 360], 
+        rotateY: [0, 360] 
+      }}
+      transition={{ 
+        duration: 20, 
+        repeat: Infinity, 
+        ease: "linear" 
+      }}
+      style={{ 
+        width: size, 
+        height: size, 
+        position: 'relative', 
+        transformStyle: 'preserve-3d' 
+      }}
+    >
+      {/* Front */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `translateZ(${size/2}px)` }} />
+      {/* Back */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(180deg) translateZ(${size/2}px)` }} />
+      {/* Left */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(-90deg) translateZ(${size/2}px)` }} />
+      {/* Right */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(90deg) translateZ(${size/2}px)` }} />
+      {/* Top */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateX(90deg) translateZ(${size/2}px)` }} />
+      {/* Bottom */}
+      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateX(-90deg) translateZ(${size/2}px)` }} />
+    </motion.div>
+  );
+}
+
 /* ── 3D Card Wrapper ──────────────────────────────────── */
 function TiltCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   const x = useMotionValue(0);
@@ -200,10 +236,19 @@ const codified = [
 ══════════════════════════════════════════════════════ */
 export default function Founder() {
   const containerRef = useRef(null);
+  const arcRef = useRef(null);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
+
+  const { scrollYProgress: arcScroll } = useScroll({
+    target: arcRef,
+    offset: ["start end", "end start"]
+  });
+
+  const arcLineY = useSpring(useTransform(arcScroll, [0, 1], ["0%", "100%"]), { stiffness: 100, damping: 30 });
 
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
   const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
@@ -281,8 +326,28 @@ export default function Founder() {
       </section>
 
       {/* ── 3.3 CAREER ARC ──────────────────────────── */}
-      <section style={{ padding: '160px 56px', position: 'relative' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <section ref={arcRef} style={{ padding: '160px 56px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
+          {/* Vertical Progress Line */}
+          <div style={{ position: 'absolute', left: '-40px', top: '0', bottom: '0', width: '1px', background: LINE }}>
+            <motion.div style={{ width: '100%', height: arcLineY, background: GOLD, originY: 0 }} />
+            <motion.div 
+              style={{ 
+                position: 'absolute', 
+                left: '50%', 
+                top: arcLineY, 
+                width: '12px', 
+                height: '12px', 
+                background: BG, 
+                border: `2px solid ${GOLD}`, 
+                borderRadius: '50%', 
+                x: '-50%', 
+                y: '-50%',
+                boxShadow: `0 0 15px ${GOLD}`
+              }} 
+            />
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
             <div>
               <Eyebrow label="Career Arc" />
@@ -293,38 +358,52 @@ export default function Founder() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px', alignItems: 'stretch' }}>
             {arc.map((item, i) => (
-              <motion.div
-                key={item.org}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
-                viewport={VP}
-                whileHover={{ y: -10 }}
-                style={{ 
-                  background: PANEL, 
-                  padding: '48px', 
-                  border: `1px solid ${LINE}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '24px',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 800, color: SOFT, letterSpacing: '0.2em' }}>{item.year}</span>
-                  <div style={{ width: '40px', height: '1px', background: LINE }} />
-                </div>
-                <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400 }}>{item.org}</h3>
-                <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, flex: 1 }}>{item.scope}</p>
-                <div style={{ paddingTop: '24px', borderTop: `1px solid ${LINE}` }}>
-                  <p style={{ fontSize: '14px', color: GOLD, fontStyle: 'italic', fontWeight: 500 }}>
-                    &ldquo;{item.codified}&rdquo;
-                  </p>
-                </div>
-              </motion.div>
+              <TiltCard key={item.org} style={{ height: '100%' }}>
+                <motion.div
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={VP}
+                  whileHover={{ y: -10, borderColor: GOLD, background: 'rgba(255,255,255,0.05)' }}
+                  style={{ 
+                    background: PANEL, 
+                    padding: '48px', 
+                    border: `1px solid ${LINE}`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '24px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+                    marginTop: i % 2 === 0 ? '0' : '60px' // Staggered parallax layout
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', transform: 'translateZ(20px)' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: SOFT, letterSpacing: '0.2em' }}>{item.year}</span>
+                    <div style={{ width: '40px', height: '1px', background: LINE }} />
+                  </div>
+                  
+                  <div style={{ transform: 'translateZ(30px)' }}>
+                    <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400, marginBottom: '8px' }}>{item.org}</h3>
+                    <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, marginBottom: '24px' }}>{item.scope}</p>
+                  </div>
+
+                  <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: `1px solid ${LINE}`, transform: 'translateZ(40px)' }}>
+                    <p style={{ fontSize: '14px', color: GOLD, fontStyle: 'italic', fontWeight: 500 }}>
+                      &ldquo;{item.codified}&rdquo;
+                    </p>
+                  </div>
+
+                  {/* Decorative element */}
+                  <div style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.05, transform: 'translateZ(-10px)' }}>
+                    <WireframeCube size={100} color={GOLD} />
+                  </div>
+                </motion.div>
+              </TiltCard>
             ))}
           </div>
         </div>
