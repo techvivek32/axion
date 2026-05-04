@@ -142,7 +142,7 @@ export default function FamilyBusiness() {
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
               style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(44px, 7vw, 92px)', fontWeight: 400, lineHeight: 0.95, letterSpacing: '-0.05em', marginBottom: '40px' }}
             >
               Longevity is not inherited. It is designed.

@@ -57,7 +57,7 @@ function LabCard({ children, delay = 0 }: { children: React.ReactNode; delay?: n
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={VP}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const }}
       whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.04)' }}
       style={{
         background: PANEL,
@@ -112,7 +112,7 @@ function Eyebrow({ label }: { label: string }) {
 /* ── Motion Variants ─────────────────────────────────── */
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  show:   { opacity: 1, y: 0, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } }
+  show:   { opacity: 1, y: 0, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const } }
 };
 const stagger = (d = 0.1) => ({
   hidden: {},
