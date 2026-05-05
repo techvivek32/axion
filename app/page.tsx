@@ -435,6 +435,8 @@ const thinking = [
 export default function Home() {
   const containerRef = useRef(null);
   const [activePractice, setActivePractice] = useState("01");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -673,7 +675,7 @@ export default function Home() {
               <motion.div 
                 key={p.id}
                 onClick={() => setActivePractice(p.id)}
-                animate={{ width: activePractice === p.id ? '60%' : '13.33%' }}
+                animate={{ width: mounted ? (activePractice === p.id ? '60%' : '13.33%') : (p.id === '01' ? '60%' : '13.33%') }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 style={{ 
                   background: 'rgba(255,255,255,0.02)', 
@@ -687,17 +689,33 @@ export default function Home() {
                   flexDirection: 'column'
                 }}
               >
-                <div style={{ position: 'absolute', top: '40px', left: '40px', fontSize: '11px', fontWeight: 800, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em' }}>{p.id}</div>
+                <div style={{ position: 'absolute', top: '24px', left: '50%', transform: 'translateX(-50%)', fontSize: '11px', fontWeight: 800, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em' }}>{p.id}</div>
                 
                 <motion.div 
-                  animate={{ opacity: activePractice === p.id ? 0 : 1, rotate: -90 }}
-                  style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', whiteSpace: 'nowrap', fontSize: '24px', fontWeight: 500, letterSpacing: '0.05em' }}
+                  animate={{ 
+                    opacity: mounted ? (activePractice === p.id ? 0 : 1) : (p.id === '01' ? 0 : 1),
+                  }}
+                  transition={{ duration: 0.3 }}
+                  style={{ 
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%) rotate(-90deg)',
+                    whiteSpace: 'nowrap', 
+                    fontSize: '15px', 
+                    fontWeight: 600, 
+                    letterSpacing: '0.08em',
+                    color: 'rgba(255,255,255,0.85)',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    transformOrigin: 'center center',
+                  }}
                 >
                   {p.title}
                 </motion.div>
 
                 <AnimatePresence>
-                  {activePractice === p.id && (
+                  {mounted && activePractice === p.id && (
                     <motion.div 
                       initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                       style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}
