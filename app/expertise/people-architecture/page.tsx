@@ -302,7 +302,7 @@ export default function PeopleArchitecture() {
 
                 <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7, margin: 0 }}>{node.desc}</p>
                 
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: ACCENT, scaleX: 0, transformOrigin: 'left' }} />
+                <motion.div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: ACCENT, scaleX: 0, transformOrigin: 'left' }} />
               </motion.div>
             ))}
           </div>
@@ -391,7 +391,7 @@ export default function PeopleArchitecture() {
 
                 <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
                 
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: ACCENT, scaleX: 0, transformOrigin: 'left' }} />
+                <motion.div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: ACCENT, scaleX: 0, transformOrigin: 'left' }} />
               </motion.div>
             ))}
           </div>
