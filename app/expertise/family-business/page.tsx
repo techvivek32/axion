@@ -1,8 +1,112 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, PerspectiveCamera, Points, PointMaterial, Environment, MeshTransmissionMaterial, Line, Float as FloatDrei } from '@react-three/drei';
+import * as THREE from 'three';
 import NavBar from '@/components/NavBar';
+
+/* ── Three.js: The Golden Thread ────────────────────── */
+function GoldenThread({ scrollYProgress }: { scrollYProgress: any }) {
+  const pointsRef = useRef<THREE.Points>(null!);
+  const lineRef = useRef<THREE.Group>(null!);
+
+  const [particles] = useState(() => {
+    const arr = new Float32Array(1500 * 3);
+    for (let i = 0; i < 1500; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const r = 8 + Math.random() * 4;
+      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      arr[i * 3 + 2] = r * Math.cos(phi);
+    }
+    return arr;
+  });
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = t * 0.05;
+      pointsRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
+    }
+    if (lineRef.current) {
+      lineRef.current.rotation.y = -t * 0.1;
+    }
+  });
+
+  return (
+    <group>
+      <Points ref={pointsRef} positions={particles} stride={3}>
+        <PointMaterial
+          transparent
+          color="#ffffff"
+          size={0.03}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={0.15}
+        />
+      </Points>
+      
+      <group ref={lineRef}>
+        {[...Array(3)].map((_, i) => (
+          <mesh key={i} rotation={[Math.random(), Math.random(), Math.random()]}>
+            <torusGeometry args={[5 + i * 2, 0.01, 16, 100]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
+          </mesh>
+        ))}
+      </group>
+    </group>
+  );
+}
+
+function LegacyMonolith() {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.y = t * 0.2;
+      meshRef.current.rotation.x = Math.sin(t * 0.5) * 0.1;
+      meshRef.current.position.y = Math.sin(t * 0.3) * 0.2;
+    }
+  });
+
+  return (
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+      <mesh ref={meshRef}>
+        <boxGeometry args={[3, 5, 0.5]} />
+        <MeshTransmissionMaterial
+          backside
+          samples={4}
+          thickness={1.5}
+          chromaticAberration={0.05}
+          anisotropy={0.1}
+          distortion={0.1}
+          distortionScale={0.1}
+          temporalDistortion={0.1}
+          color="#ffffff"
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
+    </Float>
+  );
+}
+
+function FamilyScene({ scrollYProgress }: { scrollYProgress: any }) {
+  return (
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 15]} />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <GoldenThread scrollYProgress={scrollYProgress} />
+      <LegacyMonolith />
+      <Environment preset="city" />
+    </>
+  );
+}
 
 /* ── Legacy Tokens ───────────────────────────────────── */
 const BG    = '#050505';
@@ -118,41 +222,48 @@ const caseData = [
 export default function FamilyBusiness() {
   const [activeArch, setActiveArch] = useState<number | null>(null);
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useScroll({ 
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
   return (
     <div ref={containerRef} style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif', overflowX: 'hidden' }}>
       <NavBar />
 
+      {/* ── Three.js Background Layer ────────────────── */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Canvas>
+          <FamilyScene scrollYProgress={scrollYProgress} />
+        </Canvas>
+      </div>
+
       {/* Progress Line */}
       <motion.div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '3px', background: '#fff', scaleX: progress, transformOrigin: '0%', zIndex: 1000, mixBlendMode: 'difference' }} />
 
-      {/* SECTION 6.1 - HERO */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', padding: '0 56px', overflow: 'hidden' }}>
-        <LegacyBackground />
-
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-          <div>
+      {/* SECTION 6.1 - HERO (Redesigned) */}
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '0 56px', overflow: 'hidden', zIndex: 1 }}>
+        <div style={{ maxWidth: '1000px', width: '100%', textAlign: 'center' }}>
+          <motion.div style={{ opacity: heroOpacity, scale: heroScale }}>
             <Eyebrow label="Family Business Architecture" />
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
-              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(44px, 7vw, 92px)', fontWeight: 400, lineHeight: 0.95, letterSpacing: '-0.05em', marginBottom: '40px' }}
+              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(40px, 7vw, 90px)', fontWeight: 400, lineHeight: 0.9, letterSpacing: '-0.06em', marginBottom: '40px' }}
             >
-              Longevity is not inherited. It is designed.
+              Longevity is not inherited.<br />It is designed.
             </motion.h1>
 
             <motion.div
               initial={{ opacity: 0, scaleX: 0 }}
               animate={{ opacity: 1, scaleX: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
-              style={{ height: '1px', background: ACCENT, width: '120px', originX: 0, marginBottom: '40px' }}
+              style={{ height: '1px', background: ACCENT, width: '120px', margin: '0 auto 40px' }}
             />
 
             <motion.div
@@ -160,64 +271,63 @@ export default function FamilyBusiness() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.7 }}
             >
-              <p style={{ fontSize: '20px', color: TEXT, lineHeight: 1.6, marginBottom: '24px', fontStyle: 'italic', fontWeight: 300 }}>
+              <p style={{ fontSize: '20px', color: TEXT, lineHeight: 1.5, marginBottom: '38px', fontStyle: 'italic', fontWeight: 300, maxWidth: '800px', margin: '0 auto 48px' }}>
                 Family businesses do not fail because markets shift. They fail because architecture does not evolve across generations.
               </p>
-              <p style={{ fontSize: '16px', color: MUTED, lineHeight: 1.8, maxWidth: '560px', marginBottom: '48px' }}>
-                Most family enterprises scale revenue before they scale structure. The result is an institution that grows in size but not in durability — dependent on the founder&rsquo;s presence, vulnerable to transition, and unable to compound across generations.
+              <p style={{ fontSize: '18px', color: MUTED, marginBottom: '48px', lineHeight: 1.8 }}>
+                Most family enterprises scale revenue before they scale structure. The result is an institution that grows in size but not in durability — dependent on the founder’s presence, vulnerable to transition, and unable to compound across generations.
               </p>
 
-              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <a href="#architectures" className="legacy-btn-fill">Design the Succession Architecture</a>
                 <Link href="/connect" className="legacy-btn-outline">Request a Family Diagnostic</Link>
               </div>
             </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(140px, 20vw, 280px)', fontWeight: 400, color: 'rgba(255,255,255,0.05)', lineHeight: 1, userSelect: 'none' }}>V</span>
           </motion.div>
         </div>
       </section>
 
-      {/* SECTION 6.2 - FIVE ARCHITECTURES */}
-      <section id="architectures" style={{ background: BG2, padding: '160px 56px', position: 'relative' }}>
+      {/* SECTION 6.2 - FIVE ARCHITECTURES (Redesigned with Modern Accordion) */}
+      <section id="architectures" style={{ background: 'rgba(18,18,18,0.8)', backdropFilter: 'blur(10px)', padding: '160px 56px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <Eyebrow label="Institutional Framework" />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '80px', marginBottom: '100px', alignItems: 'flex-end' }}>
-            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+          <div style={{ textAlign: 'center', marginBottom: '100px' }}>
+            <Eyebrow label="Institutional Framework" />
+            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 72px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
               Five architectures.<br />One outcome — longevity.
             </h2>
-            <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
-              Each architecture addresses a distinct failure mode. Together they define whether the institution survives the founder.
+            <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.8 }}>
+                  Each architecture addresses a distinct failure mode. Together they define whether the institution survives the founder.            
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', background: LINE }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {architectures.map((a, i) => (
               <motion.div
                 key={a.num}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={VP}
                 transition={{ duration: 0.8, delay: i * 0.1 }}
-                style={{ background: BG2, borderLeft: activeArch === i ? '4px solid #fff' : '0px solid #fff', transition: 'all 0.3s ease' }}
+                style={{ 
+                  background: 'rgba(255,255,255,0.02)', 
+                  border: '1px solid ' + LINE,
+                  transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
+                }}
               >
                 <div
                   onClick={() => setActiveArch(activeArch === i ? null : i)}
-                  style={{ padding: '48px 40px', cursor: 'pointer', display: 'grid', gridTemplateColumns: '80px 1fr auto', gap: '40px', alignItems: 'center' }}
+                  onMouseEnter={() => setActiveArch(i)}
+                  style={{ padding: '40px', cursor: 'pointer', display: 'grid', gridTemplateColumns: '80px 1fr auto', gap: '40px', alignItems: 'center' }}
                 >
-                  <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '40px', color: SOFT }}>{a.num}</span>
+                  <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '48px', color: activeArch === i ? '#fff' : SOFT, transition: 'color 0.4s' }}>{a.num}</span>
                   <div>
-                    <h3 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '12px' }}>{a.name}</h3>
-                    <p style={{ fontSize: '16px', color: MUTED, margin: 0 }}>{a.def}</p>
+                    <h3 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px', letterSpacing: '-0.02em' }}>{a.name}</h3>
+                    <p style={{ fontSize: '15px', color: MUTED, margin: 0 }}>{a.def}</p>
                   </div>
-                  <motion.div animate={{ rotate: activeArch === i ? 45 : 0 }} style={{ fontSize: '24px' }}>+</motion.div>
+                  <motion.div 
+                    animate={{ rotate: activeArch === i ? 45 : 0 }} 
+                    style={{ fontSize: '32px', fontWeight: 200, color: activeArch === i ? '#fff' : SOFT }}
+                  >+</motion.div>
                 </div>
 
                 <AnimatePresence>
@@ -226,18 +336,22 @@ export default function FamilyBusiness() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                       style={{ overflow: 'hidden' }}
                     >
-                      <div style={{ padding: '0 40px 48px 120px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
+                      <div style={{ padding: '0 40px 60px 160px', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px' }}>
                         <div>
-                          <div style={{ fontSize: '11px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '20px' }}>[ DIAGNOSTIC ]</div>
-                          <p style={{ fontSize: '18px', color: TEXT, lineHeight: 1.5, marginBottom: '32px', fontStyle: 'italic' }}>&ldquo;{a.q}&rdquo;</p>
-                          <div style={{ fontSize: '11px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '16px' }}>[ EXPLANATION ]</div>
+                          <div style={{ fontSize: '10px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '24px' }}>[ DIAGNOSTIC_QUESTION ]</div>
+                          <p style={{ fontSize: '20px', color: TEXT, lineHeight: 1.5, marginBottom: '40px', fontStyle: 'italic', borderLeft: '2px solid #fff', paddingLeft: '24px' }}>&ldquo;{a.q}&rdquo;</p>
+                          <div style={{ fontSize: '10px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '20px' }}>[ SYSTEM_DETAIL ]</div>
                           <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8 }}>{a.detail}</p>
                         </div>
-                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '40px' }}>
-                          <div style={{ fontSize: '11px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '16px' }}>[ FAILURE MODE ]</div>
-                          <p style={{ fontSize: '20px', color: TEXT, fontWeight: 500 }}>{a.fail}</p>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                          <div style={{ fontSize: '10px', fontWeight: 800, color: ACCENT, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '20px' }}>[ FAILURE_MODE ]</div>
+                          <p style={{ fontSize: '28px', color: TEXT, fontWeight: 500, lineHeight: 1.2, letterSpacing: '-0.03em' }}>{a.fail}</p>
+                          <div style={{ marginTop: 'auto', paddingTop: '40px' }}>
+                            <div style={{ width: '40px', height: '1px', background: SOFT }} />
+                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -249,58 +363,73 @@ export default function FamilyBusiness() {
         </div>
       </section>
 
-      {/* SECTION 6.3 - FRAMEWORK EXPLANATION */}
-      <section style={{ padding: '160px 56px', background: BG, position: 'relative', overflow: 'hidden' }}>
-        <LegacyBackground />
-        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      {/* SECTION 6.3 - SYSTEM LOGIC (Redesigned with Interactive Grid) */}
+      <section style={{ padding: '160px 56px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px', alignItems: 'center' }}>
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={VP}
+            >
               <Eyebrow label="System Logic" />
-              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: '48px', fontWeight: 400, lineHeight: 1.1, marginBottom: '32px' }}>
-                Five architectures operate as a system.
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: '56px', fontWeight: 400, lineHeight: 1.1, marginBottom: '32px', letterSpacing: '-0.04em' }}>
+                Five Architectures operate as a system.
               </h2>
               <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.8 }}>
                 These are not independent pillars. Each architecture depends on the others. Authority without governance is arbitrary. Succession without leadership architecture is destabilising. Capabilities without governance are unprotected. The system only holds when all five are designed together.
               </p>
-            </div>
+            </motion.div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4px', background: LINE, border: '1px solid ' + LINE }}>
               {architectures.map((a, i) => (
                 <motion.div
                   key={a.num}
-                  whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.05)' }}
-                  style={{ background: PANEL, border: '1px solid ' + LINE, padding: '32px', textAlign: 'center' }}
+                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)', scale: 0.98 }}
+                  style={{ background: BG, padding: '48px 32px', textAlign: 'center', transition: 'all 0.3s ease' }}
                 >
-                  <div style={{ fontFamily: "'Playfair Display',serif", fontSize: '20px', color: SOFT, marginBottom: '8px' }}>{a.num}</div>
-                  <div style={{ fontSize: '16px', fontWeight: 600 }}>{a.name}</div>
+                  <div style={{ fontFamily: "'Playfair Display',serif", fontSize: '24px', color: SOFT, marginBottom: '12px' }}>{a.num}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{a.name}</div>
                 </motion.div>
               ))}
+              <div style={{ background: BG, padding: '48px 32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '40px', height: '40px', border: '1px solid ' + SOFT, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', color: SOFT }}>&rarr;</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 6.4 - CASE LOGIC */}
-      <section id="case" style={{ background: BG2, padding: '160px 56px' }}>
+      {/* SECTION 6.4 - CASE LOGIC (Redesigned with Signal Registry Style) */}
+      <section id="case" style={{ background: 'rgba(18,18,18,0.8)', backdropFilter: 'blur(10px)', padding: '160px 56px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Evidence" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
-            Why most family businesses fail across generations.
+          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
+            The Survival Statistics.
           </h2>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', background: LINE }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: LINE, border: '1px solid ' + LINE }}>
             {caseData.map((c, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={VP}
                 transition={{ delay: i * 0.1 }}
-                style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 2fr', gap: '40px', alignItems: 'center', background: BG2, padding: '40px' }}
+                whileHover={{ background: 'rgba(255,255,255,0.03)' }}
+                style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '250px 1fr 200px', 
+                  gap: '40px', 
+                  alignItems: 'center', 
+                  background: 'rgba(18,18,18,0.5)', 
+                  padding: '48px 40px',
+                  transition: 'background 0.3s'
+                }}
               >
-                <div style={{ fontSize: '18px', fontWeight: 600 }}>{c.gen}</div>
-                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: '64px', fontWeight: 400, color: ACCENT, lineHeight: 1 }}>{c.pct}</div>
-                <div style={{ fontSize: '16px', color: MUTED, fontStyle: 'italic' }}>{c.note}</div>
+                <div style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.02em' }}>{c.gen}</div>
+                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: '80px', fontWeight: 400, color: ACCENT, lineHeight: 1 }}>{c.pct}</div>
+                <div style={{ fontSize: '14px', color: MUTED, fontStyle: 'italic', textAlign: 'right', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{c.note}</div>
               </motion.div>
             ))}
           </div>
@@ -309,93 +438,97 @@ export default function FamilyBusiness() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={VP}
-            style={{ marginTop: '40px', padding: '32px', border: '1px solid ' + LINE, background: 'rgba(255,255,255,0.01)' }}
+            style={{ marginTop: '60px', padding: '40px', border: '1px solid ' + LINE, background: 'rgba(255,255,255,0.01)', textAlign: 'center' }}
           >
-            <p style={{ fontSize: '14px', color: SOFT, lineHeight: 1.7, margin: 0 }}>
-              Source: Family Business Institute; McKinsey Global Institute; Harvard Business Review longitudinal studies on family enterprise succession. The pattern is consistent: the failure is not capability. It is architecture.
+            <p style={{ fontSize: '13px', color: SOFT, lineHeight: 1.7, margin: 0, letterSpacing: '0.05em' }}>
+              SOURCE_REGISTRY: FAMILY BUSINESS INSTITUTE // MCKINSEY GLOBAL // HARVARD BUSINESS REVIEW longitudinal studies. 
+              <br />The pattern is absolute: failure is architectural, not individual.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* SECTION 6.5 - CTA */}
-      <section id="cta" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative', background: '#000' }}>
-        <LegacyBackground />
-        <div style={{ maxWidth: '1000px', zIndex: 1 }}>
-          <motion.h2
+      {/* SECTION 6.5 - CTA (Redesigned as High-Impact Monolith) */}
+      <section id="cta" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1100px' }}>
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={VP}
-            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.03em', color: TEXT, fontStyle: 'italic', marginBottom: '60px' }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            &ldquo;Governance is not a handover plan. It is a structured transition that preserves what was built and creates what comes next.&rdquo;
-          </motion.h2>
+            <p style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 72px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.04em', color: TEXT, fontStyle: 'italic', marginBottom: '80px' }}>
+              &ldquo;Governance is not a handover plan.<br />
+              <span style={{ color: MUTED }}>It is a structured transition that preserves what was built and creates what comes next.</span>&rdquo;
+            </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ delay: 0.3 }}
-            style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}
-          >
-            <Link href="/connect" className="legacy-btn-fill">Request a Succession Architecture Diagnostic</Link>
-            <Link href="/founder" className="legacy-btn-outline">Speak with the Founder</Link>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ delay: 0.3 }}
+              style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}
+            >
+              <Link href="/connect" className="legacy-btn-fill">Request a Succession Diagnostic</Link>
+              <Link href="/founder" className="legacy-btn-outline">Speak with the Founder</Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '60px 56px', borderTop: '1px solid ' + LINE, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000' }}>
-        <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.1em' }}>© 2026 AXION INDEX</span>
-        <div style={{ display: 'flex', gap: '32px' }}>
-          {[['/', 'HOME'], ['/about', 'ABOUT'], ['/founder', 'FOUNDER'], ['/connect', 'CONNECT']].map(([href, label]) => (
-            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.15em' }}>{label}</Link>
-          ))}
+      <footer style={{ padding: '80px 56px', borderTop: '1px solid ' + LINE, background: '#000', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '32px' }}>
+          <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.2em' }}>© 2026 AXION INDEX // GEN_ARCHITECTURE</span>
+          <div style={{ display: 'flex', gap: '40px' }}>
+            {[['/', 'HOME'], ['/about', 'ABOUT'], ['/founder', 'FOUNDER'], ['/connect', 'CONNECT']].map(([href, label]) => (
+              <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.2em', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = SOFT}>{label}</Link>
+            ))}
+          </div>
         </div>
       </footer>
 
-      <style>{`
+      <style jsx global>{`
         .legacy-btn-fill {
           display: inline-block;
-          padding: 16px 40px;
+          padding: 18px 48px;
           background: #fff;
           color: #000;
           text-decoration: none;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 800;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          border: 1px solid #fff;
         }
         .legacy-btn-fill:hover {
-          background: #eee;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+          background: transparent;
+          color: #fff;
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(255,255,255,0.1);
         }
         .legacy-btn-outline {
           display: inline-block;
-          padding: 16px 40px;
+          padding: 18px 48px;
           border: 1px solid rgba(255,255,255,0.2);
           color: #fff;
           text-decoration: none;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 800;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .legacy-btn-outline:hover {
           border-color: #fff;
           background: rgba(255,255,255,0.05);
-          transform: translateY(-2px);
+          transform: translateY(-4px);
         }
         @media (max-width: 1024px) {
           section { padding: 100px 24px !important; }
           #hero > div { grid-template-columns: 1fr !important; text-align: center; }
-          #hero > div > div:last-child { display: none !important; }
           #architectures > div > div:last-child { padding: 0 !important; }
-          #framework > div > div { grid-template-columns: 1fr !important; gap: 60px !important; }
-          #case > div > div:last-child { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
