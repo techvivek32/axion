@@ -1,83 +1,93 @@
 'use client';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, PerspectiveCamera, Points, PointMaterial, Environment, MeshTransmissionMaterial, MeshDistortMaterial, Sphere, Line } from '@react-three/drei';
+import * as THREE from 'three';
 import NavBar from '@/components/NavBar';
 
-/* ── 3D Background Grid ───────────────────────────────── */
-function Scene3D() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+/* ── Three.js: The Architect's Prism ────────────────── */
+function ArchitectPrism({ scrollYProgress }: { scrollYProgress: any }) {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const pointsRef = useRef<THREE.Points>(null!);
+
+  const [particles] = useState(() => {
+    const arr = new Float32Array(2500 * 3);
+    for (let i = 0; i < 2500; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const r = 10 + Math.random() * 5;
+      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      arr[i * 3 + 2] = r * Math.cos(phi);
+    }
+    return arr;
+  });
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.y = t * 0.15;
+      meshRef.current.rotation.x = Math.sin(t * 0.2) * 0.1;
+    }
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = -t * 0.05;
+    }
+  });
 
   return (
-    <div style={{ position: 'absolute', inset: 0, zIndex: 0, perspective: '1000px', overflow: 'hidden', pointerEvents: 'none' }}>
-      <div 
-        style={{ 
-          position: 'absolute', 
-          inset: '-100%', 
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
-          backgroundSize: '40px 40px',
-          transform: 'rotateX(60deg) translateY(-20%)',
-          opacity: 0.3
-        }} 
-      />
-      {mounted && (
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          {Array.from({ length: 15 }).map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ x: Math.random() * 100 + "%", y: Math.random() * 100 + "%", opacity: 0 }}
-              animate={{ y: [null, "-10%"], opacity: [0, 0.2, 0] }}
-              transition={{ duration: Math.random() * 5 + 10, repeat: Infinity, delay: Math.random() * 5 }}
-              style={{ position: 'absolute', width: '2px', height: '2px', background: '#fff', borderRadius: '50%' }}
-            />
-          ))}
-        </div>
-      )}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%)' 
-        }} 
-      />
-    </div>
+    <group>
+      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+        <mesh ref={meshRef}>
+          <octahedronGeometry args={[4, 0]} />
+          <MeshTransmissionMaterial
+            backside
+            samples={4}
+            thickness={2}
+            chromaticAberration={0.05}
+            anisotropy={0.1}
+            distortion={0.1}
+            distortionScale={0.1}
+            temporalDistortion={0.1}
+            color="#ffffff"
+            transparent
+            opacity={0.8}
+          />
+        </mesh>
+      </Float>
+
+      <Points ref={pointsRef} positions={particles} stride={3}>
+        <PointMaterial
+          transparent
+          color="#ffffff"
+          size={0.03}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={0.1}
+        />
+      </Points>
+      
+      {/* Structural Orbit Rings */}
+      {[...Array(3)].map((_, i) => (
+        <mesh key={i} rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}>
+          <torusGeometry args={[6 + i * 2, 0.005, 16, 100]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
+        </mesh>
+      ))}
+    </group>
   );
 }
 
-/* ── 3D Wireframe Cube Component ────────────────────── */
-function WireframeCube({ size = 40, color = LINE }: { size?: number; color?: string }) {
+function FounderScene({ scrollYProgress }: { scrollYProgress: any }) {
   return (
-    <motion.div
-      animate={{ 
-        rotateX: [0, 360], 
-        rotateY: [0, 360] 
-      }}
-      transition={{ 
-        duration: 20, 
-        repeat: Infinity, 
-        ease: "linear" 
-      }}
-      style={{ 
-        width: size, 
-        height: size, 
-        position: 'relative', 
-        transformStyle: 'preserve-3d' 
-      }}
-    >
-      {/* Front */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `translateZ(${size/2}px)` }} />
-      {/* Back */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(180deg) translateZ(${size/2}px)` }} />
-      {/* Left */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(-90deg) translateZ(${size/2}px)` }} />
-      {/* Right */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateY(90deg) translateZ(${size/2}px)` }} />
-      {/* Top */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateX(90deg) translateZ(${size/2}px)` }} />
-      {/* Bottom */}
-      <div style={{ position: 'absolute', inset: 0, border: `1px solid ${color}`, transform: `rotateX(-90deg) translateZ(${size/2}px)` }} />
-    </motion.div>
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 15]} />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <ArchitectPrism scrollYProgress={scrollYProgress} />
+      <Environment preset="city" />
+    </>
   );
 }
 
@@ -249,84 +259,96 @@ export default function Founder() {
   });
 
   const arcLineY = useSpring(useTransform(arcScroll, [0, 1], ["0%", "100%"]), { stiffness: 100, damping: 30 });
+  const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-
-  useEffect(() => {
-    // Scroll progress bar
-    const bar = document.createElement('div');
-    bar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:#ffffff;z-index:9999;transform-origin:left;width:100%;transform:scaleX(0);transition:transform 0.1s linear;mix-blend-mode:difference;';
-    document.body.appendChild(bar);
-
-    const handleScroll = () => {
-      const s = document.documentElement.scrollTop;
-      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      bar.style.transform = `scaleX(${s / h})`;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      if (document.body.contains(bar)) document.body.removeChild(bar);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
   return (
     <div ref={containerRef} style={{ background: BG, minHeight: '100vh', color: TEXT, fontFamily: 'Inter,-apple-system,sans-serif', overflowX: 'hidden' }}>
       <NavBar />
 
-      {/* ── 3.1 HERO SECTION ───────────────────────── */}
-      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '0 56px' }}>
-        <Scene3D />
-        
-        <motion.div style={{ maxWidth: '1200px', width: '100%', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center', zIndex: 1, scale, opacity }}>
-          <div>
-            <Eyebrow label="Founder" />
-            <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(40px, 6vw, 84px)', fontWeight: 400, lineHeight: 1, letterSpacing: '-0.05em', marginBottom: '40px' }}>
-              <WordReveal text="Nitin Nahata converts intellect into architecture." />
-            </h1>
-            <motion.div variants={lineGrowX} initial="hidden" animate="show" style={{ width: '120px', height: '2px', background: GOLD, marginBottom: '40px' }} />
-            <motion.p variants={fadeUp} initial="hidden" animate="show" style={{ fontSize: '20px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
-              The practitioner whose work codified the patterns Axion Index now deploys.
-            </motion.p>
-          </div>
+      {/* ── Three.js Background Layer ────────────────── */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Canvas>
+          <FounderScene scrollYProgress={scrollYProgress} />
+        </Canvas>
+      </div>
 
-          <TiltCard>
-            <div style={{ position: 'relative', aspectRatio: '3/4', background: '#111', border: `1px solid ${LINE}`, overflow: 'hidden' }}>
-              <img src="/portrait.jpg" alt="Nitin Nahata" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #050505 0%, transparent 40%)' }} />
+      {/* Progress Line */}
+      <motion.div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '3px', background: '#fff', scaleX: progress, transformOrigin: '0%', zIndex: 1000, mixBlendMode: 'difference' }} />
+
+      {/* ── 3.1 HERO SECTION (Redesigned with Split Layout) ─────── */}
+      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '0 56px', zIndex: 1 }}>
+        <div style={{ maxWidth: '1200px', width: '100%' }}>
+          <motion.div style={{ opacity: heroOpacity, scale: heroScale, display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center' }}>
+            <div>
+              <Eyebrow label="Founder" />
+              <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(40px, 6vw, 84px)', fontWeight: 400, lineHeight: 1, letterSpacing: '-0.05em', marginBottom: '40px' }}>
+                <WordReveal text="Nitin Nahata converts intellect into architecture." />
+              </h1>
+              
+              <motion.div 
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 1.5, delay: 0.5 }}
+                style={{ width: '120px', height: '1px', background: GOLD, marginBottom: '40px', transformOrigin: 'left' }} 
+              />
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.7 }}
+              >
+                <p style={{ fontSize: '22px', color: TEXT, lineHeight: 1.5, marginBottom: '48px', fontStyle: 'italic', fontWeight: 300, maxWidth: '600px' }}>
+                  The practitioner whose work codified the patterns Axion Index now deploys.
+                </p>
+
+                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                  <Link href="/about" className="btn-premium">About Axion Index</Link>
+                  <Link href="/connect" className="btn-outline">Start Conversation</Link>
+                </div>
+              </motion.div>
             </div>
-          </TiltCard>
-        </motion.div>
+
+            <div style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto' }}>
+              <TiltCard>
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', background: '#111', border: `1px solid rgba(255,255,255,0.1)`, overflow: 'hidden' }}>
+                  <img src="/portrait.jpg" alt="Nitin Nahata" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #050505 0%, transparent 40%)' }} />
+                </div>
+              </TiltCard>
+            </div>
+          </motion.div>
+        </div>
 
         <motion.div 
           animate={{ y: [0, 10, 0] }} 
           transition={{ repeat: Infinity, duration: 2 }}
-          style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', opacity: 0.5, fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' }}
+          style={{ position: 'absolute', bottom: '40px', left: '56px', opacity: 0.5, fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase' }}
         >
           Scroll to explore
         </motion.div>
       </section>
 
-      {/* ── 3.2 THE INSIGHT ────────────────────────── */}
-      <section style={{ padding: '200px 56px', background: BG2, position: 'relative' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      {/* ── 3.2 THE INSIGHT (Redesigned) ─────────────── */}
+      <section style={{ padding: '240px 56px', background: 'rgba(10,10,10,0.8)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <Eyebrow label="Core Thesis" />
           <motion.blockquote
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
-            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.03em', fontStyle: 'italic', margin: 0 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.04em', fontStyle: 'italic', margin: 0, color: TEXT }}
           >
-            &ldquo;Most failures are not strategy failures. They are <span style={{ color: GOLD }}>people-system failures</span> that happen silently, long before anyone notices.&rdquo;
+            &ldquo;Most failures are not strategy failures. They are <span style={{ color: GOLD, borderBottom: '1px solid ' + GOLD }}>people-system failures</span> that happen silently, long before anyone notices.&rdquo;
           </motion.blockquote>
         </div>
       </section>
 
-      {/* ── 3.3 CAREER ARC ──────────────────────────── */}
-      <section ref={arcRef} style={{ padding: '160px 56px', position: 'relative', overflow: 'hidden' }}>
+      {/* ── 3.3 CAREER ARC (Redesigned) ──────────────── */}
+      <section ref={arcRef} style={{ padding: '160px 56px', position: 'relative', overflow: 'hidden', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
           {/* Vertical Progress Line */}
           <div style={{ position: 'absolute', left: '-40px', top: '0', bottom: '0', width: '1px', background: LINE }}>
@@ -348,89 +370,89 @@ export default function Founder() {
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '100px' }}>
             <div>
               <Eyebrow label="Career Arc" />
-              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em' }}>Twenty-two years inside.</h2>
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 72px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>Twenty-two years inside.</h2>
             </div>
-            <p style={{ fontSize: '16px', color: MUTED, maxWidth: '400px', marginBottom: '10px' }}>
+            <p style={{ fontSize: '18px', color: MUTED, maxWidth: '400px', marginBottom: '10px', lineHeight: 1.6 }}>
               Four institutions. Each taught what the doctrine had to absorb.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px', alignItems: 'stretch' }}>
             {arc.map((item, i) => (
-              <TiltCard key={item.org} style={{ height: '100%' }}>
-                <motion.div
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={VP}
-                  whileHover={{ y: -10, borderColor: GOLD, background: 'rgba(255,255,255,0.05)' }}
-                  style={{ 
-                    background: PANEL, 
-                    padding: '48px', 
-                    border: `1px solid ${LINE}`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '24px',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    height: '100%',
-                    transformStyle: 'preserve-3d',
-                    transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-                    marginTop: i % 2 === 0 ? '0' : '60px' // Staggered parallax layout
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', transform: 'translateZ(20px)' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 800, color: SOFT, letterSpacing: '0.2em' }}>{item.year}</span>
-                    <div style={{ width: '40px', height: '1px', background: LINE }} />
-                  </div>
-                  
-                  <div style={{ transform: 'translateZ(30px)' }}>
-                    <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400, marginBottom: '8px' }}>{item.org}</h3>
-                    <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, marginBottom: '24px' }}>{item.scope}</p>
-                  </div>
+              <div key={item.org} style={{ marginTop: i % 2 === 0 ? '0' : '80px' }}>
+                <TiltCard>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={VP}
+                    transition={{ duration: 0.8, delay: i * 0.1 }}
+                    whileHover={{ borderColor: 'rgba(255,255,255,0.3)' }}
+                    style={{ 
+                      background: 'rgba(255,255,255,0.02)', 
+                      backdropFilter: 'blur(10px)',
+                      padding: '60px 48px', 
+                      border: `1px solid ${LINE}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '32px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      height: '100%',
+                      transformStyle: "preserve-3d",
+                      transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', transform: 'translateZ(20px)' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: GOLD, letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: 'monospace' }}>[ {item.year} ]</span>
+                      <div style={{ width: '40px', height: '1px', background: LINE }} />
+                    </div>
+                    
+                    <div style={{ transform: 'translateZ(30px)' }}>
+                      <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '36px', fontWeight: 400, marginBottom: '16px', lineHeight: 1.1 }}>{item.org}</h3>
+                      <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.8, marginBottom: '24px' }}>{item.scope}</p>
+                    </div>
 
-                  <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: `1px solid ${LINE}`, transform: 'translateZ(40px)' }}>
-                    <p style={{ fontSize: '14px', color: GOLD, fontStyle: 'italic', fontWeight: 500 }}>
-                      &ldquo;{item.codified}&rdquo;
-                    </p>
-                  </div>
-
-                  {/* Decorative element */}
-                  <div style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.05, transform: 'translateZ(-10px)' }}>
-                    <WireframeCube size={100} color={GOLD} />
-                  </div>
-                </motion.div>
-              </TiltCard>
+                    <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: `1px solid rgba(255,255,255,0.05)`, transform: 'translateZ(40px)' }}>
+                      <div style={{ fontSize: '10px', fontWeight: 800, color: SOFT, letterSpacing: '0.1em', marginBottom: '12px' }}>CODIFIED_LOGIC:</div>
+                      <p style={{ fontSize: '16px', color: TEXT, fontStyle: 'italic', fontWeight: 400, lineHeight: 1.5 }}>
+                        &ldquo;{item.codified}&rdquo;
+                      </p>
+                    </div>
+                  </motion.div>
+                </TiltCard>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 3.4 CODIFICATION ────────────────────────── */}
-      <section style={{ padding: '160px 56px', background: '#000' }}>
+      {/* ── 3.4 CODIFICATION (Redesigned) ─────────────── */}
+      <section style={{ padding: '160px 56px', background: 'rgba(5,5,5,0.9)', backdropFilter: 'blur(20px)', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <Eyebrow label="Codification" />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px' }}>
-            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: '48px', fontWeight: 400, lineHeight: 1.1 }}>
-              The patterns that survived 22 years of collisions.
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px', alignItems: 'center' }}>
+            <div>
+              <Eyebrow label="Codification" />
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.04em' }}>
+                The patterns that survived 22 years of collisions.
+              </h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', background: LINE, border: `1px solid ${LINE}` }}>
               {codified.map((row) => (
                 <motion.div 
                   key={row.no}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="show"
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={VP}
-                  style={{ display: 'flex', gap: '32px' }}
+                  whileHover={{ background: 'rgba(255,255,255,0.03)' }}
+                  style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '32px', background: BG, padding: '48px', transition: 'background 0.3s' }}
                 >
-                  <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '24px', color: SOFT }}>{row.no}</span>
+                  <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', color: SOFT }}>{row.no}</span>
                   <div>
-                    <h4 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>{row.title}</h4>
-                    <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.6 }}>{row.desc}</p>
+                    <h4 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', letterSpacing: '-0.01em' }}>{row.title}</h4>
+                    <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7 }}>{row.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -439,81 +461,85 @@ export default function Founder() {
         </div>
       </section>
 
-      {/* ── 3.5 FINAL THESIS ────────────────────────── */}
-      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative' }}>
-        <Scene3D />
-        <div style={{ maxWidth: '900px', zIndex: 1 }}>
-          <motion.p
-            initial={{ opacity: 0, scale: 0.9 }}
+      {/* ── 3.5 FINAL THESIS (Redesigned) ─────────────── */}
+      <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 56px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1000px' }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={VP}
-            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, fontStyle: 'italic', color: GOLD }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            &ldquo;I architect order before scale demands it. The work is to make the patterns survive the person.&rdquo;
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ delay: 0.5 }}
-            style={{ marginTop: '60px', display: 'flex', gap: '20px', justifyContent: 'center' }}
-          >
-            <Link href="/about" className="btn-premium">About Axion Index</Link>
-            <Link href="/connect" className="btn-outline">Start Conversation</Link>
+            <p style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 72px)', fontWeight: 400, lineHeight: 1.1, fontStyle: 'italic', color: GOLD, letterSpacing: '-0.04em', marginBottom: '80px' }}>
+              &ldquo;I architect order before scale demands it. <br />
+              <span style={{ color: MUTED }}>The work is to make the patterns survive the person.</span>&rdquo;
+            </p>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ delay: 0.3 }}
+              style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}
+            >
+              <Link href="/about" className="btn-premium">About Axion Index</Link>
+              <Link href="/connect" className="btn-outline">Start Conversation</Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '60px 56px', borderTop: `1px solid ${LINE}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000' }}>
-        <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.1em' }}>© 2026 AXION INDEX</span>
-        <div style={{ display: 'flex', gap: '32px' }}>
+      <footer style={{ padding: '80px 56px', borderTop: `1px solid ${LINE}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000', position: 'relative', zIndex: 1 }}>
+        <span style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.2em' }}>© 2026 AXION INDEX // FOUNDER_PLATFORM</span>
+        <div style={{ display: 'flex', gap: '40px' }}>
           {[['/', 'HOME'], ['/about', 'ABOUT'], ['/connect', 'CONNECT']].map(([href, label]) => (
-            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.15em' }}>{label}</Link>
+            <Link key={href} href={href} style={{ fontSize: '11px', color: SOFT, textDecoration: 'none', letterSpacing: '0.2em', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = SOFT}>{label}</Link>
           ))}
         </div>
       </footer>
 
-      <style>{`
+      <style jsx global>{`
         .btn-premium {
           display: inline-block;
-          padding: 16px 40px;
+          padding: 18px 48px;
           background: #fff;
           color: #000;
           text-decoration: none;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-size: 14px;
+          font-weight: 800;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          border: 1px solid #fff;
         }
         .btn-premium:hover {
-          background: #eee;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+          background: transparent;
+          color: #fff;
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(255,255,255,0.1);
         }
         .btn-outline {
           display: inline-block;
-          padding: 16px 40px;
+          padding: 18px 48px;
           border: 1px solid rgba(255,255,255,0.2);
           color: #fff;
           text-decoration: none;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-size: 14px;
+          font-weight: 800;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .btn-outline:hover {
           border-color: #fff;
           background: rgba(255,255,255,0.05);
-          transform: translateY(-2px);
+          transform: translateY(-4px);
         }
         @media (max-width: 1024px) {
           section { padding: 100px 24px !important; }
-          .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
-          .arc-grid { grid-template-columns: 1fr !important; }
+          #hero > div { grid-template-columns: 1fr !important; text-align: center; }
+          #codification > div { grid-template-columns: 1fr !important; gap: 60px !important; }
         }
       `}</style>
     </div>
