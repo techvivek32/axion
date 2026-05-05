@@ -1,7 +1,10 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, PerspectiveCamera, Points, PointMaterial, Environment, MeshTransmissionMaterial, Sphere } from '@react-three/drei';
+import * as THREE from 'three';
 import NavBar from '@/components/NavBar';
 
 const BG='#080808',BG2='#121212',PANEL='#1a1a1a',TEXT='#ffffff',MUTED='rgba(255,255,255,.6)',SOFT='rgba(255,255,255,.35)',LINE='rgba(255,255,255,.08)',GOLD='#ffffff',GOLDB='#cccccc',ERR='#c0392b';
@@ -10,7 +13,71 @@ const fadeUp={hidden:{opacity:0,y:40},show:{opacity:1,y:0,transition:{duration:0
 const fadeIn={hidden:{opacity:0},show:{opacity:1,transition:{duration:0.5,ease:[0.22,1,0.36,1]as const}}};
 const stagger=(d=0.05)=>({hidden:{},show:{transition:{staggerChildren:d}}});
 
-/* ── 3D Tilt Component ───────────────────────────────── */
+/* ── Three.js: Connective Neural Network ──────────────── */
+function NeuralNodes() {
+  const pointsRef = useRef<THREE.Points>(null!);
+  const lineRef = useRef<THREE.LineSegments>(null!);
+
+  const count = 1500;
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+    }
+    return pos;
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = t * 0.05;
+    }
+  });
+
+  return (
+    <group>
+      <Points ref={pointsRef} positions={positions} stride={3}>
+        <PointMaterial
+          transparent
+          color="#ffffff"
+          size={0.05}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={0.3}
+        />
+      </Points>
+      <Environment preset="city" />
+    </group>
+  );
+}
+
+function ConnectScene() {
+  return (
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+      <ambientLight intensity={0.5} />
+      <NeuralNodes />
+    </>
+  );
+}
+
+function FormNodeScene() {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  useFrame((state) => {
+    meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.5;
+    meshRef.current.rotation.z = state.clock.getElapsedTime() * 0.2;
+  });
+  return (
+    <mesh ref={meshRef}>
+      <icosahedronGeometry args={[2, 1]} />
+      <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.1} />
+    </mesh>
+  );
+}
+
+/* ── UI Components ──────────────────────────────────── */
 function TiltWrapper({ children, intensity = 5, style }: { children: React.ReactNode, intensity?: number, style?: React.CSSProperties }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -442,10 +509,15 @@ export default function Connect(){
     <div ref={containerRef} style={{background:BG,minHeight:'100vh',color:TEXT,fontFamily:'Inter,-apple-system,sans-serif'}}>
       <NavBar/>
 
+      {/* ── Background Layer ─────────────────────────── */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Canvas>
+          <ConnectScene />
+        </Canvas>
+      </div>
+
       {/* HERO */}
-      <section style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',background:BG,borderBottom:`1px solid ${LINE}`,padding:'96px 56px 72px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <ConnectiveBackground />
-        
+      <section style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'96px 56px 72px',textAlign:'center',position:'relative',overflow:'hidden',zIndex:1}}>
         <div style={{maxWidth:'1200px',margin:'0 auto',width:'100%',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'80px',alignItems:'center',position:'relative',zIndex:1}}>
           <div style={{textAlign:'left'}}>
             <motion.div variants={stagger(0.08)} initial="hidden" animate="show">
@@ -469,7 +541,7 @@ export default function Connect(){
       </section>
 
       {/* WHO THIS IS FOR */}
-      <section style={{background:BG2,borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative'}}>
+      <section style={{background:'rgba(10,10,10,0.8)',backdropFilter:'blur(20px)',borderBottom:`1px solid ${LINE}`,padding:'120px 56px',position:'relative',zIndex:1}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <Eyebrow label="Who this is for"/>
           <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
@@ -523,7 +595,7 @@ export default function Connect(){
       </section>
 
       {/* WHAT HAPPENS NEXT */}
-      <section style={{background:BG,borderBottom:`1px solid ${LINE}`,padding:'80px 56px'}}>
+      <section style={{background:'transparent',borderBottom:`1px solid ${LINE}`,padding:'80px 56px',position:'relative',zIndex:1}}>
         <div style={{maxWidth:'720px',margin:'0 auto'}}>
           <Eyebrow label="Process"/>
           <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={VP}
@@ -557,14 +629,19 @@ export default function Connect(){
       </section>
 
       {/* FORM */}
-      <section style={{background:BG2,padding:'120px 56px',position:'relative',overflow:'hidden'}}>
+      <section style={{background:'rgba(10,10,10,0.8)',backdropFilter:'blur(20px)',padding:'120px 56px',position:'relative',overflow:'hidden',zIndex:1}}>
         <div style={{maxWidth:'800px',margin:'0 auto',position:'relative',zIndex:1}}>
           <TiltWrapper intensity={2}>
             <div style={{background:PANEL,border:`1px solid ${LINE}`,padding:'64px',position:'relative',overflow:'hidden',transformStyle:'preserve-3d'}}>
               <ScanningLine />
               <div style={{position:'absolute',top:0,left:0,right:0,height:'1px',background:`linear-gradient(90deg,transparent,${GOLD},transparent)`,opacity:0.2}}/>
               <div style={{transform:'translateZ(20px)'}}>
-                <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP} style={{marginBottom:'48px',textAlign:'center'}}>
+                <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={VP} style={{marginBottom:'48px',textAlign:'center', position: 'relative'}}>
+                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '200px', height: '200px', zIndex: -1, opacity: 0.4 }}>
+                    <Canvas>
+                      <FormNodeScene />
+                    </Canvas>
+                  </div>
                   <Eyebrow label="Your context"/>
                   <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(22px,3vw,42px)',fontWeight:400,lineHeight:1.1,letterSpacing:'-0.04em',color:TEXT,marginBottom:'16px'}}>
                     The more precise your inputs, the more precise the diagnostic.
@@ -724,8 +801,7 @@ export default function Connect(){
       </section>
 
       {/* CLOSING STRIP */}
-      <section style={{minHeight:'40vh',display:'flex',alignItems:'center',justifyContent:'center',background:BG,padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <ConnectiveBackground />
+      <section style={{minHeight:'40vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'120px 56px',textAlign:'center',position:'relative',overflow:'hidden',zIndex:1}}>
         <motion.p initial={{opacity:0,scale:0.9}} whileInView={{opacity:1,scale:1}} viewport={VP} transition={{duration:1.5,ease:'easeOut'}}
           style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:'clamp(28px,5vw,56px)',fontWeight:400,letterSpacing:'-0.04em',lineHeight:1.05,color:GOLD,position:'relative',zIndex:1,textShadow:'0 0 80px rgba(255,255,255,.08)'}}>
           From ambiguity to architecture.

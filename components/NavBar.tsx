@@ -55,6 +55,7 @@ export default function NavBar() {
         {/* Logo */}
         <Link href="/" aria-label="Axion Index" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 0, position: 'relative', zIndex: 2 }}>
           <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '20px', fontWeight: 900, color: '#fff', letterSpacing: '-.06em', lineHeight: 1 }}>AX</span>
+          <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '24px', fontWeight: 200, color: 'rgba(255,255,255,.5)', letterSpacing: '-.05em', lineHeight: 1, display: 'inline-block', transform: 'translateY(-1px)' }}>I</span>
           <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '20px', fontWeight: 200, color: 'rgba(255,255,255,.5)', letterSpacing: '-.05em', lineHeight: 1, marginRight: '10px' }}>ON</span>
           <span style={{ width: '1px', height: '28px', background: 'rgba(255,255,255,.15)', margin: '0 10px', display: 'inline-block' }} />
           <span style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '26px', fontWeight: 500, fontStyle: 'italic', color: '#f8fafc', letterSpacing: '-.01em', lineHeight: 1 }}>Index</span>

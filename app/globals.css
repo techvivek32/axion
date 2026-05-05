@@ -379,24 +379,32 @@ nav.nav-scrolled{
 .metric-sub{margin-top:4px;font-size:10px;color:rgba(226,232,240,.38);line-height:1.4}
 
 /* ── UNIFIED BUTTON SYSTEM ─────────────────── */
-.btn-primary,.btn-secondary,.btn-text{
+.btn-primary,.btn-secondary,.btn-premium,.btn-outline,.btn-text{
   font-family:'Inter',-apple-system,sans-serif;
   display:inline-flex;align-items:center;justify-content:center;
   cursor:pointer;text-decoration:none;border:none;
   font-size:12px;font-weight:600;letter-spacing:.06em;
-  transition:background .18s,color .18s,border-color .18s;
+  transition:all .3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.btn-primary{
-  padding:11px 26px;border-radius:999px;
-  background:var(--gold-primary);color:#1a1208;
+.btn-primary,.btn-premium{
+  padding:12px 28px;border-radius:999px;
+  background:#ffffff;color:#000000;
+  box-shadow:0 10px 30px rgba(255,255,255,0.1);
 }
-.btn-primary:hover{background:var(--gold-hover);}
-.btn-secondary{
-  padding:11px 26px;border-radius:999px;
-  background:transparent;color:var(--text-secondary);
-  border:1px solid rgba(255,255,255,.12);
+.btn-primary:hover,.btn-premium:hover{
+  background:#eeeeee;transform:translateY(-2px);
+  box-shadow:0 15px 40px rgba(255,255,255,0.2);
 }
-.btn-secondary:hover{border-color:var(--gold-primary);color:var(--text-primary);}
+.btn-secondary,.btn-outline{
+  padding:12px 28px;border-radius:999px;
+  background:rgba(255,255,255,0.03);color:#ffffff;
+  border:1px solid rgba(255,255,255,0.12);
+}
+.btn-secondary:hover,.btn-outline:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.4);
+  transform:translateY(-2px);
+}
 .btn-text{
   padding:0;background:none;
   color:rgba(218,195,152,.7);gap:5px;
