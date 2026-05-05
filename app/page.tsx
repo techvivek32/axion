@@ -184,7 +184,7 @@ function MatrixScene() {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const fadeIn = {
@@ -498,7 +498,7 @@ export default function Home() {
       </section>
 
       {/* ── Metrics Strip ────────────────────────────── */}
-      <section style={{ background: '#0a0a0a', borderY: '1px solid rgba(255,255,255,0.08)', padding: '120px 56px', position: 'relative', zIndex: 1 }}>
+      <section style={{ background: '#0a0a0a', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '120px 56px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
             {metrics.map((m, i) => (
