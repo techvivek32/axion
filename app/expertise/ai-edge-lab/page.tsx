@@ -1,7 +1,10 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Float, MeshDistortMaterial, Sphere, PerspectiveCamera, Points, PointMaterial, Line, MeshWobbleMaterial, Float as FloatDrei } from '@react-three/drei';
+import * as THREE from 'three';
 import NavBar from '@/components/NavBar';
 
 /* ── Cybernetic Tokens ────────────────────────────────── */
@@ -16,6 +19,180 @@ const GLOW  = 'rgba(255,255,255,0.15)';
 const ACCENT = '#ffffff';
 
 const VP = { once: false, margin: '-100px' };
+
+/* ── Three.js: Neural Compression Core ──────────────── */
+function ConnectionLines({ count = 20 }) {
+  const lines = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < count; i++) {
+      const start = new THREE.Vector3(
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 10
+      );
+      const end = new THREE.Vector3(0, 0, 0);
+      arr.push({ start, end });
+    }
+    return arr;
+  }, [count]);
+
+  return (
+    <group>
+      {lines.map((line, i) => (
+        <Line
+          key={i}
+          points={[line.start, line.end]}
+          color="#ffffff"
+          lineWidth={0.5}
+          transparent
+          opacity={0.1}
+        />
+      ))}
+    </group>
+  );
+}
+
+function NeuralCore({ scrollYProgress }: { scrollYProgress: any }) {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const pointsRef = useRef<THREE.Points>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
+
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 2]);
+  const rotationSpeed = useTransform(scrollYProgress, [0, 1], [0.2, 1.5]);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.x = time * 0.2;
+      meshRef.current.rotation.y = time * 0.3;
+      meshRef.current.scale.setScalar(1 + Math.sin(time) * 0.05);
+    }
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = -time * 0.1;
+    }
+    if (groupRef.current) {
+      groupRef.current.position.y = Math.sin(time * 0.5) * 0.2;
+      groupRef.current.rotation.z = time * 0.05;
+    }
+  });
+
+  const [particles] = useState(() => {
+    const arr = new Float32Array(3000 * 3);
+    for (let i = 0; i < 3000; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const r = 5 + Math.random() * 3;
+      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      arr[i * 3 + 2] = r * Math.cos(phi);
+    }
+    return arr;
+  });
+
+  return (
+    <group ref={groupRef}>
+      <Float speed={3} rotationIntensity={2} floatIntensity={1}>
+        <mesh ref={meshRef}>
+          <icosahedronGeometry args={[2, 20]} />
+          <MeshDistortMaterial
+            color="#ffffff"
+            speed={4}
+            distort={0.5}
+            radius={1}
+            wireframe
+            transparent
+            opacity={0.2}
+          />
+        </mesh>
+      </Float>
+
+      <Points ref={pointsRef} positions={particles} stride={3}>
+        <PointMaterial
+          transparent
+          color="#ffffff"
+          size={0.03}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={0.5}
+        />
+      </Points>
+
+      <ConnectionLines count={40} />
+
+      {/* Internal Core */}
+      <mesh>
+        <sphereGeometry args={[0.6, 32, 32]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
+        <pointLight intensity={3} distance={15} color="#ffffff" />
+      </mesh>
+
+      {/* Outer Halo */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[4, 0.02, 16, 100]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
+      </mesh>
+      <mesh rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[4.5, 0.01, 16, 100]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
+      </mesh>
+    </group>
+  );
+}
+
+function Scene({ scrollYProgress }: { scrollYProgress: any }) {
+  return (
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+      <ambientLight intensity={0.2} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <NeuralCore scrollYProgress={scrollYProgress} />
+    </>
+  );
+}
+
+/* ── Three.js: Data Compression Vortex ──────────────── */
+function CompressionVortex() {
+  const points = useRef<THREE.Points>(null!);
+  const [particles] = useState(() => {
+    const arr = new Float32Array(1500 * 3);
+    for (let i = 0; i < 1500; i++) {
+      const angle = (i / 1500) * Math.PI * 20;
+      const radius = 2 + (i / 1500) * 8;
+      arr[i * 3] = Math.cos(angle) * radius;
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 2;
+      arr[i * 3 + 2] = Math.sin(angle) * radius;
+    }
+    return arr;
+  });
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    points.current.rotation.y = time * 0.1;
+    points.current.position.y = Math.sin(time * 0.5) * 0.5;
+  });
+
+  return (
+    <Points ref={points} positions={particles} stride={3}>
+      <PointMaterial
+        transparent
+        color="#ffffff"
+        size={0.05}
+        sizeAttenuation={true}
+        depthWrite={false}
+        opacity={0.2}
+      />
+    </Points>
+  );
+}
+
+function DoctrineScene() {
+  return (
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 15]} />
+      <CompressionVortex />
+    </>
+  );
+}
 
 /* ── 3D Tilt Component ───────────────────────────────── */
 function TiltWrapper({ children }: { children: React.ReactNode }) {
@@ -76,12 +253,24 @@ function NeuralGrid() {
           position: 'absolute', 
           inset: '-100%', 
           backgroundImage: `linear-gradient(${LINE} 1px, transparent 1px), linear-gradient(90deg, ${LINE} 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-          transform: 'rotateX(65deg) translateY(-20%)',
-          opacity: 0.2,
+          backgroundSize: '80px 80px',
+          transform: 'rotateX(70deg) translateY(-20%)',
+          opacity: 0.15,
           y
         }} 
       />
+      
+      {/* Vertical Data Streams */}
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'space-around', opacity: 0.05 }}>
+        {[1, 2, 3, 4, 5].map(i => (
+          <motion.div
+            key={i}
+            animate={{ y: ['-100%', '100%'] }}
+            transition={{ duration: 5 + i, repeat: Infinity, ease: 'linear' }}
+            style={{ width: '1px', height: '100%', background: 'linear-gradient(to bottom, transparent, #fff, transparent)' }}
+          />
+        ))}
+      </div>
       
       {/* Horizontal Scanlines */}
       <div style={{
@@ -94,20 +283,14 @@ function NeuralGrid() {
       
       {/* Pulse effect */}
       <motion.div
-        animate={{ opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.05, 0.15, 0.05] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)'
+          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 80%)'
         }}
       />
-      
-      {/* Decorative corner brackets */}
-      <div style={{ position: 'absolute', top: '40px', left: '40px', width: '20px', height: '20px', borderTop: '1px solid ' + SOFT, borderLeft: '1px solid ' + SOFT }} />
-      <div style={{ position: 'absolute', top: '40px', right: '40px', width: '20px', height: '20px', borderTop: '1px solid ' + SOFT, borderRight: '1px solid ' + SOFT }} />
-      <div style={{ position: 'absolute', bottom: '40px', left: '40px', width: '20px', height: '20px', borderBottom: '1px solid ' + SOFT, borderLeft: '1px solid ' + SOFT }} />
-      <div style={{ position: 'absolute', bottom: '40px', right: '40px', width: '20px', height: '20px', borderBottom: '1px solid ' + SOFT, borderRight: '1px solid ' + SOFT }} />
     </div>
   );
 }
@@ -155,39 +338,71 @@ function FloatingParticles() {
 }
 
 /* ── Component: LabCard ───────────────────────────────── */
-function LabCard({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+function LabCard({ children, delay = 0, type = "default" }: { children: React.ReactNode; delay?: number; type?: string }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <TiltWrapper>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VP}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const }}
         style={{
-          background: PANEL,
-          border: '1px solid ' + LINE,
-          padding: '40px',
+          background: isHovered ? 'rgba(255,255,255,0.04)' : PANEL,
+          border: '1px solid ' + (isHovered ? 'rgba(255,255,255,0.2)' : LINE),
+          padding: '48px',
           position: 'relative',
           overflow: 'hidden',
-          transition: 'all 0.3s ease',
+          transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
           height: '100%',
-          transformStyle: "preserve-3d"
+          transformStyle: "preserve-3d",
+          borderRadius: '4px' // More industrial sharp look
         }}
       >
-        {/* Hover Glow Edge */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1 }}
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0,
-            height: '1px',
-            background: 'linear-gradient(90deg, transparent, #fff, transparent)',
-            zIndex: 10
-          }}
-        />
-        <div style={{ transform: "translateZ(20px)" }}>
+        {/* Cybernetic Border Corners */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '10px', height: '10px', borderTop: `2px solid ${isHovered ? '#fff' : 'transparent'}`, borderLeft: `2px solid ${isHovered ? '#fff' : 'transparent'}`, transition: 'all 0.3s' }} />
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '10px', height: '10px', borderTop: `2px solid ${isHovered ? '#fff' : 'transparent'}`, borderRight: `2px solid ${isHovered ? '#fff' : 'transparent'}`, transition: 'all 0.3s' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '10px', height: '10px', borderBottom: `2px solid ${isHovered ? '#fff' : 'transparent'}`, borderLeft: `2px solid ${isHovered ? '#fff' : 'transparent'}`, transition: 'all 0.3s' }} />
+        <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderBottom: `2px solid ${isHovered ? '#fff' : 'transparent'}`, borderRight: `2px solid ${isHovered ? '#fff' : 'transparent'}`, transition: 'all 0.3s' }} />
+
+        {/* Scanning Line Effect on Hover */}
+        {isHovered && (
+          <motion.div
+            initial={{ top: '-10%' }}
+            animate={{ top: '110%' }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: 'absolute',
+              left: 0,
+              width: '100%',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent, #fff, transparent)',
+              zIndex: 1,
+              opacity: 0.5
+            }}
+          />
+        )}
+
+        <div style={{ transform: "translateZ(30px)", position: 'relative', zIndex: 2 }}>
           {children}
+        </div>
+
+        {/* Background Decorative Element */}
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '-20px', 
+          right: '-20px', 
+          fontSize: '120px', 
+          fontWeight: 900, 
+          color: 'rgba(255,255,255,0.03)', 
+          fontFamily: 'monospace',
+          pointerEvents: 'none',
+          userSelect: 'none'
+        }}>
+          {type === "actor" ? "ACT" : "LAB"}
         </div>
       </motion.div>
     </TiltWrapper>
@@ -234,6 +449,7 @@ const stagger = (d = 0.1) => ({
 ══════════════════════════════════════════════════════ */
 export default function AIEdgeLab() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [activeLaw, setActiveLaw] = useState<number>(0);
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -254,8 +470,11 @@ export default function AIEdgeLab() {
 
       {/* SECTION 5.1 - HERO (Redesigned) */}
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', padding: '0 56px', overflow: 'hidden' }}>
-        <NeuralGrid />
-        <FloatingParticles />
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <Canvas>
+            <Scene scrollYProgress={scrollYProgress} />
+          </Canvas>
+        </div>
         
         <motion.div 
           style={{ 
@@ -265,100 +484,81 @@ export default function AIEdgeLab() {
             position: 'relative', 
             zIndex: 1,
             opacity: heroOpacity,
-            scale: heroScale
+            scale: heroScale,
+            textAlign: 'center'
           }}
         >
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ maxWidth: '800px' }}>
               <Eyebrow label="AI EDGE LAB / OPERATING DOCTRINE" />
               
               <motion.h1 
-                variants={stagger(0.08)} 
+                variants={stagger(0.12)} 
                 initial="hidden" 
                 animate="show"
                 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(48px, 8vw, 110px)', fontWeight: 400, lineHeight: 0.9, letterSpacing: '-0.06em', marginBottom: '40px' }}
               >
                 {['The', 'Work', 'Shift.'].map((w, i) => (
-                  <motion.span key={i} variants={fadeUp} style={{ display: 'inline-block', marginRight: '0.2em' }}>{w}</motion.span>
+                  <motion.span key={i} 
+                    variants={{
+                      hidden: { opacity: 0, y: 100, rotate: 5 },
+                      show: { opacity: 1, y: 0, rotate: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }
+                    }} 
+                    style={{ display: 'inline-block', margin: '0 0.1em', transformOrigin: 'center' }}>
+                    {w}
+                  </motion.span>
                 ))}
               </motion.h1>
 
               <motion.div 
                 initial={{ opacity: 0, width: 0 }} 
-                animate={{ opacity: 1, width: '100px' }} 
-                transition={{ duration: 1, delay: 0.5 }}
-                style={{ height: '1px', background: ACCENT, marginBottom: '40px' }} 
+                animate={{ opacity: 1, width: '120px' }} 
+                transition={{ duration: 1.5, delay: 0.8, ease: "circOut" }}
+                style={{ height: '1px', background: ACCENT, margin: '0 auto 40px' }} 
               />
 
-              <motion.div variants={stagger(0.1)} initial="hidden" animate="show">
-                <motion.p variants={fadeUp} style={{ fontSize: '22px', color: TEXT, lineHeight: 1.5, marginBottom: '24px', maxWidth: '700px', fontStyle: 'italic', fontWeight: 300 }}>
+              <motion.div variants={stagger(0.15)} initial="hidden" animate="show">
+                <motion.p 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 1, delay: 1 } }
+                  }}
+                  style={{ fontSize: '22px', color: TEXT, lineHeight: 1.5, marginBottom: '24px', maxWidth: '700px', fontStyle: 'italic', fontWeight: 300, margin: '0 auto 24px' }}>
                   AI has entered as a fourth actor - not as a tool, but as a force that absorbs work and reprices human contribution.
                 </motion.p>
                 
-                <motion.p variants={fadeUp} style={{ fontSize: '16px', color: MUTED, lineHeight: 1.8, maxWidth: '560px', marginBottom: '48px' }}>
+                <motion.p 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 1, delay: 1.2 } }
+                  }}
+                  style={{ fontSize: '16px', color: MUTED, lineHeight: 1.8, maxWidth: '560px', marginBottom: '48px', margin: '0 auto 48px' }}>
                   The workplace now has four actors: the Employee, the CXO, the Organisation - and AI. Each faces a different structural challenge.
                 </motion.p>
 
-                <motion.div variants={fadeUp} style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 1, delay: 1.4 } }
+                  }}
+                  style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
                   <Link href="#assessments" className="lab-btn-fill">Take the Quick Mirror</Link>
                   <a href="#laws" className="lab-btn-outline">Read the Three Laws</a>
                 </motion.div>
               </motion.div>
             </div>
-
-            {/* 3D Hero Element */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                style={{
-                  width: '300px',
-                  height: '300px',
-                  border: '1px solid ' + SOFT,
-                  borderRadius: '50%',
-                  position: 'absolute'
-                }}
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                style={{
-                  width: '240px',
-                  height: '240px',
-                  border: '1px dashed ' + SOFT,
-                  borderRadius: '50%',
-                  position: 'absolute'
-                }}
-              />
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                style={{
-                  width: '100px',
-                  height: '100px',
-                  background: 'radial-gradient(circle, #fff, transparent)',
-                  borderRadius: '50%',
-                  boxShadow: '0 0 50px rgba(255,255,255,0.2)',
-                  zIndex: 1
-                }}
-              />
-            </motion.div>
           </div>
         </motion.div>
 
         {/* Decorative Data Flow */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.1 }}
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 0.1, x: 0 }}
           viewport={VP}
-          style={{ position: 'absolute', right: '56px', bottom: '56px', fontSize: '120px', fontWeight: 900, fontFamily: 'monospace', writingMode: 'vertical-rl', letterSpacing: '0.2em' }}
+          transition={{ duration: 1.5 }}
+          style={{ position: 'absolute', right: '56px', bottom: '56px', fontSize: '80px', fontWeight: 900, fontFamily: 'monospace', writingMode: 'vertical-rl', letterSpacing: '0.2em' }}
         >
-          AI_EDGE_LAB
+          
         </motion.div>
       </section>
 
@@ -367,12 +567,22 @@ export default function AIEdgeLab() {
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="System Components" />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '80px', marginBottom: '80px', alignItems: 'flex-end' }}>
-            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+            <motion.h2 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={VP}
+              transition={{ duration: 1 }}
+              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
               Four actors.<br />Four reckonings.
-            </h2>
-            <p style={{ fontSize: '18px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={VP}
+              transition={{ duration: 1, delay: 0.2 }}
+              style={{ fontSize: '18px', color: MUTED, lineHeight: 1.6, maxWidth: '500px' }}>
               AI enters not as a tool, but as an actor that forces repositioning.
-            </p>
+            </motion.p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
@@ -382,12 +592,18 @@ export default function AIEdgeLab() {
               { num: 'III', name: 'AI', reckoning: 'Absorbs work in layers - execution to analysis to judgment.', question: '"What is the boundary?"' },
               { num: 'IV', name: 'Organisation', reckoning: 'Investment high, outcomes low.', question: '"What is structurally missing?"' },
             ].map((actor, i) => (
-              <LabCard key={actor.num} delay={i * 0.1}>
+              <LabCard key={actor.num} delay={i * 0.1} type="actor">
                 <div style={{ fontSize: '12px', color: SOFT, fontWeight: 800, marginBottom: '32px', fontFamily: 'monospace' }}>[ ACTOR_0{i+1} ]</div>
                 <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '32px', fontWeight: 400, marginBottom: '16px' }}>{actor.name}</h3>
                 <p style={{ fontSize: '16px', color: MUTED, lineHeight: 1.7, marginBottom: '24px' }}>{actor.reckoning}</p>
-                <div style={{ padding: '16px', background: 'rgba(255,255,255,0.03)', borderLeft: '2px solid #fff' }}>
-                  <p style={{ fontSize: '14px', color: TEXT, fontStyle: 'italic', margin: 0 }}>{actor.question}</p>
+                <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderLeft: '2px solid #fff', position: 'relative', overflow: 'hidden' }}>
+                  <p style={{ fontSize: '14px', color: TEXT, fontStyle: 'italic', margin: 0, position: 'relative', zIndex: 1 }}>{actor.question}</p>
+                  <motion.div 
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.6 }}
+                    style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)', zIndex: 0 }}
+                  />
                 </div>
               </LabCard>
             ))}
@@ -395,34 +611,109 @@ export default function AIEdgeLab() {
         </div>
       </section>
 
-      {/* SECTION 5.3 - THREE LAWS (Redesigned with Technical List) */}
-      <section id="laws" style={{ background: BG, padding: '160px 56px', position: 'relative' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <Eyebrow label="Operational Laws" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
-            Three laws. One predictable curve.
-          </h2>
+      {/* SECTION 5.3 - THREE LAWS (Redesigned with Horizontal Expanding Cards) */}
+      <section id="laws" style={{ background: BG, padding: '160px 56px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
+            <div>
+              <Eyebrow label="Operational Laws" />
+              <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+                Three laws.<br />One predictable curve.
+              </h2>
+            </div>
+            <p style={{ fontSize: '16px', color: MUTED, lineHeight: 1.6, maxWidth: '400px' }}>
+              The fundamental principles governing the compression of work and the repricing of intelligence.
+            </p>
+          </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+          <div style={{ display: 'flex', height: '480px', gap: '20px' }}>
             {[
-              { num: 'LAW_01', name: 'Intelligence Abundance', statement: 'As intelligence becomes cheap, its value declines.', implication: 'What was once a premium skill becomes a commodity.' },
-              { num: 'LAW_02', name: 'Judgment Scarcity', statement: 'Judgment becomes the premium layer.', implication: 'The scarcer the judgment, the higher the value.' },
-              { num: 'LAW_03', name: 'Compression Curve', statement: 'AI compresses work upward.', implication: 'Work moves from execution to analysis to judgment.' },
+              { num: '01', name: 'Intelligence Abundance', statement: 'As intelligence becomes cheap, its value declines.', implication: 'What was once a premium skill becomes a commodity.' },
+              { num: '02', name: 'Judgment Scarcity', statement: 'Judgment becomes the premium layer.', implication: 'The scarcer the judgment, the higher the value.' },
+              { num: '03', name: 'Compression Curve', statement: 'AI compresses work upward.', implication: 'Work moves from execution to analysis to judgment.' },
             ].map((law, i) => (
               <motion.div 
                 key={law.num}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={VP}
-                transition={{ duration: 1, delay: i * 0.2 }}
-                style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: '40px', alignItems: 'flex-start' }}
+                animate={{ width: activeLaw === i ? '60%' : '20%' }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                onMouseEnter={() => setActiveLaw(i)}
+                style={{
+                  position: 'relative',
+                  background: PANEL,
+                  border: `1px solid ${activeLaw === i ? '#fff' : LINE}`,
+                  padding: '32px',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'border-color 0.4s'
+                }}
               >
-                <div style={{ fontFamily: 'monospace', fontSize: '14px', color: SOFT, paddingTop: '8px' }}>{law.num}</div>
-                <div>
-                  <h4 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '16px', letterSpacing: '-0.02em' }}>{law.name}</h4>
-                  <p style={{ fontSize: '18px', color: TEXT, lineHeight: 1.6, marginBottom: '16px' }}>{law.statement}</p>
-                  <p style={{ fontSize: '14px', color: MUTED, fontStyle: 'italic' }}>Implication: {law.implication}</p>
+                {/* Large Outlined Background Number */}
+                <div style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  fontSize: '140px',
+                  fontWeight: 900,
+                  fontFamily: "'Playfair Display',serif",
+                  color: 'transparent',
+                  WebkitTextStroke: `1px ${activeLaw === i ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)'}`,
+                  lineHeight: 1,
+                  pointerEvents: 'none',
+                  transition: 'all 0.4s'
+                }}>
+                  {law.num}
                 </div>
+
+                {/* Vertical Label (When Collapsed) */}
+                <AnimatePresence>
+                  {activeLaw !== i && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{
+                        position: 'absolute',
+                        bottom: '32px',
+                        left: '50%',
+                        transform: 'translateX(-50%) rotate(-90deg)',
+                        transformOrigin: 'center center',
+                        whiteSpace: 'nowrap',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        color: SOFT
+                      }}
+                    >
+                      {law.name}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Expanded Content */}
+                <motion.div
+                  animate={{ opacity: activeLaw === i ? 1 : 0, y: activeLaw === i ? 0 : 20 }}
+                  transition={{ duration: 0.5, delay: activeLaw === i ? 0.3 : 0 }}
+                  style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', pointerEvents: activeLaw === i ? 'auto' : 'none' }}
+                >
+                  <div style={{ marginBottom: '24px' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: TEXT, padding: '4px 12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      LAW_{law.num}
+                    </span>
+                  </div>
+                  <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '36px', fontWeight: 400, color: TEXT, marginBottom: '16px', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                    {law.name}
+                  </h3>
+                  <p style={{ fontSize: '16px', color: TEXT, lineHeight: 1.5, marginBottom: '16px', maxWidth: '450px' }}>
+                    {law.statement}
+                  </p>
+                  <div style={{ width: '32px', height: '1px', background: TEXT, marginBottom: '16px' }} />
+                  <p style={{ fontSize: '13px', color: MUTED, fontStyle: 'italic', letterSpacing: '0.02em' }}>
+                    Implication: {law.implication}
+                  </p>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -433,11 +724,15 @@ export default function AIEdgeLab() {
       <section id="eras" style={{ background: BG2, padding: '160px 56px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Macro Shift" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
             Three eras of work.
-          </h2>
+          </motion.h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', position: 'relative' }}>
             {[
               { era: 'Industrial', focus: 'Manual', desc: 'Value in physical execution' },
               { era: 'Knowledge', focus: 'Cognitive', desc: 'Value in intellectual work' },
@@ -445,22 +740,25 @@ export default function AIEdgeLab() {
             ].map((e, i) => (
               <motion.div 
                 key={e.era}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={VP}
-                transition={{ delay: i * 0.2 }}
-                style={{ position: 'relative' }}
+                transition={{ delay: i * 0.2, duration: 0.8 }}
+                style={{ position: 'relative', zIndex: 1 }}
               >
                 <div style={{ fontSize: '12px', color: SOFT, fontWeight: 800, marginBottom: '20px', fontFamily: 'monospace' }}>ERA_0{i+1}</div>
                 <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '40px', fontWeight: 400, marginBottom: '16px' }}>{e.focus}</h3>
                 <p style={{ fontSize: '16px', color: MUTED, lineHeight: 1.6 }}>{e.desc}</p>
                 {i < 2 && (
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    whileInView={{ width: '40px' }}
-                    style={{ position: 'absolute', top: '50px', right: '-40px', height: '1px', background: LINE, zIndex: 2 }}
-                  />
+                  <div style={{ position: 'absolute', top: '55px', right: '-40px', width: '40px', height: '1px', background: LINE, overflow: 'hidden' }}>
+                    <motion.div 
+                      initial={{ x: '-100%' }}
+                      whileInView={{ x: '100%' }}
+                      viewport={VP}
+                      transition={{ duration: 1, delay: i * 0.2 + 0.5 }}
+                      style={{ width: '100%', height: '100%', background: '#fff' }}
+                    />
+                  </div>
                 )}
               </motion.div>
             ))}
@@ -468,24 +766,40 @@ export default function AIEdgeLab() {
         </div>
       </section>
 
-      {/* SECTION 5.5 - DOCTRINE (Redesigned as High-Impact Quote) */}
-      <section id="doctrine" style={{ padding: '200px 56px', background: BG, position: 'relative', overflow: 'hidden' }}>
-        <NeuralGrid />
+      {/* SECTION 5.5 - DOCTRINE (Redesigned as High-Impact Quote with Three.js Vortex) */}
+      <section id="doctrine" style={{ padding: '240px 56px', background: BG, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <Canvas>
+            <DoctrineScene />
+          </Canvas>
+        </div>
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={VP}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             style={{ textAlign: 'center' }}
           >
             <p style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.04em', color: TEXT, marginBottom: '40px' }}>
               AI does not eliminate work first. <br />
               <span style={{ color: MUTED }}>It eliminates the structural premium on intelligence inside work.</span>
             </p>
-            <div style={{ width: '60px', height: '2px', background: ACCENT, margin: '0 auto 40px' }} />
-            <p style={{ fontSize: '12px', color: SOFT, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            <motion.div 
+              initial={{ width: 0 }}
+              whileInView={{ width: '80px' }}
+              viewport={VP}
+              transition={{ duration: 1, delay: 0.5 }}
+              style={{ height: '2px', background: ACCENT, margin: '0 auto 40px' }} 
+            />
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={VP}
+              transition={{ delay: 0.8 }}
+              style={{ fontSize: '12px', color: SOFT, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
               - Nitin Nahata, Founder, Axion Index
-            </p>
+            </motion.p>
           </motion.div>
         </div>
       </section>
@@ -494,11 +808,15 @@ export default function AIEdgeLab() {
       <section id="edge" style={{ background: BG2, padding: '160px 56px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Analytical Engine" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
             Four dimensions of positioning.
-          </h2>
+          </motion.h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2px', background: LINE }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2px', background: LINE, border: `1px solid ${LINE}` }}>
             {[
               { letter: 'E', name: 'Exposure', question: 'How much of your work AI can replace' },
               { letter: 'D', name: 'Decision Density', question: 'How much judgment you own' },
@@ -511,9 +829,15 @@ export default function AIEdgeLab() {
                 whileInView={{ opacity: 1 }}
                 viewport={VP}
                 transition={{ delay: i * 0.1 }}
-                style={{ background: BG2, padding: '48px 32px', textAlign: 'center' }}
+                whileHover={{ background: 'rgba(255,255,255,0.03)' }}
+                style={{ background: BG2, padding: '64px 32px', textAlign: 'center', transition: 'background 0.3s' }}
               >
-                <span style={{ fontFamily: "'Playfair Display',serif", fontSize: '64px', fontWeight: 400, color: SOFT, display: 'block', marginBottom: '24px' }}>{dim.letter}</span>
+                <motion.span 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={VP}
+                  transition={{ delay: i * 0.1 + 0.2, type: 'spring' }}
+                  style={{ fontFamily: "'Playfair Display',serif", fontSize: '72px', fontWeight: 400, color: SOFT, display: 'block', marginBottom: '24px' }}>{dim.letter}</motion.span>
                 <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{dim.name}</h3>
                 <p style={{ fontSize: '14px', color: MUTED, lineHeight: 1.6 }}>{dim.question}</p>
               </motion.div>
@@ -527,8 +851,16 @@ export default function AIEdgeLab() {
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Risk Matrix" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
-            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em' }}>Six work types.</h2>
-            <p style={{ fontSize: '16px', color: MUTED, maxWidth: '400px', marginBottom: '10px' }}>Work compresses upward until judgment becomes the boundary.</p>
+            <motion.h2 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={VP}
+              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 64px)', fontWeight: 400, letterSpacing: '-0.04em' }}>Six work types.</motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={VP}
+              style={{ fontSize: '16px', color: MUTED, maxWidth: '400px', marginBottom: '10px' }}>Work compresses upward until judgment becomes the boundary.</motion.p>
           </div>
 
           <div style={{ border: '1px solid ' + LINE, background: PANEL }}>
@@ -542,16 +874,19 @@ export default function AIEdgeLab() {
             ].map((row, i) => (
               <motion.div 
                 key={row.type}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={VP}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ background: 'rgba(255,255,255,0.02)' }}
                 style={{ 
                   display: 'grid', 
                   gridTemplateColumns: '2fr 1fr 1.5fr', 
                   borderBottom: i < 5 ? '1px solid ' + LINE : 'none',
-                  padding: '32px',
-                  alignItems: 'center'
+                  padding: '40px 32px',
+                  alignItems: 'center',
+                  transition: 'background 0.3s',
+                  cursor: 'default'
                 }}
               >
                 <div style={{ fontSize: '18px', fontWeight: 500 }}>{row.type}</div>
@@ -567,63 +902,84 @@ export default function AIEdgeLab() {
       <section id="assessments" style={{ background: BG2, padding: '160px 56px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Diagnostic Instruments" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.03em', marginBottom: '80px' }}>
             Measure where you stand.
-          </h2>
+          </motion.h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px', alignItems: 'stretch' }}>
             {[
               { abbr: 'ARI', name: 'AI Replaceability Index', desc: 'Individual risk index. 9 questions, ~3 min. Immediate Edge Score.', price: 'Free tier: Quick Mirror', detail: 'Full Diagnostic: Rs 499 + GST' },
               { abbr: 'BDI', name: 'Brainpower Density Index', desc: 'CXO model shift. Measure decision density across your leadership layer.', price: 'Building', detail: 'Waitlist - for leaders' },
               { abbr: 'ORG AI DARS', name: 'Org AI Decision Architecture Realignment System', desc: 'Organisation readiness. Enterprise-wide AI positioning assessment.', price: 'Building', detail: 'Enterprise engagement' },
             ].map((a, i) => (
-              <LabCard key={a.abbr} delay={i * 0.1}>
-                <span style={{ fontFamily: 'monospace', fontSize: '14px', color: SOFT, marginBottom: '32px', display: 'block' }}>[ {a.abbr} ]</span>
-                <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '28px', fontWeight: 400, marginBottom: '20px' }}>{a.name}</h3>
-                <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7, marginBottom: '32px', flex: 1 }}>{a.desc}</p>
-                <div style={{ paddingTop: '24px', borderTop: '1px solid ' + LINE }}>
-                  <div style={{ fontSize: '12px', fontWeight: 800, color: TEXT, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>{a.price}</div>
-                  <div style={{ fontSize: '12px', color: SOFT }}>{a.detail}</div>
-                </div>
-              </LabCard>
+              <div key={a.abbr} style={{ display: 'flex' }}>
+                <LabCard delay={i * 0.1} type="diagnostic">
+                  <span style={{ fontFamily: 'monospace', fontSize: '14px', color: SOFT, marginBottom: '32px', display: 'block' }}>[ {a.abbr} ]</span>
+                  <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '28px', fontWeight: 400, marginBottom: '20px' }}>{a.name}</h3>
+                  <p style={{ fontSize: '15px', color: MUTED, lineHeight: 1.7, marginBottom: '32px', flex: 1 }}>{a.desc}</p>
+                  <div style={{ paddingTop: '24px', borderTop: '1px solid ' + LINE, marginTop: 'auto' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: TEXT, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>{a.price}</div>
+                    <div style={{ fontSize: '12px', color: SOFT }}>{a.detail}</div>
+                  </div>
+                </LabCard>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION 5.9 - EVIDENCE (Redesigned as Technical Log) */}
+      {/* SECTION 5.9 - EVIDENCE (Redesigned as Technical Signal Registry) */}
       <section id="evidence" style={{ background: BG, padding: '160px 56px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Eyebrow label="Signal Registry" />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, letterSpacing: '-0.04em', marginBottom: '80px' }}>
             12 reports. 6 months.
-          </h2>
+          </motion.h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2px', background: LINE }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: LINE, border: `1px solid ${LINE}` }}>
             {[
-              { title: '23% scaled AI', source: 'McKinsey - State of AI 2025' },
-              { title: '90% pilot failure', source: 'McKinsey - Agentic AI 2026' },
-              { title: '78% governance lag', source: 'EY - AI Pulse Survey 2026' },
-              { title: 'HR as AI landing zone', source: 'PwC - AI Predictions 2026' },
-              { title: 'CEO, not CTO, calls AI shots', source: 'BCG - AI Radar 2026' },
-              { title: '$200B value uncaptured', source: 'BCG - The $200B Opportunity 2026' },
-              { title: 'AI replacing analyst roles', source: 'McKinsey - 2025' },
-              { title: 'Judgment as premium skill', source: 'BCG - 2026' },
-              { title: 'Intelligence commoditisation', source: 'EY - 2026' },
-              { title: 'Work compression acceleration', source: 'PwC - 2026' },
-              { title: 'Decision architecture gap', source: 'McKinsey - 2026' },
-              { title: 'AI-first org design', source: 'BCG - 2026' },
+              { title: '23% scaled AI', source: 'McKinsey - State of AI 2025', timestamp: 'JAN_25' },
+              { title: '90% pilot failure', source: 'McKinsey - Agentic AI 2026', timestamp: 'FEB_26' },
+              { title: '78% governance lag', source: 'EY - AI Pulse Survey 2026', timestamp: 'MAR_26' },
+              { title: 'HR as AI landing zone', source: 'PwC - AI Predictions 2026', timestamp: 'APR_26' },
+              { title: 'CEO, not CTO, calls AI shots', source: 'BCG - AI Radar 2026', timestamp: 'MAY_26' },
+              { title: '$200B value uncaptured', source: 'BCG - The $200B Opportunity 2026', timestamp: 'JUN_26' },
+              { title: 'AI replacing analyst roles', source: 'McKinsey - 2025', timestamp: 'JUL_25' },
+              { title: 'Judgment as premium skill', source: 'BCG - 2026', timestamp: 'AUG_26' },
+              { title: 'Intelligence commoditisation', source: 'EY - 2026', timestamp: 'SEP_26' },
+              { title: 'Work compression acceleration', source: 'PwC - 2026', timestamp: 'OCT_26' },
+              { title: 'Decision architecture gap', source: 'McKinsey - 2026', timestamp: 'NOV_26' },
+              { title: 'AI-first org design', source: 'BCG - 2026', timestamp: 'DEC_26' },
             ].map((e, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={VP}
                 transition={{ delay: i * 0.05 }}
-                style={{ background: BG, padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '160px' }}
+                whileHover={{ background: 'rgba(255,255,255,0.03)' }}
+                style={{ 
+                  background: BG, 
+                  padding: '24px 32px', 
+                  display: 'grid', 
+                  gridTemplateColumns: '120px 1fr 250px', 
+                  alignItems: 'center', 
+                  gap: '32px',
+                  transition: 'background 0.3s',
+                  cursor: 'default'
+                }}
               >
-                <div style={{ fontSize: '16px', fontWeight: 500, lineHeight: 1.4 }}>{e.title}</div>
-                <div style={{ fontSize: '10px', color: SOFT, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: '16px' }}>{e.source}</div>
+                <div style={{ fontSize: '10px', color: SOFT, letterSpacing: '0.15em', fontWeight: 800, fontFamily: 'monospace' }}>[{e.timestamp}]</div>
+                <div style={{ fontSize: '18px', fontWeight: 500, color: TEXT, letterSpacing: '-0.01em' }}>{e.title}</div>
+                <div style={{ fontSize: '11px', color: SOFT, letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'right' }}>{e.source}</div>
               </motion.div>
             ))}
           </div>
